@@ -442,20 +442,6 @@ export default function HomePage() {
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
         <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Terms of Service
-          </Link>
-        </nav>
       </footer>
     </div>
   )
