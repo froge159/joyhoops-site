@@ -1,8 +1,8 @@
 "use client"
 
+import { Trophy, Menu, X, Mail, Linkedin, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Trophy, Menu, X, Mail, Linkedin, MessageCircle } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -43,17 +43,6 @@ export default function TeamPage() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-              asChild
-            >
-              <Link href="/donate">
-                <Heart className="h-4 w-4 mr-1" />
-                Donate
-              </Link>
-            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -466,10 +455,7 @@ export default function TeamPage() {
                   className="px-4 sm:px-12 bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
                   asChild
                 >
-                  <Link href="/volunteer">
-                    Volunteer With Us
-                    <Heart className="ml-2 h-4 w-4" />
-                  </Link>
+                  <Link href="/volunteer">Volunteer With Us</Link>
                 </Button>
                 <Button
                   variant="outline"

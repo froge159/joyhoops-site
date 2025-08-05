@@ -4,7 +4,7 @@ import type React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Trophy, Menu, X, Mail, Phone, MapPin, MessageCircle, Send } from "lucide-react"
+import { Trophy, Menu, X, Mail, Phone, MapPin, MessageCircle, Send } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -77,17 +77,6 @@ export default function ContactPage() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-              asChild
-            >
-              <Link href="/donate">
-                <Heart className="h-4 w-4 mr-1" />
-                Donate
-              </Link>
-            </Button>
             <Button
               variant="outline"
               size="sm"

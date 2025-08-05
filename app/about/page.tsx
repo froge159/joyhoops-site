@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Users, Trophy, Star, Menu, X, Target, Award, Globe, Lightbulb, MessageCircle } from "lucide-react"
+import { Users, Trophy, Star, Menu, X, Target, Award, Globe, Lightbulb, Heart } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -43,17 +43,6 @@ export default function AboutPage() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-              asChild
-            >
-              <Link href="/donate">
-                <Heart className="h-4 w-4 mr-1" />
-                Donate
-              </Link>
-            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -229,7 +218,7 @@ export default function AboutPage() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Our Core Values</h2>
-                <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[900px] text-slate-600 md:text-lg/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   The principles that guide everything we do
                 </p>
               </div>
@@ -353,10 +342,12 @@ export default function AboutPage() {
           <div className="container px-6 md:px-8">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Join Our Mission</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">
+                  Ready to Make a Difference?
+                </h2>
                 <p className="max-w-[600px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Be part of something bigger. Help us create positive change in young lives through the power of
-                  sports.
+                  Whether you're a student looking to volunteer or a parent wanting to enroll your child, join the
+                  JoyHoops community today!
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row px-8">
@@ -367,7 +358,7 @@ export default function AboutPage() {
                 >
                   <Link href="/volunteer">
                     Become a Volunteer
-                    <Heart className="ml-2 h-4 w-4" />
+                    <Users className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -376,7 +367,7 @@ export default function AboutPage() {
                   className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-lg"
                   asChild
                 >
-                  <Link href="/contact">Get In Touch</Link>
+                  <Link href="/register">Register Your Child</Link>
                 </Button>
               </div>
             </div>
@@ -393,24 +384,6 @@ export default function AboutPage() {
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
         <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Terms of Service
-          </Link>
-          <div className="flex items-center space-x-1">
-            <MessageCircle className="h-4 w-4 text-[#FF6B35]" />
-            <span className="text-xs text-slate-600">WeChat: JoyHoops2024</span>
-          </div>
-        </nav>
       </footer>
     </div>
   )
