@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Joyhoops Sports Academy',
+  description: '',
+  generator: '',
 }
 
 export default function RootLayout({
@@ -25,7 +26,20 @@ export default function RootLayout({
             }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body>
+        <NextTopLoader
+          color="#29D"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #29d,0 0 5px #29d"
+        />
+        {children}
+      </body>
     </html>
   )
 }

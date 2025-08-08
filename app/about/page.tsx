@@ -8,7 +8,9 @@ import Link from "next/link"
 import { useState } from "react"
 
 export default function AboutPage() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FAFAFA]">

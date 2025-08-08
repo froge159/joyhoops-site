@@ -7,6 +7,8 @@ import { Card, CardHeader } from "@/components/ui/card"
 import { Trophy, Menu, X, Eye, EyeOff, User, Mail } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { register } from "./actions";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -16,12 +18,14 @@ export default function RegisterPage() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
     address: "",
     password: "",
     confirmPassword: "",
     dateOfBirth: "",
+    phone: "",
   })
+
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -31,18 +35,42 @@ export default function RegisterPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!")
       return
     }
+    if (formData.password.length < 8 || formData.password.search(/[A-Z]/) === -1 || formData.password.search(/[a-z]/) === -1 || formData.password.search(/[0-9]/) === -1) {
+      alert("Password must be at least 8 characters long and include uppercase, lowercase, and numbers.")
+      return
+    }
+    const result = await register({
+      email: formData.email,
+      password: formData.password,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      address: formData.address,
+      dateOfBirth: formData.dateOfBirth,
+      phone: formData.phone,
+    });
 
-    // Handle form submission here
-    console.log("Registration form submitted:", formData)
-    alert("Registration successful! Please check your email for verification instructions.")
+    if (!result?.success) {
+      if (result?.error === "Email already registered.") {
+        alert("This email is already registered. Please log in instead.");
+        return;
+      }
+      alert("Registration failed: " + result.error);
+      return;
+    }
+
+    if (result?.success && typeof window !== "undefined") {
+      console.log("Email set in localStorage", formData.email);
+      localStorage.setItem("pendingEmail", formData.email);
+      router.push("/email-verify");
+    }
+    
   }
 
   return (

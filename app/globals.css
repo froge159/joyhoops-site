@@ -88,7 +88,23 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
 .container {
-  max-width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;  
 }
+
+
+
+

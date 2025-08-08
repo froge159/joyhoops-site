@@ -7,6 +7,7 @@ import { Card, CardHeader } from "@/components/ui/card"
 import { Trophy, Menu, X, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { login } from "./actions";
 
 export default function LoginPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -14,7 +15,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false,
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,9 +27,13 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login submission here
-    console.log("Login form submitted:", formData)
-    alert("Login successful! Redirecting to dashboard...")
+    
+    login({
+      email: formData.email,
+      password: formData.password,
+    }).catch((error) => {
+      console.error("Login failed:", error);
+    });
   }
 
   return (
@@ -196,19 +200,6 @@ export default function LoginPage() {
 
                   {/* Remember Me & Forgot Password */}
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="rememberMe"
-                        name="rememberMe"
-                        checked={formData.rememberMe}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 text-[#3DA9FC] focus:ring-[#3DA9FC] border-slate-300 rounded"
-                      />
-                      <label htmlFor="rememberMe" className="text-sm text-slate-600">
-                        Remember me
-                      </label>
-                    </div>
                     <Link href="/forgot-password" className="text-sm text-[#3DA9FC] hover:underline">
                       Forgot password?
                     </Link>

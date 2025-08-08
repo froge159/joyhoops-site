@@ -29,6 +29,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { createClient } from "@/lib/supabase/client";
+import { redirect } from "next/navigation";
 
 // Mock data for user statistics
 const userStats = {

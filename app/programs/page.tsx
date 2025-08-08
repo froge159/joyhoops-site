@@ -451,7 +451,7 @@ export default function ProgramsPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-[#2E2E2E]">Locations</h3>
-                      <p classNameclassName="text-slate-600 text-sm">
+                      <p className="text-slate-600 text-sm">
                         City Tennis Center, High School Courts, Recreation Center
                       </p>
                     </div>
