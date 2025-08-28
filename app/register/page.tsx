@@ -9,6 +9,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { register } from "./actions";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function RegisterPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -26,6 +27,7 @@ export default function RegisterPage() {
   })
 
   const router = useRouter();
+  const supabase = createClient();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -33,6 +35,26 @@ export default function RegisterPage() {
       ...prev,
       [name]: value,
     }))
+  }
+
+  const validateEmail = (email:String) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  const handleGoogleLogin = () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    }).catch((error) => {
+      console.error("google registration failed:", error);
+      alert("Google registration failed. Please try again.");
+    });
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +68,10 @@ export default function RegisterPage() {
       alert("Password must be at least 8 characters long and include uppercase, lowercase, and numbers.")
       return
     }
+    if (!validateEmail(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
     const result = await register({
       email: formData.email,
       password: formData.password,
@@ -58,7 +84,7 @@ export default function RegisterPage() {
 
     if (!result?.success) {
       if (result?.error === "Email already registered.") {
-        alert("This email is already registered. Please log in instead.");
+        alert("This email is already registered.");
         return;
       }
       alert("Registration failed: " + result.error);
@@ -385,6 +411,7 @@ export default function RegisterPage() {
                     variant="outline"
                     size="lg"
                     className="w-full border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent"
+                    onClick = {handleGoogleLogin}
                   >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                       <path

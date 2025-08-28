@@ -8,6 +8,8 @@ import { Trophy, Menu, X, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-rea
 import Link from "next/link"
 import { useState } from "react"
 import { login } from "./actions";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -16,6 +18,8 @@ export default function LoginPage() {
     email: "",
     password: "",
   })
+  const supabase = createClient();
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -33,6 +37,18 @@ export default function LoginPage() {
       password: formData.password,
     }).catch((error) => {
       console.error("Login failed:", error);
+    });
+  }
+
+  const handleGoogleLogin = () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    }).catch((error) => {
+      console.error("google login failed:", error);
+      alert("Google login failed. Please try again.");
     });
   }
 
@@ -233,6 +249,7 @@ export default function LoginPage() {
                     variant="outline"
                     size="lg"
                     className="w-full border-slate-300 text-slate-700 hover:bg-slate-50 bg-transparent"
+                    onClick = {() => handleGoogleLogin()}
                   >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                       <path
@@ -262,16 +279,6 @@ export default function LoginPage() {
                     Don't have an account?{" "}
                     <Link href="/register" className="text-[#3DA9FC] hover:underline font-medium">
                       Create one here
-                    </Link>
-                  </p>
-                </div>
-
-                {/* Email Verification Link */}
-                <div className="text-center mt-4">
-                  <p className="text-xs text-slate-500">
-                    Need to verify your email?{" "}
-                    <Link href="/email-verify" className="text-[#3DA9FC] hover:underline">
-                      Click here
                     </Link>
                   </p>
                 </div>

@@ -15,6 +15,9 @@ import {
 import { Trophy, ArrowLeft, Save, Trash2, User, Phone, MapPin, Calendar, Mail, Lock, LogOut } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { redirect } from "next/navigation"; 
+import { createClient } from "@/lib/supabase/client";
+import { deleteAccount } from "./actions";
 
 export default function SettingsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -67,17 +70,22 @@ export default function SettingsPage() {
   }
 
   const handleDeleteAccount = () => {
-    // Here you would handle the actual account deletion logic
+    deleteAccount();
     console.log("Account deletion confirmed")
     setIsDeleteDialogOpen(false)
-    // Redirect to login or home page
+    redirect("/");
   }
 
-  const handleLogout = () => {
-    // Here you would handle the actual logout logic
+  const handleLogout = async () => {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+      return;
+    }
     console.log("User logged out")
     setIsLogoutDialogOpen(false)
-    // Redirect to login page
+    redirect("/");
   }
 
   return (

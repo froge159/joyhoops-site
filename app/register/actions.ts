@@ -20,15 +20,16 @@ export async function register(data: SignupData) {
     const supabase = await createClient();
     const admin = await createAdminClient();    
 
-    // check if email already exists
-    const { data: existingUser, error: userError } = await admin
-        .from('auth.users')
-        .select('id')
-        .eq('email', data.email)
-        .single();
-    if (existingUser) {
-        return { success: false, error: "Email already registered." };
+    const { data: user, error: userError} = await admin.auth.admin.listUsers();
+
+    if (user.users.some(u => u.email === data.email)) {
+        return { success: false, error: "Email already in use." };
     }
+    if (userError) {
+        console.error("user lookup error:", userError);
+        return { success: false, error: userError.message };
+    }
+
     
     // sign up user - added to auth.users
     const { data:signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -68,7 +69,6 @@ export async function register(data: SignupData) {
     (await cookies()).set('pendingEmail', data.email, {
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7,
     });
     return {success: true};
 }

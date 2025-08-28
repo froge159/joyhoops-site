@@ -51,7 +51,7 @@ export async function updateSession(request: NextRequest) {
     if (isProtectedRoute) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/email-verify';
-      console.log("user not verified, redirecting to email verify page");
+      console.log("user not verified, redirecting to email verify page" + request.cookies.get('pendingEmail')!.value);
       return NextResponse.redirect(redirectUrl);
     }
   }

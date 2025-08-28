@@ -30,7 +30,7 @@ import {
 import Link from "next/link"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 // Mock data for user statistics
 const userStats = {
@@ -541,3 +541,4 @@ export default function UserHomePage() {
     </div>
   )
 }
+
