@@ -17,7 +17,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { redirect } from "next/navigation"; 
 import { createClient } from "@/lib/supabase/client";
-import { deleteAccount } from "./actions";
+import deleteAccount from "./actions";
 
 export default function SettingsPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -69,8 +69,14 @@ export default function SettingsPage() {
     setIsEditingPassword(false)
   }
 
-  const handleDeleteAccount = () => {
-    deleteAccount();
+  const handleDeleteAccount = async () => {
+    const supabase = createClient();
+    const result = await deleteAccount((await supabase.auth.getUser()).data.user!.id);
+    if (!result.success) {
+      alert("Error deleting account: " + result.error);
+      console.error("Error deleting account:", result.error);
+      return;
+    }
     console.log("Account deletion confirmed")
     setIsDeleteDialogOpen(false)
     redirect("/");
@@ -437,7 +443,7 @@ export default function SettingsPage() {
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Keep My Account
             </Button>
-            <Button variant="destructive" onClick={handleDeleteAccount}>
+            <Button variant="destructive" onClick={() => handleDeleteAccount()}>
               Yes, Delete My Account
             </Button>
           </DialogFooter>
