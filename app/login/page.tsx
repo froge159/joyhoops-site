@@ -29,15 +29,17 @@ export default function LoginPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    login({
+    const result = await login({
       email: formData.email,
       password: formData.password,
-    }).catch((error) => {
-      console.error("Login failed:", error);
     });
+    if (result?.error === "email_not_confirmed") {
+      alert("Please confirm your email before logging in.");
+    }
+    
   }
 
   const handleGoogleLogin = () => {

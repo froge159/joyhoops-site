@@ -36,7 +36,16 @@ export async function updateSession(request: NextRequest) {
   const isEmailVerifyPage = pathName.startsWith('/email-verify');
   const protectedRoutes = ['/user-home', '/admin'];
   const isProtectedRoute = protectedRoutes.some((route) => pathName.startsWith(route));
-  const isHomePage = pathName === '/';
+  const isAdmin = user?.email === process.env.ADMIN_EMAIL;
+
+  if (isAdmin) {
+    const redirectUrl = request.nextUrl.clone();
+    if (pathName !== '/admin') {
+      redirectUrl.pathname = '/admin';
+      console.log("admin user tried to access non-admin page, redirecting to admin");
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
 
   if (!user && !request.cookies.get('pendingEmail')) {
     if (isProtectedRoute || pathName === '/email-verify') {

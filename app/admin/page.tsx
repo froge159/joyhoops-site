@@ -32,7 +32,6 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
-// Mock data for the admin dashboard
 const organizationStats = {
   totalHours: 2847,
   classesDelivered: 342,
