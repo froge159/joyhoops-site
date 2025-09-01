@@ -31,7 +31,7 @@ import {
   Trash2,
 } from "lucide-react"
 import { useState } from "react"
-import { addCoach, deleteCoach, editCoach } from "./actions"
+import { deleteCoach } from "./actions"
 
 interface OrganizationStats {
   totalHours: number;
@@ -46,13 +46,13 @@ interface QuickSummaryStats {
   avgChildrenPerClass: number;
 }
 interface GenCoach {
-  classCount: number;
   id: number;
   firstName: string;
   lastName: string;
   active: boolean;
   volunteerHours: number;
   totalHours: number;
+  classCount: number;
 }
 interface SpecCoach {
   id: number;
@@ -61,13 +61,13 @@ interface SpecCoach {
   active: boolean;
   volunteerHours: number;
   totalHours: number;
-  createdAt: Date;
+  createdAt: string;
   totalClasses: number;
   detailedClasses: CoachClass[];
 }
 interface CoachClass {
   id: number;
-  startDatetime: Date;
+  startDatetime: string;
   volunteerHours: number;
   totalHours: number;
   location: string;
@@ -176,16 +176,34 @@ export default function AdminDashboard(
     setSelectedCoach(null)
   }
 
-  const handleAddCoach = () => {
+  const handleAddCoach = async () => {
     if (newCoach.firstName && newCoach.lastName) {
       const coach = {
-        id: Math.max(...gCoachesData.map((c) => c.id)) + 1,
+        id: gCoachesData.length === 0 ? 1 : Math.max(...gCoachesData.map((c) => c.id)) + 1,
         firstName: newCoach.firstName,
         lastName: newCoach.lastName,
         classCount: 0,
         active: newCoach.status === "Active",
         volunteerHours: 0,
         totalHours: 0,
+      }
+      const response = await fetch("/api/add-coach", {
+        method: "POST", 
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          id: coach.id,
+          firstName: coach.firstName,
+          lastName: coach.lastName,
+          status: coach.active,
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error adding coach: ", error);
+        alert("Error adding coach.");
+        setNewCoach({ firstName: "", lastName: "", status: "Active" })
+        setIsAddCoachOpen(false)
+        return;
       }
       setgCoachesData([...gCoachesData, coach])
       setsCoachesData([...sCoachesData, {
@@ -195,22 +213,38 @@ export default function AdminDashboard(
         active: coach.active,
         volunteerHours: coach.volunteerHours,
         totalHours: coach.totalHours,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         totalClasses: 0,
         detailedClasses: [],
       }]);
-      addCoach(coach.firstName, coach.lastName, newCoach.status==="Active");
       setNewCoach({ firstName: "", lastName: "", status: "Active" })
       setIsAddCoachOpen(false)
     }
   }
 
-  const handleEditCoach = () => {
+  const handleEditCoach = async () => {
     if (editingCoach) {
-      setgCoachesData(gCoachesData.map((coach) => (coach.id === editingCoach.id ? editingCoach : coach)))
-      editCoach(editingCoach.id, editingCoach.firstName, editingCoach.lastName, editingCoach.active)
-      setEditingCoach(null)
-      setIsEditCoachOpen(false)
+      const response = await fetch("/api/edit-coach", {
+        method: "PUT", 
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          id: editingCoach.id,
+          firstName: editingCoach.firstName,
+          lastName: editingCoach.lastName,
+          status: editingCoach.active,
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error editing coach: ", error);
+        alert("Error editing coach.");
+        setEditingCoach(null);
+        setIsEditCoachOpen(false);
+        return;
+      }
+      setsCoachesData(gCoachesData.map((coach) => (coach.id === editingCoach.id ? editingCoach : coach)))
+      setEditingCoach(null);
+      setIsEditCoachOpen(false);
     }
   }
 
@@ -323,7 +357,7 @@ export default function AdminDashboard(
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-slate-600">Member since</div>
-                      <div className="font-medium">{selectedCoach.createdAt.toLocaleDateString()}</div>
+                      <div className="font-medium">{selectedCoach.createdAt}</div>
                     </div>
                   </div>
                 </CardHeader>
@@ -346,9 +380,9 @@ export default function AdminDashboard(
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="font-medium text-[#2E2E2E]">{classItem.startDatetime.toLocaleDateString()}</span>
+                          <span className="font-medium text-[#2E2E2E]">{classItem.startDatetime}</span>
                         </div>
-                        <div className="text-sm text-slate-600">{classItem.startDatetime.toLocaleDateString()}</div>
+                        <div className="text-sm text-slate-600">{classItem.startDatetime}</div>
                       </div>
 
                       <div>
@@ -659,19 +693,19 @@ export default function AdminDashboard(
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                       <div>
                         <div className="text-2xl font-bold text-[#3DA9FC] mb-1">
-                          {(organizationStats.totalHours / organizationStats.activeCoaches).toFixed(1)}
+                          {(quickSummaryStats.avgHoursPerCoach).toFixed(1)}
                         </div>
                         <div className="text-sm text-slate-600">Average Hours per Coach</div>
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-[#FF6B35] mb-1">
-                          {(organizationStats.classesDelivered / organizationStats.activeCoaches).toFixed(1)}
+                          {(quickSummaryStats.avgClassesPerCoach).toFixed(1)}
                         </div>
                         <div className="text-sm text-slate-600">Average Classes per Coach</div>
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-[#3DA9FC] mb-1">
-                          {(organizationStats.uniqueChildren / organizationStats.classesDelivered).toFixed(1)}
+                          {(quickSummaryStats.avgChildrenPerClass).toFixed(1)}
                         </div>
                         <div className="text-sm text-slate-600">Average Children per Class</div>
                       </div>
