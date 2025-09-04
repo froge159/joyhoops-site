@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "../../supabase/server"; 
+import { createAdminClient } from "../../supabase/admin"; 
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
     const { data, error } = await supabase
       .from("Coach")

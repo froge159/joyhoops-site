@@ -33,10 +33,14 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const pathName = request.nextUrl.pathname
-  const isEmailVerifyPage = pathName.startsWith('/email-verify');
   const protectedRoutes = ['/user-home', '/admin'];
   const isProtectedRoute = protectedRoutes.some((route) => pathName.startsWith(route));
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
+  const isAPIRoute = pathName.startsWith('/api/');
+
+  if (isAPIRoute) {
+    return supabaseResponse;
+  }
 
   if (isAdmin) {
     const redirectUrl = request.nextUrl.clone();

@@ -31,7 +31,6 @@ import {
   Trash2,
 } from "lucide-react"
 import { useState } from "react"
-import { deleteCoach } from "./actions"
 
 interface OrganizationStats {
   totalHours: number;
@@ -45,16 +44,8 @@ interface QuickSummaryStats {
   avgClassesPerCoach: number;
   avgChildrenPerClass: number;
 }
-interface GenCoach {
-  id: number;
-  firstName: string;
-  lastName: string;
-  active: boolean;
-  volunteerHours: number;
-  totalHours: number;
-  classCount: number;
-}
-interface SpecCoach {
+
+interface Coach {
   id: number;
   firstName: string;
   lastName: string;
@@ -75,38 +66,15 @@ interface CoachClass {
 }
 
 
-function specCoachToGenCoach(coach: SpecCoach): GenCoach {
-  return {
-    classCount: coach.totalClasses,
-    id: coach.id,
-    firstName: coach.firstName,
-    lastName: coach.lastName,
-    active: coach.active,
-    volunteerHours: coach.volunteerHours,
-    totalHours: coach.totalHours,
-  }
-}
-
-export default function AdminDashboard(
-  {initialCoaches,
-  organizationStats,
-  quickSummaryStats,
-  specificCoachData}: 
-  {initialCoaches: GenCoach[],
-  organizationStats: OrganizationStats,
-  quickSummaryStats: QuickSummaryStats,
-  specificCoachData: SpecCoach[]
-  }
-) {
-  const [selectedCoach, setSelectedCoach] = useState<(typeof specificCoachData)[0] | null>(null)
+export default function AdminDashboard({coaches,organizationStats,quickSummaryStats}: {coaches: Coach[],organizationStats: OrganizationStats,quickSummaryStats: QuickSummaryStats,}) {
+  const [selectedCoach, setSelectedCoach] = useState<(typeof coaches)[0] | null>(null)
   const [showClasses, setShowClasses] = useState(false)
-  const [gCoachesData, setgCoachesData] = useState(initialCoaches)
-  const [sCoachesData, setsCoachesData] = useState(specificCoachData);
+  const [coachData, setCoachData] = useState(coaches)
   const [isAddCoachOpen, setIsAddCoachOpen] = useState(false)
   const [isEditCoachOpen, setIsEditCoachOpen] = useState(false)
   const [isDeleteCoachOpen, setIsDeleteCoachOpen] = useState(false)
-  const [editingCoach, setEditingCoach] = useState<(typeof initialCoaches)[0] | null>(null)
-  const [deletingCoach, setDeletingCoach] = useState<(typeof initialCoaches)[0] | null>(null)
+  const [editingCoach, setEditingCoach] = useState<(typeof coaches)[0] | null>(null)
+  const [deletingCoach, setDeletingCoach] = useState<(typeof coaches)[0] | null>(null)
   const [newCoach, setNewCoach] = useState({
     firstName: "",
     lastName: "",
@@ -166,7 +134,7 @@ export default function AdminDashboard(
     isActive: true,
   })
 
-  const handleViewClasses = (coach: (typeof specificCoachData)[0]) => {
+  const handleViewClasses = (coach: (typeof coaches)[0]) => {
     setSelectedCoach(coach)
     setShowClasses(true)
   }
@@ -179,7 +147,7 @@ export default function AdminDashboard(
   const handleAddCoach = async () => {
     if (newCoach.firstName && newCoach.lastName) {
       const coach = {
-        id: gCoachesData.length === 0 ? 1 : Math.max(...gCoachesData.map((c) => c.id)) + 1,
+        id: coachData.length === 0 ? 1 : Math.max(...coachData.map((c) => c.id)) + 1,
         firstName: newCoach.firstName,
         lastName: newCoach.lastName,
         classCount: 0,
@@ -205,8 +173,7 @@ export default function AdminDashboard(
         setIsAddCoachOpen(false)
         return;
       }
-      setgCoachesData([...gCoachesData, coach])
-      setsCoachesData([...sCoachesData, {
+      setCoachData([...coachData, {
         id: coach.id,
         firstName: coach.firstName,
         lastName: coach.lastName,
@@ -231,7 +198,7 @@ export default function AdminDashboard(
           id: editingCoach.id,
           firstName: editingCoach.firstName,
           lastName: editingCoach.lastName,
-          status: editingCoach.active,
+          active: editingCoach.active,
         })
       });
       if (!response.ok) {
@@ -242,27 +209,41 @@ export default function AdminDashboard(
         setIsEditCoachOpen(false);
         return;
       }
-      setsCoachesData(gCoachesData.map((coach) => (coach.id === editingCoach.id ? editingCoach : coach)))
+      setCoachData(coachData.map((coach) => (coach.id === editingCoach.id ? editingCoach : coach)))
       setEditingCoach(null);
       setIsEditCoachOpen(false);
     }
   }
 
-  const handleDeleteCoach = () => {
+  const handleDeleteCoach = async () => {
     if (deletingCoach) {
-      setgCoachesData(gCoachesData.filter((coach) => coach.id !== deletingCoach.id))
-      deleteCoach(deletingCoach.id)
+      const response = await fetch("/api/delete-coach", {
+        method: "DELETE", 
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          id: deletingCoach.id
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error deleting coach: ", error);
+        alert("Error deleting coach.");
+        setDeletingCoach(null);
+        setIsDeleteCoachOpen(false);
+        return;
+      }
+      setCoachData(coachData.filter((coach) => coach.id !== deletingCoach.id))
       setDeletingCoach(null)
       setIsDeleteCoachOpen(false)
     }
   }
 
-  const openEditDialog = (coach: (typeof initialCoaches)[0]) => {
+  const openEditDialog = (coach: (typeof coaches)[0]) => {
     setEditingCoach({ ...coach })
     setIsEditCoachOpen(true)
   }
 
-  const openDeleteDialog = (coach: (typeof initialCoaches)[0]) => {
+  const openDeleteDialog = (coach: (typeof coaches)[0]) => {
     setDeletingCoach(coach)
     setIsDeleteCoachOpen(true)
   }
@@ -532,7 +513,7 @@ export default function AdminDashboard(
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#2E2E2E]">Coach Management</h2>
                   <div className="flex items-center space-x-4">
-                    <div className="text-sm text-slate-600">{gCoachesData.length} total coaches</div>
+                    <div className="text-sm text-slate-600">{coachData.length} total coaches</div>
                     <Dialog open={isAddCoachOpen} onOpenChange={setIsAddCoachOpen}>
                       <DialogTrigger asChild>
                         <Button className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white">
@@ -603,7 +584,7 @@ export default function AdminDashboard(
                 </div>
 
                 <div className="space-y-4">
-                  {sCoachesData.map((coach) => (
+                  {coachData.map((coach) => (
                     <Card
                       key={coach.id}
                       className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow"
@@ -659,7 +640,7 @@ export default function AdminDashboard(
                               View
                             </Button>
                             <Button
-                              onClick={() => openEditDialog(specCoachToGenCoach(coach))}
+                              onClick={() => openEditDialog(coach)}
                               size="sm"
                               variant="outline"
                               className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10"
@@ -667,7 +648,7 @@ export default function AdminDashboard(
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
-                              onClick={() => openDeleteDialog(specCoachToGenCoach(coach))}
+                              onClick={() => openDeleteDialog(coach)}
                               size="sm"
                               variant="outline"
                               className="border-red-500 text-red-500 hover:bg-red-50"

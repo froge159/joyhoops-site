@@ -18,18 +18,12 @@ export default async function AdminDashboard() {
     avgChildrenPerClass: 0
   };
   const generalCoachData = (await getCoaches()).data ?? [];
-  
-  const specificCoachPromises = generalCoachData.map((coach) => getCoach(coach.id));
-  const specificCoachResults = await Promise.all(specificCoachPromises);
-  const specificCoachData = specificCoachResults.map((result) => result.data);
-  const filteredSpecificCoachData = specificCoachData.filter((coach): coach is NonNullable<typeof coach> => coach !== undefined) ?? [];
 
   return (
-    <AdminDashBoard 
-      initialCoaches={generalCoachData}
+    <AdminDashBoard
+      coaches={generalCoachData.filter((coach): coach is NonNullable<typeof coach> => coach !== undefined)}
       organizationStats={organizationStats}
       quickSummaryStats={quickSummaryStats}
-      specificCoachData={filteredSpecificCoachData}>
-    </AdminDashBoard>
+    />
   )
 }

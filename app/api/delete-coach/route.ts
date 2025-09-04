@@ -1,29 +1,19 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "../../supabase/admin";
 
-export async function PUT(req: Request) {
+export async function DELETE(req: Request) {
     try {
-        const {id, firstName, lastName, active } = await req.json();
-        if (!firstName || !lastName || typeof active !== "boolean") {
-            return NextResponse.json(
-                { success: false, error: "invalid input data"},
-                {status: 400}
-            );
-        }
+        const { id  } = await req.json();
 
         const supabase = await createAdminClient();
         const { data, error } = await supabase
             .from("Coach")
-            .update({
-                first_name: firstName,
-                last_name: lastName,
-                active: active,
-            })
+            .delete()
             .eq("id", id)
             .select()
             .single();
         if (error) {
-            console.error("Error editing coach", error);
+            console.error("Error deleting coach", error);
             return NextResponse.json({ success: false, error: error.message }, {status: 500});
         }
 

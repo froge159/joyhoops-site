@@ -184,7 +184,6 @@ export async function deleteClass(classId: number) {
     return { success: true }
 }
 
-// TODO: merge genCoach into specCoach
 // read all coaches
 export async function getCoaches() {
     const supabase = await createClient();
@@ -196,7 +195,7 @@ export async function getCoaches() {
         return { success: false, error: error.message }
     }
 
-    const data = coaches.map(async (coach) => await getCoach(coach.id));
+    const data = await Promise.all(coaches.map((coach) => getCoach(coach.id).then(res => res.data)))
     return {
         success: true,
         data: data
@@ -253,22 +252,6 @@ export async function getCoach(coachId: number) {
         totalClasses,
         detailedClasses 
     }};
-}
-
-
-// delete coach
-export async function deleteCoach(coachId: number) {
-    const supabase = await createClient();
-    const { error } = await supabase
-        .from("Coach")
-        .delete()
-        .eq("id", coachId);
-    if (error) {
-        console.error("Error deleting coach", error);
-        return { success: false, error: error.message }
-    }
-
-    return { success: true };
 }
 
 
