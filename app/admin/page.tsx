@@ -1,5 +1,5 @@
 import {
-  getCoaches, getCoach,
+  getCoaches, getClasses,
   getOrganizationStats, getQuickSummaryStats} from "./actions"
 import AdminDashBoard from "./AdminComponent";
 
@@ -18,12 +18,14 @@ export default async function AdminDashboard() {
     avgChildrenPerClass: 0
   };
   const generalCoachData = (await getCoaches()).data ?? [];
+  const classData = (await getClasses()).data ?? [];
 
   return (
     <AdminDashBoard
       coaches={generalCoachData.filter((coach): coach is NonNullable<typeof coach> => coach !== undefined)}
       organizationStats={organizationStats}
       quickSummaryStats={quickSummaryStats}
+      classes={classData.filter((cls): cls is NonNullable<typeof cls> => cls !== undefined)}
     />
   )
 }

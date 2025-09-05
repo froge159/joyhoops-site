@@ -1,11 +1,12 @@
 import { createClient } from "../supabase/server";
+import { createAdminClient } from "../supabase/admin";
 import { adaptEventHandlers } from "recharts/types/util/types";
 
 
 // helper functions
 
 async function getCoachTotalClasses(coachId: number) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { count, error } = await supabase
         .from("Class_Coach")
         .select("class_id", { count: "exact", head: true})
@@ -18,7 +19,7 @@ async function getCoachTotalClasses(coachId: number) {
 }
 
 async function getClassTotalChildren(classId: number) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { count, error } = await supabase
         .from("Class_User_Child")
         .select("child_id", { count: "exact", head: true})
@@ -30,61 +31,7 @@ async function getClassTotalChildren(classId: number) {
     return count || 0;
 }
 
-// create class
-export async function addClass({
-    active,
-    start_datetime,
-    end_datetime,
-    description,
-    name,
-    location,
-    volunteer_hours,
-    price,
-}: {
-    active: boolean,
-    start_datetime: string,
-    end_datetime: string,
-    description: string,
-    name: string,
-    location: string,
-    volunteer_hours: number,
-    price: number,
-}) {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from("Class")
-        .insert({
-            active,
-            start_datetime,
-            end_datetime,
-            description,
-            name,
-            location,
-            volunteer_hours,
-            price,
-        })
-        .select()
-        .single();
-    if (error) {
-        console.error("Error adding class", error);
-        return { success: false, error: error.message }
-    }
 
-    return {
-        success: true,
-        data: {
-            id: data.id,
-            active: data.active,
-            description: data.description,
-            name: data.name,
-            location: data.location,
-            volunteerHours: data.volunteer_hours,
-            price: data.price,
-            startDatetime: data.start_datetime,
-            endDatetime: data.end_datetime,
-        }
-    }
-}
 // read all classes
 export async function getClasses() {
     const supabase = await createClient();
@@ -106,8 +53,8 @@ export async function getClasses() {
             location: cls.location,
             volunteerHours: cls.volunteer_hours,
             price: cls.price,
-            startDatetime: cls.start_datetime.toISOString(),
-            endDatetime: cls.end_datetime.toISOString(),
+            startDatetime: new Date(cls.start_datetime).toISOString(),
+            endDatetime: new Date(cls.end_datetime).toISOString(),
         }
     });
     return { success: true, data: formatted }
@@ -135,7 +82,7 @@ export async function editClass(
         price: number,
     }
 ) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { data, error } = await supabase
         .from("Class")
         .update({
@@ -170,23 +117,11 @@ export async function editClass(
         }
     }
 }
-// delete class
-export async function deleteClass(classId: number) {
-    const supabase = await createClient();
-    const { error } = await supabase
-        .from("Class")
-        .delete()
-        .eq("id", classId);
-    if (error) {
-        console.error("Error deleting class", error);
-        return { success: false, error: error.message }
-    }
-    return { success: true }
-}
+
 
 // read all coaches
 export async function getCoaches() {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { data: coaches, error } = await supabase
         .from("Coach")
         .select("id")
@@ -218,22 +153,32 @@ export async function getCoach(coachId: number) {
     }
     const totalClasses = await getCoachTotalClasses(coachId);
 
-    const { data: classes, error: classesError } = await supabase
+    const { data: classCoachRows, error: classCoachError } = await supabase
         .from("Class_Coach")
-        .select("class_id, Class:class_id(id, start_datetime, volunteer_hours, total_hours, location)")
-        .eq("coach_id", coachId)
-        .order("Class.start_datetime", { ascending: false });
+        .select("class_id")
+        .eq("coach_id", coachId);
+    if (classCoachError) {
+        console.error("Error fetching class-coach relationships", classCoachError);
+        return { success: false, error: classCoachError.message }
+    }
+    const { data: classes, error: classesError } = await supabase
+        .from("Class")
+        .select("id, start_datetime, volunteer_hours, location")
+        .in("id", classCoachRows.map((row) => row.class_id));
     if (classesError) {
         console.error("Error fetching classes for coach", classesError);
         return { success: false, error: classesError.message }
     }
+    const sortedClasses = (classes || []).sort((a, b) => 
+        new Date(b?.start_datetime).getTime() - new Date(a?.start_datetime).getTime()
+    );
 
-    const detailedClasses = (classes || []).map((entry: any) => ({
-        id: entry.Class.id,
-        startDatetime: entry.Class.start_datetime.toISOString(),
-        volunteerHours: entry.Class.volunteer_hours,
-        totalHours: entry.Class.total_hours,
-        location: entry.Class.location,
+    const detailedClasses = (sortedClasses || []).map((entry: any) => ({
+        id: entry.id,
+        startDatetime: entry.start_datetime.toISOString(),
+        volunteerHours: entry.volunteer_hours,
+        totalHours: entry.total_hours,
+        location: entry.location,
         childCount: 0,
     }));
 
@@ -248,7 +193,7 @@ export async function getCoach(coachId: number) {
         active: coach.active,
         volunteerHours: coach.volunteer_hours,
         totalHours: coach.total_hours,
-        createdAt: coach.created_at.toISOString(),
+        createdAt: new Date(coach.created_at).toISOString(),
         totalClasses,
         detailedClasses 
     }};
@@ -257,7 +202,7 @@ export async function getCoach(coachId: number) {
 
 
 export async function getOrganizationStats() {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     // sum of hours from all coaches
     const { data: totalHoursData, error: totalHoursError } = await supabase
         .from("Coach")
@@ -324,7 +269,7 @@ export async function getOrganizationStats() {
 }
 
 export async function getQuickSummaryStats() {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     // avg hours per coach
     const { data: totalHoursData, error: totalHoursError } = await supabase
         .from("Coach")

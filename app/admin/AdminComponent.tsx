@@ -64,9 +64,20 @@ interface CoachClass {
   location: string;
   childCount: number;
 }
+interface Class {
+  id: number;
+  active: boolean;
+  description: string;
+  name: string;
+  location: string;
+  volunteerHours: number;
+  price: number;
+  startDatetime: string;
+  endDatetime: string;
+}
 
 
-export default function AdminDashboard({coaches,organizationStats,quickSummaryStats}: {coaches: Coach[],organizationStats: OrganizationStats,quickSummaryStats: QuickSummaryStats,}) {
+export default function AdminDashboard({coaches,organizationStats,quickSummaryStats, classes}: {coaches: Coach[],organizationStats: OrganizationStats,quickSummaryStats: QuickSummaryStats,classes:Class[]}) {
   const [selectedCoach, setSelectedCoach] = useState<(typeof coaches)[0] | null>(null)
   const [showClasses, setShowClasses] = useState(false)
   const [coachData, setCoachData] = useState(coaches)
@@ -81,43 +92,8 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
     status: "Active" as "Active" | "Inactive",
   })
 
-  // Add after existing state declarations
   const [activeTab, setActiveTab] = useState<"coaches" | "classes">("coaches")
-  const [classesData, setClassesData] = useState([
-    {
-      id: 1,
-      name: "Youth Basketball Fundamentals",
-      description: "Learn the basics of basketball including dribbling, shooting, and teamwork",
-      startDateTime: "2024-02-15T16:00",
-      endDateTime: "2024-02-15T17:30",
-      location: "Community Center Gym",
-      volunteerHours: 1.5,
-      price: 25,
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: "Soccer Skills Development",
-      description: "Develop soccer skills through fun drills and mini-games",
-      startDateTime: "2024-02-16T15:30",
-      endDateTime: "2024-02-16T17:00",
-      location: "Central Park Fields",
-      volunteerHours: 1.5,
-      price: 25,
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: "Tennis for Beginners",
-      description: "Introduction to tennis basics and court etiquette",
-      startDateTime: "2024-02-17T16:00",
-      endDateTime: "2024-02-17T17:30",
-      location: "City Tennis Center",
-      volunteerHours: 1.5,
-      price: 25,
-      isActive: false,
-    },
-  ])
+  const [classesData, setClassesData] = useState(classes)
   const [isAddClassOpen, setIsAddClassOpen] = useState(false)
   const [isEditClassOpen, setIsEditClassOpen] = useState(false)
   const [isDeleteClassOpen, setIsDeleteClassOpen] = useState(false)
@@ -126,12 +102,12 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
   const [newClass, setNewClass] = useState({
     name: "",
     description: "",
-    startDateTime: "",
-    endDateTime: "",
+    startDatetime: "",
+    endDatetime: "",
     location: "",
     volunteerHours: 0,
     price: 0,
-    isActive: true,
+    active: true,
   })
 
   const handleViewClasses = (coach: (typeof coaches)[0]) => {
@@ -248,22 +224,46 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
     setIsDeleteCoachOpen(true)
   }
 
-  const handleAddClass = () => {
-    if (newClass.name && newClass.startDateTime && newClass.endDateTime && newClass.location) {
+  const handleAddClass = async () => {
+    if (newClass.name && newClass.startDatetime && newClass.endDatetime && newClass.location) {
       const classItem = {
         id: Math.max(...classesData.map((c) => c.id)) + 1,
         ...newClass,
+      }
+      const response = await fetch("/api/add-class", {
+        method: "POST", 
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          ...classItem
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error adding class: ", error);
+        alert("Error adding class.");
+        setNewClass({
+          name: "",
+          description: "",
+          startDatetime: "",
+          endDatetime: "",
+          location: "",
+          volunteerHours: 0,
+          price: 0,
+          active: true,
+        })
+        setIsAddClassOpen(false)
+        return;
       }
       setClassesData([...classesData, classItem])
       setNewClass({
         name: "",
         description: "",
-        startDateTime: "",
-        endDateTime: "",
+        startDatetime: "",
+        endDatetime: "",
         location: "",
         volunteerHours: 0,
         price: 0,
-        isActive: true,
+        active: true,
       })
       setIsAddClassOpen(false)
     }
@@ -338,7 +338,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-slate-600">Member since</div>
-                      <div className="font-medium">{selectedCoach.createdAt}</div>
+                      <div className="font-medium">{new Date(selectedCoach.createdAt).toLocaleDateString()}</div>
                     </div>
                   </div>
                 </CardHeader>
@@ -363,7 +363,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="font-medium text-[#2E2E2E]">{classItem.startDatetime}</span>
                         </div>
-                        <div className="text-sm text-slate-600">{classItem.startDatetime}</div>
+                        <div className="text-sm text-slate-600">{new Date(classItem.startDatetime).toLocaleString()}</div>
                       </div>
 
                       <div>
@@ -411,10 +411,9 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
             </div>
             <div>
               <h1 className="text-xl font-bold text-[#2E2E2E]">JoyHoops Admin Dashboard</h1>
-              <p className="text-sm text-slate-600">Organization Overview & Coach Management</p>
+              <p className="text-sm text-slate-60 0">Organization Overview & Coach Management</p>
             </div>
           </div>
-          <div className="text-sm text-slate-600">Last updated: {new Date().toLocaleDateString()}</div>
         </div>
       </header>
 
@@ -739,26 +738,26 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="startDateTime" className="text-right">
+                          <Label htmlFor="startDatetime" className="text-right">
                             Start Date/Time
                           </Label>
                           <Input
-                            id="startDateTime"
+                            id="startDatetime"
                             type="datetime-local"
-                            value={newClass.startDateTime}
-                            onChange={(e) => setNewClass({ ...newClass, startDateTime: e.target.value })}
+                            value={newClass.startDatetime}
+                            onChange={(e) => setNewClass({ ...newClass, startDatetime: e.target.value })}
                             className="col-span-3"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="endDateTime" className="text-right">
+                          <Label htmlFor="endDatetime" className="text-right">
                             End Date/Time
                           </Label>
                           <Input
-                            id="endDateTime"
+                            id="endDatetime"
                             type="datetime-local"
-                            value={newClass.endDateTime}
-                            onChange={(e) => setNewClass({ ...newClass, endDateTime: e.target.value })}
+                            value={newClass.endDatetime}
+                            onChange={(e) => setNewClass({ ...newClass, endDatetime: e.target.value })}
                             className="col-span-3"
                           />
                         </div>
@@ -805,8 +804,8 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                             Status
                           </Label>
                           <Select
-                            value={newClass.isActive ? "active" : "inactive"}
-                            onValueChange={(value) => setNewClass({ ...newClass, isActive: value === "active" })}
+                            value={newClass.active ? "active" : "inactive"}
+                            onValueChange={(value) => setNewClass({ ...newClass, active: value === "active" })}
                           >
                             <SelectTrigger className="col-span-3">
                               <SelectValue />
@@ -823,7 +822,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           type="submit"
                           onClick={handleAddClass}
                           disabled={
-                            !newClass.name || !newClass.startDateTime || !newClass.endDateTime || !newClass.location
+                            !newClass.name || !newClass.startDatetime || !newClass.endDatetime || !newClass.location
                           }
                         >
                           Add Class
@@ -848,10 +847,10 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           <div className="flex items-center space-x-2">
                             <span
                               className={`text-sm px-2 py-1 rounded-full font-medium ${
-                                classItem.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                classItem.active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                               }`}
                             >
-                              {classItem.isActive ? "Active" : "Inactive"}
+                              {classItem.active ? "Active" : "Inactive"}
                             </span>
                           </div>
                         </div>
@@ -860,16 +859,16 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           <div className="flex items-center space-x-1 mb-1">
                             <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                             <span className="font-medium text-sm text-[#2E2E2E]">
-                              {new Date(classItem.startDateTime).toLocaleDateString()}
+                              {new Date(classItem.startDatetime).toLocaleDateString()}
                             </span>
                           </div>
                           <div className="text-xs text-slate-600">
-                            {new Date(classItem.startDateTime).toLocaleTimeString([], {
+                            {new Date(classItem.startDatetime).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}{" "}
                             -
-                            {new Date(classItem.endDateTime).toLocaleTimeString([], {
+                            {new Date(classItem.endDatetime).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
@@ -1052,26 +1051,26 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="editStartDateTime" className="text-right">
+                <Label htmlFor="editstartDatetime" className="text-right">
                   Start Date/Time
                 </Label>
                 <Input
-                  id="editStartDateTime"
+                  id="editstartDatetime"
                   type="datetime-local"
-                  value={editingClass.startDateTime}
-                  onChange={(e) => setEditingClass({ ...editingClass, startDateTime: e.target.value })}
+                  value={editingClass.startDatetime}
+                  onChange={(e) => setEditingClass({ ...editingClass, startDatetime: e.target.value })}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="editEndDateTime" className="text-right">
+                <Label htmlFor="editendDatetime" className="text-right">
                   End Date/Time
                 </Label>
                 <Input
-                  id="editEndDateTime"
+                  id="editendDatetime"
                   type="datetime-local"
-                  value={editingClass.endDateTime}
-                  onChange={(e) => setEditingClass({ ...editingClass, endDateTime: e.target.value })}
+                  value={editingClass.endDatetime}
+                  onChange={(e) => setEditingClass({ ...editingClass, endDatetime: e.target.value })}
                   className="col-span-3"
                 />
               </div>
@@ -1138,8 +1137,8 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
               onClick={handleEditClass}
               disabled={
                 !editingClass?.name ||
-                !editingClass?.startDateTime ||
-                !editingClass?.endDateTime ||
+                !editingClass?.startDatetime ||
+                !editingClass?.endDatetime ||
                 !editingClass?.location
               }
             >
