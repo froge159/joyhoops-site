@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "../../supabase/admin";
+import { createAdminClient } from "../../clients/admin";
 
 export async function DELETE(req: Request) {
     try {

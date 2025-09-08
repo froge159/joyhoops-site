@@ -1,5 +1,5 @@
-import { createClient } from "../supabase/server";
-import { createAdminClient } from "../supabase/admin";
+import { createClient } from "../clients/server";
+import { createAdminClient } from "../clients/admin";
 import { adaptEventHandlers } from "recharts/types/util/types";
 
 
@@ -43,6 +43,25 @@ export async function getClasses() {
         console.error("Error fetching classes", error);
         return { success: false, error: error.message }
     }
+
+    const supabaseAdmin = await createAdminClient();
+    const classIds = (data || []).map((cls: any) => cls.id);
+    const { data: classCoachRows, error: classCoachError } = await supabaseAdmin
+        .from("Class_Coach")
+        .select("class_id, coach_id")
+        .in("class_id", classIds);
+    if (classCoachError) {
+        console.error("Error fetching class-coach relationships", classCoachError);
+        return { success: false, error: classCoachError.message }
+    }
+
+    const classIdToCoachIds: Record<number, number[]> = {};
+    (classCoachRows || []).forEach((row: any) => {
+        if (!classIdToCoachIds[row.class_id]) {
+            classIdToCoachIds[row.class_id] = [];
+        }
+        classIdToCoachIds[row.class_id].push(row.coach_id);
+    });
     // Format date/time for each class
     const formatted = (data || []).map((cls: any) => {
         return {
@@ -55,68 +74,12 @@ export async function getClasses() {
             price: cls.price,
             startDatetime: new Date(cls.start_datetime).toISOString(),
             endDatetime: new Date(cls.end_datetime).toISOString(),
+            coaches: classIdToCoachIds[cls.id] || []
         }
     });
     return { success: true, data: formatted }
 }
-// update class
-export async function editClass(
-    classId: number,
-    {
-        active,
-        start_datetime,
-        end_datetime,
-        description,
-        name,
-        location,
-        volunteer_hours,
-        price,
-    }: {
-        active: boolean,
-        start_datetime: string,
-        end_datetime: string,
-        description: string,
-        name: string,
-        location: string,
-        volunteer_hours: number,
-        price: number,
-    }
-) {
-    const supabase = await createAdminClient();
-    const { data, error } = await supabase
-        .from("Class")
-        .update({
-            active,
-            start_datetime,
-            end_datetime,
-            description,
-            name,
-            location,
-            volunteer_hours,
-            price,
-        })
-        .eq("id", classId)
-        .select()
-        .single();
-    if (error) {
-        console.error("Error editing class", error);
-        return { success: false, error: error.message }
-    }
-    return {
-        success: true,
-        data: {
-            id: data.id,
-            active: data.active,
-            description: data.description,
-            name: data.name,
-            location: data.location,
-            volunteerHours: data.volunteer_hours,
-            price: data.price,
-            startDatetime: data.start_datetime.toISOString(),
-            endDatetime: data.end_datetime.toISOString(),
-        }
-    }
-}
+
 
 
 // read all coaches
@@ -175,7 +138,7 @@ export async function getCoach(coachId: number) {
 
     const detailedClasses = (sortedClasses || []).map((entry: any) => ({
         id: entry.id,
-        startDatetime: entry.start_datetime.toISOString(),
+        startDatetime: new Date(entry.start_datetime).toISOString(),
         volunteerHours: entry.volunteer_hours,
         totalHours: entry.total_hours,
         location: entry.location,

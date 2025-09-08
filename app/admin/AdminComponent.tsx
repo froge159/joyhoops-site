@@ -1,5 +1,5 @@
 "use client"
-
+// TODO: fix detailed classes display, makes sure it updates immediately, add sign out for admin
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -30,7 +30,8 @@ import {
   Edit,
   Trash2,
 } from "lucide-react"
-import { useState } from "react"
+import { createAdminClient } from "../clients/admin";
+import { useState, useRef, useEffect } from "react";
 
 interface OrganizationStats {
   totalHours: number;
@@ -74,9 +75,64 @@ interface Class {
   price: number;
   startDatetime: string;
   endDatetime: string;
+  coaches: number[];
 }
 
 
+function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coaches: Coach[]; selectedCoachIds: number[]; onChange: (ids: number[]) => void }) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm bg-white text-left"
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        {selectedCoachIds.length === 0
+          ? "Select coaches..."
+          : `${selectedCoachIds.length} coach${selectedCoachIds.length > 1 ? "es" : ""} selected`}
+      </button>
+      {open && (
+        <div className="absolute z-10 mt-2 w-full bg-white border border-slate-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+          {coaches.map((coach) => (
+            <label key={coach.id} className="flex items-center px-3 py-2 hover:bg-slate-100 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selectedCoachIds.includes(coach.id)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    onChange([...selectedCoachIds, coach.id]);
+                  } else {
+                    onChange(selectedCoachIds.filter((id) => id !== coach.id));
+                  }
+                }}
+              />
+              <span className="ml-2">{coach.firstName} {coach.lastName}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// TODO: convert edge functions to next route handlers (replace add-class), decide whether to use product_id in Class table
 export default function AdminDashboard({coaches,organizationStats,quickSummaryStats, classes}: {coaches: Coach[],organizationStats: OrganizationStats,quickSummaryStats: QuickSummaryStats,classes:Class[]}) {
   const [selectedCoach, setSelectedCoach] = useState<(typeof coaches)[0] | null>(null)
   const [showClasses, setShowClasses] = useState(false)
@@ -108,6 +164,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
     volunteerHours: 0,
     price: 0,
     active: true,
+    coaches: [] as number[], // array of selected coach IDs
   })
 
   const handleViewClasses = (coach: (typeof coaches)[0]) => {
@@ -215,9 +272,9 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
   }
 
   const openEditDialog = (coach: (typeof coaches)[0]) => {
-    setEditingCoach({ ...coach })
-    setIsEditCoachOpen(true)
-  }
+    setEditingCoach(coach);
+    setIsEditCoachOpen(true);
+  };
 
   const openDeleteDialog = (coach: (typeof coaches)[0]) => {
     setDeletingCoach(coach)
@@ -227,19 +284,28 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
   const handleAddClass = async () => {
     if (newClass.name && newClass.startDatetime && newClass.endDatetime && newClass.location) {
       const classItem = {
-        id: Math.max(...classesData.map((c) => c.id)) + 1,
+        id: classesData.length == 0 ? 1 : Math.max(...classesData.map((c) => c.id)) + 1,
         ...newClass,
       }
-      const response = await fetch("/api/add-class", {
-        method: "POST", 
+      const response = await fetch("/api/create-class", {
+        method: "POST",
         headers: {"Content-Type": "application/json",},
         body: JSON.stringify({
-          ...classItem
+          name: classItem.name,
+          description: classItem.description,
+          startDatetime: classItem.startDatetime,
+          endDatetime: classItem.endDatetime,
+          location: classItem.location,
+          volunteerHours: classItem.volunteerHours,
+          price: classItem.price,
+          active: classItem.active,
+          coaches: classItem.coaches,
+          id: classItem.id,
         })
-      });
+      })
       if (!response.ok) {
         const error = await response.json();
-        console.error("Error adding class: ", error);
+        console.error("Error adding class: ", error.message);
         alert("Error adding class.");
         setNewClass({
           name: "",
@@ -250,6 +316,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
           volunteerHours: 0,
           price: 0,
           active: true,
+          coaches: [],
         })
         setIsAddClassOpen(false)
         return;
@@ -264,31 +331,74 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         volunteerHours: 0,
         price: 0,
         active: true,
+        coaches: [],
       })
-      setIsAddClassOpen(false)
+      setIsAddClassOpen(false);
     }
   }
 
-  const handleEditClass = () => {
+  const handleEditClass = async () => {
     if (editingClass) {
+      const response = await fetch("/api/update-class", {
+        method: "PUT",
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          id: editingClass.id,
+          name: editingClass.name,
+          description: editingClass.description,
+          startDatetime: editingClass.startDatetime,
+          endDatetime: editingClass.endDatetime,
+          location: editingClass.location,
+          volunteerHours: editingClass.volunteerHours,
+          price: editingClass.price,
+          active: editingClass.active,
+          coaches: editingClass.coaches, 
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error editing class: ", error);
+        alert("Error editing class.");
+        setEditingClass(null);
+        setIsEditClassOpen(false);
+        return;
+      }
       setClassesData(classesData.map((classItem) => (classItem.id === editingClass.id ? editingClass : classItem)))
       setEditingClass(null)
       setIsEditClassOpen(false)
     }
   }
 
-  const handleDeleteClass = () => {
+  const handleDeleteClass = async () => {
     if (deletingClass) {
+      const response = await fetch("/api/delete-class", {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json",},
+        body: JSON.stringify({
+          id: deletingClass.id
+        })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Error deleting class: ", error);
+        alert("Error deleting class.");
+        setDeletingClass(null);
+        setIsDeleteClassOpen(false);
+        return;
+      }
       setClassesData(classesData.filter((classItem) => classItem.id !== deletingClass.id))
       setDeletingClass(null)
       setIsDeleteClassOpen(false)
     }
   }
 
-  const openEditClassDialog = (classItem: any) => {
-    setEditingClass({ ...classItem })
-    setIsEditClassOpen(true)
-  }
+  const openEditClassDialog = (cls: Class) => {
+    setEditingClass({
+      ...cls,
+      coaches: Array.isArray(cls.coaches) ? cls.coaches : [], // ensure it's always an array
+    });
+    setIsEditClassOpen(true);
+  };
 
   const openDeleteClassDialog = (classItem: any) => {
     setDeletingClass(classItem)
@@ -816,6 +926,16 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                             </SelectContent>
                           </Select>
                         </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label className="text-right">Assign Coaches</Label>
+                          <div className="col-span-3">
+                            <CoachMultiSelectDropdown
+                              coaches={coachData}
+                              selectedCoachIds={newClass.coaches}
+                              onChange={(ids) => setNewClass((prev) => ({ ...prev, coaches: ids }))}
+                            />
+                          </div>
+                        </div>
                       </div>
                       <DialogFooter>
                         <Button
@@ -855,7 +975,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           </div>
                         </div>
 
-                        <div>
+                        <div className="h-full flex flex-col justify-center">
                           <div className="flex items-center space-x-1 mb-1">
                             <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                             <span className="font-medium text-sm text-[#2E2E2E]">
@@ -875,7 +995,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           </div>
                         </div>
 
-                        <div>
+                        <div className="h-full flex flex-col justify-center">
                           <div className="flex items-center space-x-1 mb-1">
                             <MapPin className="h-4 w-4 text-[#FF6B35]" />
                             <span className="font-medium text-sm text-[#2E2E2E]">{classItem.location}</span>
@@ -883,7 +1003,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           <div className="text-xs text-slate-600">Location</div>
                         </div>
 
-                        <div>
+                        <div className="h-full flex flex-col justify-center">
                           <div className="flex items-center space-x-1 mb-1">
                             <Clock className="h-4 w-4 text-[#3DA9FC]" />
                             <span className="font-medium text-sm text-[#2E2E2E]">{classItem.volunteerHours}h</span>
@@ -891,7 +1011,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           <div className="text-xs text-slate-600">Volunteer Hours</div>
                         </div>
 
-                        <div>
+                        <div className="h-full flex flex-col justify-center">
                           <div className="flex items-center space-x-1 mb-1">
                             <span className="font-bold text-lg text-[#2E2E2E]">${classItem.price}</span>
                           </div>
@@ -1128,6 +1248,18 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                     <SelectItem value="inactive">Inactive</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Assign Coaches</Label>
+                <div className="col-span-3">
+                  <CoachMultiSelectDropdown
+                    coaches={coachData}
+                    selectedCoachIds={editingClass.coaches}
+                    onChange={(ids) =>
+                      setEditingClass((prev: any) => ({ ...prev, coaches: ids }))
+                    }
+                  />
+                </div>
               </div>
             </div>
           )}
