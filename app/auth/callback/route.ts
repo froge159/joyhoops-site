@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "../../clients/server";
+import { cookies } from "next/headers";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get('code');
 
@@ -12,7 +13,13 @@ export async function GET(request: Request) {
             console.error("Error exchanging code for session:", error);
             return NextResponse.json({error: error.message}, { status: 400});
         }
-
-        return NextResponse.redirect(requestUrl.origin);
     }
+
+     
+    const pendingEmail = request.cookies.get("pendingEmail")?.value;
+    const isChanging = request.cookies.get("isChangingPassword")?.value;
+
+    const response = NextResponse.redirect(new URL(pendingEmail ? "/user-home" : isChanging ? "/set-password" : "/", request.url));
+    response.cookies.delete("pendingEmail");
+    return response;
 }

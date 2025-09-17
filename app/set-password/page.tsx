@@ -10,6 +10,7 @@ import { Trophy, ArrowLeft, Lock, Eye, EyeOff, Check, X } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { createClient } from "../clients/client";
 
 export default function SetPasswordPage() {
   const [password, setPassword] = useState("")
@@ -19,7 +20,8 @@ export default function SetPasswordPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
-  const router = useRouter()
+  const router = useRouter();
+  const supabase = createClient();
 
   // Password strength validation
   const [passwordStrength, setPasswordStrength] = useState({
@@ -59,20 +61,22 @@ export default function SetPasswordPage() {
     setIsLoading(true)
     setError("")
 
-    try {
-      // Simulate API call to update password
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      setSuccess(true)
-
-      // Redirect to login after 3 seconds
-      setTimeout(() => {
-        router.push("/login")
-      }, 3000)
-    } catch (err) {
-      setError("Failed to update password. Please try again.")
-    } finally {
-      setIsLoading(false)
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      console.error("Error updating password:", error.message);
+      setError("Failed to update password. Please try again.");
+      setIsLoading(false);
+      return;
     }
+    
+    const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({value: "isChangingPassword", remove: true})});
+    if (!response.ok) {
+      console.error("Failed to remove access cookie");
+      setError("Error finalizing password change. Please try again.");
+      setIsLoading(false);
+      return;
+    }
+    router.push("/user-home");
   }
 
   if (success) {

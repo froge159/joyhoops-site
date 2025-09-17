@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import next from 'next';
+import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -33,7 +34,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const pathName = request.nextUrl.pathname
-  const protectedRoutes = ['/user-home', '/admin'];
+  const protectedRoutes = ['/user-home', '/admin', '/set-password'];
   const isProtectedRoute = protectedRoutes.some((route) => pathName.startsWith(route));
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
   const isAPIRoute = pathName.startsWith('/api/');
@@ -44,7 +45,7 @@ export async function updateSession(request: NextRequest) {
 
   if (isAdmin) {
     const redirectUrl = request.nextUrl.clone();
-    if (pathName !== '/admin') {
+    if (pathName !== '/admin' && !request.cookies.get('isChangingPassword')) {
       redirectUrl.pathname = '/admin';
       console.log("admin user tried to access non-admin page, redirecting to admin");
       return NextResponse.redirect(redirectUrl);
@@ -60,20 +61,29 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+  if (!request.cookies.get('isChangingPassword')) {
+    if (pathName === '/set-password') {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/';
+      console.log("user tried to access password reset route without changing password, redirecting to home");
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   if (!user && request.cookies.get('pendingEmail')) {
     if (isProtectedRoute) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/email-verify';
-      console.log("user not verified, redirecting to email verify page" + request.cookies.get('pendingEmail')!.value);
+      console.log("user not verified, redirecting to email verify page");
       return NextResponse.redirect(redirectUrl);
     }
   }
 
   if (user) {
-    if (pathName === '/' || pathName === '/email-verify' || pathName === '/register' || pathName === '/login') {
+    if (pathName !== '/user-home' && pathName !== '/user-home/settings' && !request.cookies.get("isChangingPassword")) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/user-home';
-      console.log("logged in user tried to access restricted page, redirecting to user home");
+      console.log("logged in user tried to access restricted page, redirecting to user home" + pathName);
       return NextResponse.redirect(redirectUrl);
     }
   }

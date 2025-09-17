@@ -7,7 +7,7 @@ import { Card, CardHeader } from "@/components/ui/card"
 import { Trophy, Menu, X, MessageCircle, Mail, RefreshCw } from 'lucide-react'
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { createClient } from "../clients/client"
 
 export default function EmailVerifyPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

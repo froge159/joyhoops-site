@@ -104,7 +104,7 @@ export async function getCoach(coachId: number) {
     const supabase = await createClient();
     const { data: coach, error } = await supabase
         .from("Coach")
-        .select("id, first_name, last_name, active, total_hours, volunteer_hours, created_at")
+        .select("id, first_name, last_name, active, volunteer_hours, created_at")
         .eq("id", coachId)
         .single();
     if (error) {
@@ -126,7 +126,7 @@ export async function getCoach(coachId: number) {
     }
     const { data: classes, error: classesError } = await supabase
         .from("Class")
-        .select("id, start_datetime, volunteer_hours, location")
+        .select("id, start_datetime, volunteer_hours, location, name")
         .in("id", classCoachRows.map((row) => row.class_id));
     if (classesError) {
         console.error("Error fetching classes for coach", classesError);
@@ -140,9 +140,9 @@ export async function getCoach(coachId: number) {
         id: entry.id,
         startDatetime: new Date(entry.start_datetime).toISOString(),
         volunteerHours: entry.volunteer_hours,
-        totalHours: entry.total_hours,
         location: entry.location,
         childCount: 0,
+        name: entry.name
     }));
 
     detailedClasses.forEach(async (entry: any) => {
@@ -155,7 +155,6 @@ export async function getCoach(coachId: number) {
         id: coach.id,
         active: coach.active,
         volunteerHours: coach.volunteer_hours,
-        totalHours: coach.total_hours,
         createdAt: new Date(coach.created_at).toISOString(),
         totalClasses,
         detailedClasses 

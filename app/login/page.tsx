@@ -8,7 +8,7 @@ import { Trophy, Menu, X, Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-rea
 import Link from "next/link"
 import { useState } from "react"
 import { login } from "./actions";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "../clients/client";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {

@@ -9,7 +9,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { register } from "./actions";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "../clients/client";
 
 export default function RegisterPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -91,9 +91,13 @@ export default function RegisterPage() {
       return;
     }
 
-    if (result?.success && typeof window !== "undefined") {
-      console.log("Email set in localStorage", formData.email);
-      localStorage.setItem("pendingEmail", formData.email);
+    if (result?.success) {
+      const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({value: "pendingEmail", remove: false})});
+      if (!response.ok) {
+        console.error("Failed to set access cookie");
+        alert("Error setting access cookie");
+        return;
+      }
       router.push("/email-verify");
     }
     

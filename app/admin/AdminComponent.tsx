@@ -32,6 +32,8 @@ import {
 } from "lucide-react"
 import { createAdminClient } from "../clients/admin";
 import { useState, useRef, useEffect } from "react";
+import { createClient } from "../clients/client";
+import { redirect } from "next/navigation";
 
 interface OrganizationStats {
   totalHours: number;
@@ -52,7 +54,6 @@ interface Coach {
   lastName: string;
   active: boolean;
   volunteerHours: number;
-  totalHours: number;
   createdAt: string;
   totalClasses: number;
   detailedClasses: CoachClass[];
@@ -61,9 +62,9 @@ interface CoachClass {
   id: number;
   startDatetime: string;
   volunteerHours: number;
-  totalHours: number;
   location: string;
   childCount: number;
+  name: string;
 }
 interface Class {
   id: number;
@@ -132,7 +133,6 @@ function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coa
   );
 }
 
-// TODO: convert edge functions to next route handlers (replace add-class), decide whether to use product_id in Class table
 export default function AdminDashboard({coaches,organizationStats,quickSummaryStats, classes}: {coaches: Coach[],organizationStats: OrganizationStats,quickSummaryStats: QuickSummaryStats,classes:Class[]}) {
   const [selectedCoach, setSelectedCoach] = useState<(typeof coaches)[0] | null>(null)
   const [showClasses, setShowClasses] = useState(false)
@@ -167,6 +167,16 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
     coaches: [] as number[], // array of selected coach IDs
   })
 
+  const handleLogOut = async () => {
+    const adminClient = createClient();
+    const { error } = await adminClient.auth.signOut();
+    if (error) {
+      console.error("Error signing out: ", error.message);
+      alert("Error signing out.");
+    }
+    redirect("/");
+  }
+
   const handleViewClasses = (coach: (typeof coaches)[0]) => {
     setSelectedCoach(coach)
     setShowClasses(true)
@@ -186,7 +196,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         classCount: 0,
         active: newCoach.status === "Active",
         volunteerHours: 0,
-        totalHours: 0,
       }
       const response = await fetch("/api/add-coach", {
         method: "POST", 
@@ -212,7 +221,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         lastName: coach.lastName,
         active: coach.active,
         volunteerHours: coach.volunteerHours,
-        totalHours: coach.totalHours,
         createdAt: new Date().toISOString(),
         totalClasses: 0,
         detailedClasses: [],
@@ -321,7 +329,21 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         setIsAddClassOpen(false)
         return;
       }
-      setClassesData([...classesData, classItem])
+      setClassesData([...classesData, classItem]);
+      setCoachData(coachData.map(coach => {
+        if (classItem.coaches.includes(coach.id)) {
+          coach.detailedClasses = [...coach.detailedClasses, {
+            id: classItem.id,
+            startDatetime: classItem.startDatetime,
+            volunteerHours: classItem.volunteerHours,
+            location: classItem.location,
+            childCount: 0,
+            name: classItem.name
+          }];
+          coach.totalClasses += 1;
+        }
+        return coach;
+      }));
       setNewClass({
         name: "",
         description: "",
@@ -363,9 +385,27 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         setIsEditClassOpen(false);
         return;
       }
-      setClassesData(classesData.map((classItem) => (classItem.id === editingClass.id ? editingClass : classItem)))
-      setEditingClass(null)
-      setIsEditClassOpen(false)
+      setClassesData(classesData.map((classItem) => (classItem.id === editingClass.id ? editingClass : classItem)));
+      setCoachData(coachData.map((coach) => {
+        if (coach.detailedClasses) {
+          coach.detailedClasses = coach.detailedClasses.map((classItem) => {
+            if (classItem.id === editingClass.id) {
+              return {
+                id: editingClass.id,
+                startDatetime: editingClass.startDatetime,
+                volunteerHours: editingClass.volunteerHours,
+                location: editingClass.location,
+                childCount: classItem.childCount,
+                name: editingClass.name
+              }
+            }
+            return classItem;
+          });
+        }
+        return coach;
+      }));
+      setEditingClass(null);
+      setIsEditClassOpen(false);
     }
   }
 
@@ -386,7 +426,14 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         setIsDeleteClassOpen(false);
         return;
       }
-      setClassesData(classesData.filter((classItem) => classItem.id !== deletingClass.id))
+      setClassesData(classesData.filter((classItem) => classItem.id !== deletingClass.id));
+      setCoachData(coachData.map((coachItem) => {
+          if (coachItem.detailedClasses) {
+            coachItem.detailedClasses = coachItem.detailedClasses.filter((classItem) => classItem.id !== deletingClass.id);
+            coachItem.totalClasses = coachItem.detailedClasses.length;
+          }
+          return coachItem;
+      }));
       setDeletingClass(null)
       setIsDeleteClassOpen(false)
     }
@@ -442,7 +489,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                         {selectedCoach.firstName} {selectedCoach.lastName}
                       </CardTitle>
                       <CardDescription className="text-lg">
-                        <span className="ml-2">{selectedCoach.totalHours} total hours</span> •
                         <span className="ml-2">{selectedCoach.totalClasses} classes delivered</span>
                       </CardDescription>
                     </div>
@@ -471,7 +517,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="font-medium text-[#2E2E2E]">{classItem.startDatetime}</span>
+                          <span className="font-medium text-[#2E2E2E]">{classItem.name}</span>
                         </div>
                         <div className="text-sm text-slate-600">{new Date(classItem.startDatetime).toLocaleString()}</div>
                       </div>
@@ -479,9 +525,9 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
                           <Clock className="h-4 w-4 text-[#FF6B35]" />
-                          <span className="font-medium text-[#2E2E2E]">{classItem.totalHours} minutes</span>
+                          <span className="font-medium text-[#2E2E2E]">{classItem.volunteerHours} hours</span>
                         </div>
-                        <div className="text-sm text-slate-600">{classItem.volunteerHours} volunteer hours</div>
+                        <div className="text-sm text-slate-600">Volunteer Hours</div>
                       </div>
 
                       <div>
@@ -521,9 +567,16 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
             </div>
             <div>
               <h1 className="text-xl font-bold text-[#2E2E2E]">JoyHoops Admin Dashboard</h1>
-              <p className="text-sm text-slate-60 0">Organization Overview & Coach Management</p>
+              <p className="text-sm text-slate-600">Organization Overview & Coach Management</p>
             </div>
           </div>
+          <Button
+              variant="default"
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+              onClick={handleLogOut}
+            >
+              Log out
+            </Button>
         </div>
       </header>
 
@@ -699,7 +752,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                       className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
                           <div className="md:col-span-2">
                             <h3 className="font-semibold text-lg text-[#2E2E2E] mb-1">
                               {coach.firstName} {coach.lastName}
@@ -713,14 +766,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                                 {coach.active ? "Active" : "Inactive"}
                               </span>
                             </div>
-                          </div>
-
-                          <div className="text-center">
-                            <div className="flex items-center justify-center space-x-1 mb-1">
-                              <Clock className="h-4 w-4 text-[#FF6B35]" />
-                              <span className="font-bold text-xl text-[#2E2E2E]">{coach.totalHours}</span>
-                            </div>
-                            <div className="text-sm text-slate-600">Total Hours</div>
                           </div>
 
                           <div className="text-center">
@@ -1237,8 +1282,8 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                   Status
                 </Label>
                 <Select
-                  value={editingClass.isActive ? "active" : "inactive"}
-                  onValueChange={(value) => setEditingClass({ ...editingClass, isActive: value === "active" })}
+                  value={editingClass.active ? "active" : "inactive"}
+                  onValueChange={(value) => (setEditingClass({ ...editingClass, active: value === "active" }))}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue />

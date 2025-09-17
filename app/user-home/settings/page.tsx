@@ -16,7 +16,7 @@ import { Trophy, ArrowLeft, Save, Trash2, User, Phone, MapPin, Calendar, Mail, L
 import Link from "next/link"
 import { useState } from "react"
 import { redirect } from "next/navigation"; 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "../../clients/client";
 import deleteAccount from "./actions";
 
 export default function SettingsPage() {

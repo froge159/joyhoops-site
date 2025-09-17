@@ -1,8 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '../clients/server';
+import { createAdminClient } from '../clients/admin';
 import { cookies } from 'next/headers';
 
 interface SignupData {
@@ -64,11 +64,5 @@ export async function register(data: SignupData) {
         return { success: false, error: profileError.message };
     }
 
-    // revalidate home, set cookie, and return success
-    revalidatePath('/', 'layout');
-    (await cookies()).set('pendingEmail', data.email, {
-        httpOnly: true,
-        sameSite: 'strict',
-    });
     return {success: true};
 }
