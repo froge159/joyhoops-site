@@ -17,3 +17,8 @@ export async function POST(request: Request) {
 
     return response;
 }
+
+
+
+// MIDDLEWARE FILES
+// set-access-cookoie, forgot-password, register, callback, middleware, set-password

@@ -1,21 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "../../clients/admin"; 
 
-/*
-const adminClient = await createAdminClient();
-      const { data, error } = await adminClient.functions.invoke('create-class', {
-        body: {
-          name: classItem.name,
-          description: classItem.description,
-          startDatetime: classItem.startDatetime,
-          endDatetime: classItem.endDatetime,
-          location: classItem.location,
-          volunteerHours: classItem.volunteerHours,
-          price: classItem.price,
-          active: classItem.active,
-        }
-      })
-*/
 
 export async function POST(req: Request) {
   try {

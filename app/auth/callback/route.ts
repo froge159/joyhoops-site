@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const pendingEmail = request.cookies.get("pendingEmail")?.value;
     const isChanging = request.cookies.get("isChangingPassword")?.value;
 
-    const response = NextResponse.redirect(new URL(pendingEmail ? "/user-home" : isChanging ? "/set-password" : "/", request.url));
+    const response = NextResponse.redirect(new URL(pendingEmail ? "/user-home" : isChanging ? "/set-password" : "/user-home", request.url));
     response.cookies.delete("pendingEmail");
     return response;
 }

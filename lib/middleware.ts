@@ -78,9 +78,9 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
   }
-
-  if (user) {
-    if (pathName !== '/user-home' && pathName !== '/user-home/settings' && !request.cookies.get("isChangingPassword")) {
+  
+  if (user && !isAdmin) {
+    if (pathName.substring(0, 10) !== '/user-home' && !request.cookies.get("isChangingPassword")) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/user-home';
       console.log("logged in user tried to access restricted page, redirecting to user home" + pathName);
