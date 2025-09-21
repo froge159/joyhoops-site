@@ -1,3 +1,7 @@
 export default function Loading() {
-  return null
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <p className="text-lg animate-pulse">Loading your classes...</p>
+    </div>
+  )
 }

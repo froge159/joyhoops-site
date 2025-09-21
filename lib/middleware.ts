@@ -45,7 +45,7 @@ export async function updateSession(request: NextRequest) {
 
   if (isAdmin) {
     const redirectUrl = request.nextUrl.clone();
-    if (pathName !== '/admin' && !request.cookies.get('isChangingPassword')) {
+    if (pathName !== '/admin') {
       redirectUrl.pathname = '/admin';
       console.log("admin user tried to access non-admin page, redirecting to admin");
       return NextResponse.redirect(redirectUrl);

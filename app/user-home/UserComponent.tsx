@@ -48,11 +48,10 @@ interface Coach {
 
 interface Class {
   id: number,
-  title: string,
+  name: string,
   coaches: Coach[], // missing
-  date: string,
-  time: string,
-  duration: string,
+  start_datetime: string,
+  end_datetime: string,
   location: string,
   price: number,
   status: 'available' | 'enrolled' | 'completed', // missing
@@ -62,7 +61,7 @@ interface Class {
 
 
 
-export default function UserHomePage({classes, userStats} : {classes: Class[], userStats: UserStats}) {
+export default function UserHomePage({classes, userStats, name} : {classes: Class[], userStats: UserStats, name: string}) {
   const [activeTab, setActiveTab] = useState("available")
   const [searchTerm, setSearchTerm] = useState("")
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
@@ -80,7 +79,7 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
     
     const instructorNames = classItem.coaches.map(coach => `${coach.firstName} ${coach.lastName}`).join(", ");
     const matchesSearch =
-      classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      classItem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       instructorNames.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesTab && matchesSearch
   })
@@ -129,7 +128,7 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
               <Trophy className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-[#2E2E2E]">Welcome back, Sarah!</h1>
+              <h1 className="text-xl font-bold text-[#2E2E2E]">Welcome back, {name.split(" ")[0]}!</h1>
               <p className="text-sm text-slate-600">Ready for your next sports adventure?</p>
             </div>
           </div>
@@ -229,7 +228,7 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.title}</h3>
+                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.name}</h3>
                             <Badge variant="secondary" className="bg-[#3DA9FC]/10 text-[#3DA9FC]">
                               ${classItem.price}
                             </Badge>
@@ -242,12 +241,23 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="text-sm text-slate-600">
-                            {classItem.date} at {classItem.time}
+                            {new Date(classItem.start_datetime).toLocaleDateString()} at {new Date(classItem.start_datetime).toLocaleTimeString()}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Clock className="h-4 w-4 text-[#FF6B35]" />
-                          <span className="text-sm text-slate-600">{classItem.duration}</span>
+                          <span className="text-sm text-slate-600">
+                            {
+                              (() => {
+                                const start = new Date(classItem.start_datetime).getTime();
+                                const end = new Date(classItem.end_datetime).getTime();
+                                const durationMs = end - start;
+                                const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+                                const durationMinutes = Math.floor((durationMs / (1000 * 60)) % 60);
+                                return `${durationHours}h ${durationMinutes}m`;
+                              })()
+                            }
+                          </span>
                         </div>
                       </div>
 
@@ -278,7 +288,7 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.title}</h3>
+                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.name}</h3>
                             <Badge className="bg-green-100 text-green-700">Enrolled</Badge>
                           </div>
                           <p className="text-slate-600 mb-3">{classItem.description}</p>
@@ -299,12 +309,21 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="text-sm text-slate-600">
-                            {classItem.date} at {classItem.time}
+                            {new Date(classItem.start_datetime).toLocaleDateString()} at {new Date(classItem.start_datetime).toLocaleTimeString()}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Clock className="h-4 w-4 text-[#FF6B35]" />
-                          <span className="text-sm text-slate-600">{classItem.duration}</span>
+                          <span className="text-sm text-slate-600">{
+                            (() => {
+                                const start = new Date(classItem.start_datetime).getTime();
+                                const end = new Date(classItem.end_datetime).getTime();
+                                const durationMs = end - start;
+                                const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+                                const durationMinutes = Math.floor((durationMs / (1000 * 60)) % 60);
+                                return `${durationHours}h ${durationMinutes}m`;
+                              })()
+                          }</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <MapPin className="h-4 w-4 text-[#FF6B35]" />
@@ -337,7 +356,7 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.title}</h3>
+                            <h3 className="text-xl font-bold text-[#2E2E2E]">{classItem.name}</h3>
                             <Badge variant="secondary" className="bg-slate-100 text-slate-600">
                               Completed
                             </Badge>
@@ -360,12 +379,21 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="text-sm text-slate-600">
-                            {classItem.date} at {classItem.time}
+                            {new Date(classItem.start_datetime).toLocaleDateString()} at {new Date(classItem.start_datetime).toLocaleTimeString()}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Clock className="h-4 w-4 text-[#FF6B35]" />
-                          <span className="text-sm text-slate-600">{classItem.duration}</span>
+                          <span className="text-sm text-slate-600">{
+                            (() => {
+                                const start = new Date(classItem.start_datetime).getTime();
+                                const end = new Date(classItem.end_datetime).getTime();
+                                const durationMs = end - start;
+                                const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+                                const durationMinutes = Math.floor((durationMs / (1000 * 60)) % 60);
+                                return `${durationHours}h ${durationMinutes}m`;
+                              })()
+                          }</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <MapPin className="h-4 w-4 text-[#FF6B35]" />
@@ -399,9 +427,9 @@ export default function UserHomePage({classes, userStats} : {classes: Class[], u
           {selectedClass && (
             <div className="py-4">
               <div className="mb-4 p-4 bg-slate-50 rounded-lg">
-                <h4 className="font-semibold text-[#2E2E2E] mb-1">{selectedClass.title}</h4>
+                <h4 className="font-semibold text-[#2E2E2E] mb-1">{selectedClass.name}</h4>
                 <p className="text-sm text-slate-600">
-                  {selectedClass.date} at {selectedClass.time}
+                  {new Date(selectedClass.start_datetime).toLocaleDateString()} at {new Date(selectedClass.start_datetime).toLocaleTimeString()}
                 </p>
               </div>
 

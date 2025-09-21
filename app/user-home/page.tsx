@@ -1,6 +1,7 @@
 'use server'
 import UserHomePage from "./UserComponent";
 import { createClient } from "../clients/server";
+import {getUserClasses, getUserStats} from "./actions";
 
 export default async function UserHome() {
   const supabase = await createClient();
@@ -8,32 +9,21 @@ export default async function UserHome() {
 	const userId = user?.id;
 
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-user-classes/${userId}`, {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json"
-    }
-  });
-  if (!response.ok) {
-    throw new Error("Failed to fetch user classes");
-  }
-  const classes = (await response.json()).classes;
+  const classes = (await getUserClasses(userId ?? "")).classes ?? [];
+  const stats = (await getUserStats(userId ?? "")).data ?? {
+    upcomingClasses: 0,
+    totalHours: 0,
+    availableClasses: 0,
+    classesCompleted: 0
+  };
 
-	const response2 = await fetch(`/api/get-user-stats/${userId}`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json"
-		}
-	});
-	if (!response2.ok) {
-		throw new Error("Failed to fetch user stats");
-	}
-	const stats = (await response2.json()).data;
+	const name = user?.user_metadata?.full_name;
   
   return (
     <UserHomePage
         classes={classes}
 				userStats={stats}
+				name={name ?? "User"}
     />
   )
 }

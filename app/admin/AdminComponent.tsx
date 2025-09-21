@@ -1,5 +1,4 @@
 "use client"
-// TODO: fix detailed classes display, makes sure it updates immediately, add sign out for admin
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
