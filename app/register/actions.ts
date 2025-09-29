@@ -14,10 +14,26 @@ interface SignupData {
     dateOfBirth: string;
     phone: string;
 }
+interface OAuthSignUpData {
+    firstName: string;
+    lastName: string;
+    address: string;
+    dateOfBirth: string;
+    phone: string;
+}
+
+export async function setOAuthCookies(data: OAuthSignUpData) {
+    const cookieStore = await cookies();
+    cookieStore.set('pendingFirstName', data.firstName, { path: '/' });
+    cookieStore.set('pendingLastName', data.lastName, { path: '/' });
+    cookieStore.set('pendingAddress', data.address, { path: '/' });
+    cookieStore.set('pendingDateOfBirth', data.dateOfBirth, { path: '/' });
+    cookieStore.set('pendingPhone', data.phone, { path: '/' });
+    return { success: true };
+}
 
 
 export async function register(data: SignupData) {
-    const supabase = await createClient();
     const admin = await createAdminClient();    
 
     const { data: user, error: userError} = await admin.auth.admin.listUsers();
@@ -30,9 +46,8 @@ export async function register(data: SignupData) {
         return { success: false, error: userError.message };
     }
 
-    
     // sign up user - added to auth.users
-    const { data:signUpData, error: signUpError } = await supabase.auth.signUp({
+    const { data:signUpData, error: signUpError } = await admin.auth.signUp({
         email: data.email,
         password: data.password,
     });

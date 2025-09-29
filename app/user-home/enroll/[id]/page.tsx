@@ -1,6 +1,6 @@
 'use server'
 import { createClient } from "@/app/clients/server";
-import {getClass, getChildren, addChild} from "./actions";
+import {getClass, getChildren} from "./actions";
 import EnrollmentComponent from "./EnrollmentComponent";
 
 export default async function EnrollmentPage({params}: {params: Promise<{id: string}>}) {

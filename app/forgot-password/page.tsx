@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
       console.error("Error sending password reset email:", error.message);
       alert("Error: " + error.message);
     } else {
-      const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({value: "isChangingPassword", remove: false})});
+      const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({name: "isChangingPassword", value: "true", remove: false})});
       if (!response.ok) {
         console.error("Failed to set access cookie");
         alert("Error setting access cookie");

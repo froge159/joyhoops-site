@@ -68,8 +68,8 @@ export default function SetPasswordPage() {
       setIsLoading(false);
       return;
     }
-    
-    const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({value: "isChangingPassword", remove: true})});
+
+    const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({name: "isChangingPassword", value: "false", remove: true})});
     if (!response.ok) {
       console.error("Failed to remove access cookie");
       setError("Error finalizing password change. Please try again.");

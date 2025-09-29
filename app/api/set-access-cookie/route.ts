@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-    const { value, remove } = await request.json();
+    const { name, value, remove } = await request.json();
 
     const response = NextResponse.json({ message: "Cookie set!" });
 
     if (remove) {
-        response.cookies.delete(value);
+        response.cookies.delete(name);
         return response;
     }
-    response.cookies.set(value, "true", {
+    response.cookies.set(name, value, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/", 
@@ -17,8 +17,3 @@ export async function POST(request: Request) {
 
     return response;
 }
-
-
-
-// MIDDLEWARE FILES
-// set-access-cookoie, forgot-password, register, callback, middleware, set-password

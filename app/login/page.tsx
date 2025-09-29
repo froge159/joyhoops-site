@@ -10,6 +10,7 @@ import { useState } from "react"
 import { login } from "./actions";
 import { createClient } from "../clients/client";
 import { useRouter } from "next/navigation";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default function LoginPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -18,8 +19,10 @@ export default function LoginPage() {
     email: "",
     password: "",
   })
-  const supabase = createClient();
-  const router = useRouter();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -38,6 +41,9 @@ export default function LoginPage() {
     });
     if (result?.error === "email_not_confirmed") {
       alert("Please confirm your email before logging in.");
+    }
+    else if (result?.error === "invalid_credentials") {
+      alert("Invalid email or password. Please try again.");
     }
     
   }

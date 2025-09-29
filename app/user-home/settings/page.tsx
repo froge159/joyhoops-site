@@ -89,8 +89,6 @@ export default function SettingsPage() {
       console.error("Error signing out:", error.message);
       return;
     }
-    console.log("User logged out")
-    setIsLogoutDialogOpen(false)
     redirect("/");
   }
 

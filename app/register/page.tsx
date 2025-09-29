@@ -7,8 +7,9 @@ import { Card, CardHeader } from "@/components/ui/card"
 import { Trophy, Menu, X, Eye, EyeOff, User, Mail } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import { register } from "./actions";
+import { register, setOAuthCookies } from "./actions";
 import { useRouter } from "next/navigation";
+import { createBrowserClient } from '@supabase/ssr'
 import { createClient } from "../clients/client";
 
 export default function RegisterPage() {
@@ -27,7 +28,10 @@ export default function RegisterPage() {
   })
 
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -45,7 +49,14 @@ export default function RegisterPage() {
       );
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
+    await setOAuthCookies({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      address: formData.address,
+      dateOfBirth: formData.dateOfBirth,
+      phone: formData.phone,
+    });
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -92,7 +103,7 @@ export default function RegisterPage() {
     }
 
     if (result?.success) {
-      const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({value: "pendingEmail", remove: false})});
+      const response = await fetch("/api/set-access-cookie", {method: "POST", body: JSON.stringify({name: "pendingEmail", value: "true", remove: false})});
       if (!response.ok) {
         console.error("Failed to set access cookie");
         alert("Error setting access cookie");

@@ -1,3 +1,4 @@
+import { createAdminClient } from "@/app/clients/admin";
 import { createClient } from "../../../clients/server";
 
 export async function getClass(id: string) {
@@ -9,7 +10,7 @@ export async function getClass(id: string) {
 		.single();
 	if (error) {
 		console.error("Error fetching class:", error);
-		throw new Error("Could not fetch class");
+		return {success: false, error: "Could not fetch class"};
 	}
 
 	const {data: CoachesData, error: CoachesError} = await supabase
@@ -18,7 +19,7 @@ export async function getClass(id: string) {
 		.eq("class_id", id);
 	if (CoachesError) {
 		console.error("Error fetching coaches:", CoachesError);
-		throw new Error("Could not fetch coaches");
+		return {success: false, error: "Could not fetch coaches"};
 	}
 
 	return {
@@ -30,10 +31,16 @@ export async function getClass(id: string) {
 		price: data.price,
 		description: data.description,
 		coaches: CoachesData?.map((cc) => {
+			let coachObj;
+			if (Array.isArray(cc.Coach)) {
+				coachObj = cc.Coach[0];
+			} else {
+				coachObj = cc.Coach;
+			}
 			return {
 				id: cc.coach_id,
-				firstName: cc.Coach.first_name,
-				lastName: cc.Coach.last_name
+				firstName: coachObj?.first_name ?? "",
+				lastName: coachObj?.last_name ?? ""
 			};
 		}) || []
 	};
@@ -47,7 +54,7 @@ export async function getChildren(userId: string) {
 		.eq("user_id", userId);
 	if (error) {
 		console.error("Error fetching children:", error);
-		throw new Error("Could not fetch children");
+		return {success: false, error: "Could not fetch children"};
 	}
 
 	const result = data.map((child) => ({
@@ -60,22 +67,28 @@ export async function getChildren(userId: string) {
 }
 
 export async function addChild(userId: string, childFirstName: string, childDateOfBirth: string) {
-	const supabase = await createClient();
+	if (!childFirstName || !childDateOfBirth) {
+		return {success: false, error: "Invalid input data"}
+	}
+
+	const supabase = await createAdminClient();
 	const { data, error } = await supabase
 		.from("Child")
-		.insert(
+		.insert([
 			{ user_id: userId, first_name: childFirstName, date_of_birth: childDateOfBirth }
-		)
+		])
 		.select()
 		.single();
-	if (error) {
-		console.error("Error adding child:", error);
-		throw new Error("Could not add child");
+	if (error || !data) {
+		return {success: false, error: "Could not add child"};
 	}
 	return {
-		id: data.id,
-		name: data.first_name,
-		age: Math.floor((new Date().getTime() - new Date(data.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365)),
-		dateOfBirth: new Date(data.date_of_birth).toISOString()
+		success: true,
+		data: {
+			id: data.id,
+			name: data.first_name,
+			age: Math.floor((new Date().getTime() - new Date(data.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365)),
+			dateOfBirth: new Date(data.date_of_birth).toISOString()
+		}
 	};
 }

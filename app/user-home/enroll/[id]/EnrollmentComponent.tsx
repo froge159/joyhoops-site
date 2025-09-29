@@ -29,7 +29,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import { addChild } from "./actions"
+import {createClient} from "../../../clients/client";
+import { createBrowserClient } from "@supabase/ssr";
 
 interface Coach {
   id: number,
@@ -76,20 +77,26 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 
   const handleAddChild = async () => {
     if (newChild.name && newChild.dateOfBirth) {
-      const child = {
-        id: children.length > 0 ? Math.max(...children.map((c) => c.id)) + 1 : 1,
-        name: newChild.name,
-        dateOfBirth: newChild.dateOfBirth,
-      }
-    	const res = await addChild(userId, child.name, child.dateOfBirth)
-			.catch(error => {
-				console.error("skibidi erorr:", error)
-				setNewChild({ name: "",  dateOfBirth: "" })
+    	const res = await fetch('/api/add-child', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          childFirstName: newChild.name,
+          childDateOfBirth: newChild.dateOfBirth
+        }),
+      });
+      if (!res.ok) {
+        console.error("Failed to add child:", await res.text());
+        setNewChild({ name: "",dateOfBirth: "" })
 				setIsAddingChild(false)
-				return;
-			});
-			if (res) {
-				setChildren([...children, res])
+        return;
+      }
+      const data = await res.json();
+			if (data) {
+				setChildren([...children, data.data])
 				setNewChild({ name: "",dateOfBirth: "" })
 				setIsAddingChild(false)
     	}
@@ -104,11 +111,47 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 
   const totalCost = selectedChildren.length * classData.price
 
-  const handleConfirmRemove = () => {
+  const handleConfirmRemove = async () => {
     if (childToRemove) {
+      const res = await fetch("/api/delete-child", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ childId: childToRemove.id }),
+      })
+      if (!res.ok) {
+        console.error("Failed to delete child:", await res.text());
+        alert("Failed to delete child.");
+        setChildToRemove(null);
+        return;
+      }
       setChildren(children.filter((c) => c.id !== childToRemove.id))
       setSelectedChildren(selectedChildren.filter((id) => id !== childToRemove.id))
       setChildToRemove(null)
+    }
+  }
+
+  const handlePaymentClick = async () => {
+    const supabase = createClient();
+    const {data} = await supabase.auth.getSession();
+
+    const { data: checkoutData, error } = await supabase.functions.invoke('checkout', {
+      method: 'POST',
+      body: JSON.stringify({
+        userId,
+        classId: classData.id,
+        childIds: selectedChildren,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data?.session?.access_token}`
+      },
+    });
+    if (error) {
+      console.error("Error invoking checkout function:", error);
+      alert("Failed to initiate payment.");
+      return;
     }
   }
 
@@ -239,7 +282,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                       <div
                         key={child.id}
                         className="flex items-center space-x-3 p-4 border border-slate-200 rounded-lg"
-                      >
+                      > 
                         <Checkbox
                           id={`child-${child.id}`}
                           checked={selectedChildren.includes(child.id)}
@@ -250,7 +293,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                             {child.name}
                           </label>
                           <p className="text-sm text-slate-600">
-                            {child.age} years old • Born {child.dateOfBirth}
+                            {child.age} years old • Born {new Date(child.dateOfBirth).toLocaleDateString()}
                           </p>
                         </div>
                         <Badge variant="outline" className="text-[#3DA9FC]">
@@ -384,7 +427,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
             <Button variant="outline" onClick={() => setShowPayment(false)}>
               Cancel
             </Button>
-            <Button className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white">
+            <Button className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white" onClick = {handlePaymentClick}>
               <CreditCard className="h-4 w-4 mr-2" />
               Proceed to Payment
             </Button>

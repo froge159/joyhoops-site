@@ -16,14 +16,20 @@ export default async function UserHome() {
     availableClasses: 0,
     classesCompleted: 0
   };
-
-	const name = user?.user_metadata?.full_name;
+  const {data: name, error: nameError} = await supabase
+    .from("User")
+    .select("first_name")
+    .eq("id", userId)
+    .single();
+  if (nameError) {
+    console.error("Error fetching user name:", nameError);
+  }
   
   return (
     <UserHomePage
         classes={classes}
 				userStats={stats}
-				name={name ?? "User"}
+				name={name?.first_name ?? "User"}
     />
   )
 }
