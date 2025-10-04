@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
   const router = useRouter();
   const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_OAUTH_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
@@ -108,6 +108,9 @@ export default function RegisterPage() {
         console.error("Failed to set access cookie");
         alert("Error setting access cookie");
         return;
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("pendingEmail", formData.email);
       }
       router.push("/email-verify");
     }

@@ -69,6 +69,11 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   const [selectedChildren, setSelectedChildren] = useState<number[]>([])
   const [selectAllChildren, setSelectAllChildren] = useState(false);
   
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("pendingEmail");
+    }
+  }, []);
 
 
   const filteredClasses = (classes ?? []).filter((classItem) => {

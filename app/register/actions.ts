@@ -38,12 +38,13 @@ export async function register(data: SignupData) {
 
     const { data: user, error: userError} = await admin.auth.admin.listUsers();
 
-    if (user.users.some(u => u.email === data.email)) {
-        return { success: false, error: "Email already in use." };
-    }
     if (userError) {
         console.error("user lookup error:", userError);
         return { success: false, error: userError.message };
+    }
+
+    if (user.users.some(u => u.email === data.email)) {
+        return { success: false, error: "Email already in use." };
     }
 
     // sign up user - added to auth.users
