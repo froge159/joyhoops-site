@@ -114,8 +114,29 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     }
   }
 
-  const confirmCancelEnrollment = () => {
-    console.log("Cancelling enrollment for children:", selectedChildren)
+  const confirmCancelEnrollment = async () => {
+    const supabase = createClient();
+    const { data: { user }} = await supabase.auth.getUser();
+    const { data: unenrollData, error } = await supabase.functions.invoke('unenroll', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        class_id: selectedClass?.id,
+        user_id: user?.id,
+        children: selectedChildren
+      })
+    });
+    if (error) {
+      console.error("Error invoking unenroll function:", error);
+      alert("Failed to cancel enrollment.");
+      setCancelDialogOpen(false)
+      setSelectedClass(null)
+      setSelectedChildren([])
+      setSelectAllChildren(false)
+      return; 
+    }
     setCancelDialogOpen(false)
     setSelectedClass(null)
     setSelectedChildren([])

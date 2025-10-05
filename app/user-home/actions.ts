@@ -16,7 +16,7 @@ export async function getUserClasses(userId: string) {
     const classIds = data?.map((cls: any) => cls.id) ?? [];
     const { data: junctions, error: junctionError } = await supabase
         .from("Class_User_Child")
-        .select("class_id, Class(end_datetime)")
+        .select("class_id, child_id, Child(first_name, date_of_birth), Class(end_datetime)")
         .eq("user_id", userId)
         .in("class_id", classIds);
     if (junctionError) {
@@ -54,10 +54,23 @@ export async function getUserClasses(userId: string) {
         }
         classCoachesMap.get(cc.class_id)?.push(cc.Coach);
     });
+    // get children
+    const enrolledChildrenMap = new Map<string, any[]>();
+    junctions?.forEach((j: any) => {
+        if (!enrolledChildrenMap.has(j.class_id)) {
+            enrolledChildrenMap.set(j.class_id, []);
+        }
+        enrolledChildrenMap.get(j.class_id)?.push({
+            id: j.child_id,
+            name: j.Child.first_name,
+            age: isNaN(Math.floor((now.getTime() - new Date(j.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))) ? 0 : Math.floor((now.getTime() - new Date(j.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+        });
+    });
+
     const classesWithCoaches = classesWithStatus.map((cls: any) => ({
         ...cls,
         coaches: classCoachesMap.get(cls.id) || [],
-        enrolledChildren: []
+        enrolledChildren: enrolledChildrenMap.get(cls.id) || []
     }));
 
     return { success: true, classes: classesWithCoaches };
