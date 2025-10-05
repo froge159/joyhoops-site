@@ -13,8 +13,6 @@ export default async function EnrollmentPage({params}: {params: Promise<{id: str
 	const classData = (await getClass(id)) ?? [];
 	const children = (await getChildren(userId ?? "")) ?? [];
 
-	console.log(JSON.stringify(children));
-
 	return (
 		<EnrollmentComponent
 			classData = {classData}

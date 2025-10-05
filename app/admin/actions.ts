@@ -168,12 +168,12 @@ export async function getOrganizationStats() {
     // sum of hours from all coaches
     const { data: totalHoursData, error: totalHoursError } = await supabase
         .from("Coach")
-        .select("volunteer_hours.sum()")
+        .select("volunteer_hours")
     if (totalHoursError) {
         console.error("Error fetching total hours", totalHoursError);
         return { success: false, error: totalHoursError.message}
     }
-    const totalHours = totalHoursData[0].sum || 0;
+    const totalHours = (totalHoursData || []).reduce((sum, row) => sum + (row.volunteer_hours || 0), 0);
 
     // classes delivered
     const { count: inactiveClassesCount, error: inactiveClassesError } = await supabase
@@ -235,12 +235,12 @@ export async function getQuickSummaryStats() {
     // avg hours per coach
     const { data: totalHoursData, error: totalHoursError } = await supabase
         .from("Coach")
-        .select("volunteer_hours.sum()")
+        .select("volunteer_hours")
     if (totalHoursError) {
         console.error("Error fetching total hours", totalHoursError);
         return { success: false, error: totalHoursError.message}
     }
-    const totalHours = totalHoursData[0].sum || 0;
+    const totalHours = (totalHoursData || []).reduce((sum, row) => sum + (row.volunteer_hours || 0), 0);
     const { count: totalCoachesCount, error: totalCoachesError } = await supabase
         .from("Coach")
         .select("id", { count: "exact", head: true})

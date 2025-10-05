@@ -134,25 +134,20 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 
   const handlePaymentClick = async () => {
     const supabase = createClient();
-    const {data} = await supabase.auth.getSession();
-
     const { data: checkoutData, error } = await supabase.functions.invoke('checkout', {
       method: 'POST',
       body: JSON.stringify({
         userId,
         classId: classData.id,
         childIds: selectedChildren,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${data?.session?.access_token}`
-      },
+      })
     });
     if (error) {
       console.error("Error invoking checkout function:", error);
       alert("Failed to initiate payment.");
-      return;
+      return; 
     }
+    window.location.href = checkoutData.url;
   }
 
   return (
