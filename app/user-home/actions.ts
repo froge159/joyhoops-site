@@ -63,7 +63,7 @@ export async function getUserClasses(userId: string) {
         enrolledChildrenMap.get(j.class_id)?.push({
             id: j.child_id,
             name: j.Child.first_name,
-            age: isNaN(Math.floor((now.getTime() - new Date(j.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))) ? 0 : Math.floor((now.getTime() - new Date(j.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+            age: Math.floor((new Date().getTime() - new Date(j.Child.date_of_birth).getTime()) / (1000 * 60 * 60 * 24 * 365)),
         });
     });
 
@@ -87,11 +87,20 @@ export async function getUserStats(userId: string) {
         console.error("Error fetching classes", enrolledClassesError);
         return { success: false, error: enrolledClassesError.message };
     }
+    // deduplicate by class_id
+    const uniqueClassesMap = new Map<string, any>();
+    enrolledClasses.forEach((cls: any) => {
+        if (!uniqueClassesMap.has(cls.class_id)) {
+            uniqueClassesMap.set(cls.class_id, cls);
+        }
+    });
+    const uniqueEnrolledClasses = Array.from(uniqueClassesMap.values());
+
     // get unenrolled classes
     const { data: unenrolledClasses, error: unenrolledClassesError } = await supabase
         .from("Class")
         .select("id")
-        .not("id", "in", `(${enrolledClasses?.map((cls: any) => cls.class_id).join(",")})`);
+        .not("id", "in", `(${uniqueEnrolledClasses.map((cls: any) => cls.class_id).join(",")})`);
     if (unenrolledClassesError) {
         console.error("Error fetching classes", unenrolledClassesError);
         return { success: false, error: unenrolledClassesError.message };
@@ -100,7 +109,7 @@ export async function getUserStats(userId: string) {
     let upcoming = 0;
     let completed = 0;
     let totalHours = 0;
-    enrolledClasses.forEach((cls: any) => {
+    uniqueEnrolledClasses.forEach((cls: any) => {
         const now = new Date();
         const endDate = new Date(cls.Class.end_datetime);
         const startDate = new Date(cls.Class.start_datetime);

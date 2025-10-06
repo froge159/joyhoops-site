@@ -1,8 +1,7 @@
 import { type EmailOtpType } from '@supabase/supabase-js';
-import { type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { createClient } from '../../clients/server';
-import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {
@@ -12,6 +11,8 @@ export async function GET(request: NextRequest) {
     const next = searchParams.get('next') ?? '/';
     const cookieStore = cookies();
     const supabase = await createClient();
+    // redirect response
+    const response = NextResponse.redirect(next);
 
     if (token_hash && type) {
         const { error } = await supabase.auth.verifyOtp({
@@ -19,12 +20,8 @@ export async function GET(request: NextRequest) {
             token_hash,
         });
         if (!error) {
-            (await cookieStore).set('pendingEmail', '', {
-                httpOnly: true,
-                sameSite: 'strict',
-                maxAge: 0,
-            });
-            redirect(next);
+            response.cookies.delete('pendingEmail');
+            return response;
         }
     }    
 }

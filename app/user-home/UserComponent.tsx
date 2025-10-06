@@ -96,40 +96,26 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     setCancelDialogOpen(true)
   }
 
-  const handleChildSelection = (childId: number, checked: boolean) => {
-    if (checked) {
-      setSelectedChildren([...selectedChildren, childId])
-    } else {
-      setSelectedChildren(selectedChildren.filter((id) => id !== childId))
-      setSelectAllChildren(false)
-    }
-  }
-
-  const handleSelectAllChildren = (checked: boolean) => {
-    setSelectAllChildren(checked)
-    if (checked && selectedClass) {
-      setSelectedChildren(selectedClass.enrolledChildren.map((child) => child.id))
-    } else {
-      setSelectedChildren([])
-    }
-  }
-
   const confirmCancelEnrollment = async () => {
+    if (!selectedClass) {
+      return;
+    }
+    const asdf = selectedClass.enrolledChildren.map((child) => child.id);
     const supabase = createClient();
     const { data: { user }} = await supabase.auth.getUser();
-    const { data: unenrollData, error } = await supabase.functions.invoke('unenroll', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+    const { data: { session } } = await supabase.auth.getSession();
+    const accessToken = session?.access_token;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/unenroll`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
       body: JSON.stringify({
         class_id: selectedClass?.id,
         user_id: user?.id,
-        children: selectedChildren
+        children: asdf
       })
     });
-    if (error) {
-      console.error("Error invoking unenroll function:", error);
+    if (!res.ok) {
+      console.error("Error invoking unenroll function:", res.statusText);
       alert("Failed to cancel enrollment.");
       setCancelDialogOpen(false)
       setSelectedClass(null)
@@ -141,6 +127,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     setSelectedClass(null)
     setSelectedChildren([])
     setSelectAllChildren(false)
+    window.location.reload();
   }
 
 
@@ -460,13 +447,6 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="select-all" checked={selectAllChildren} onCheckedChange={handleSelectAllChildren} />
-                  <label htmlFor="select-all" className="text-sm font-medium text-[#2E2E2E]">
-                    Cancel all children
-                  </label>
-                </div>
-
                 <div className="border-t pt-3">
                   <p className="text-sm font-medium text-slate-700 mb-2">Individual children:</p>
                   <div className="space-y-2">
@@ -474,8 +454,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div key={child.id} className="flex items-center space-x-2">
                         <Checkbox
                           id={`child-${child.id}`}
-                          checked={selectedChildren.includes(child.id)}
-                          onCheckedChange={(checked) => handleChildSelection(child.id, checked as boolean)}
+                          checked={true}
+                          disabled
                         />
                         <label htmlFor={`child-${child.id}`} className="text-sm text-slate-600">
                           {child.name} ({child.age} years old)
@@ -501,7 +481,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
             <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
               Keep Enrollment
             </Button>
-            <Button variant="destructive" onClick={confirmCancelEnrollment} disabled={selectedChildren.length === 0}>
+            <Button variant="destructive" onClick={confirmCancelEnrollment}>
               Cancel Enrollment
             </Button>
           </DialogFooter>
