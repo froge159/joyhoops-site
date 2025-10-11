@@ -66,6 +66,8 @@ export default function EnrollmentComponent({classData, existingChildren, userId
   const [children, setChildren] = useState(existingChildren)
   const [showPayment, setShowPayment] = useState(false)
   const [childToRemove, setChildToRemove] = useState<{ id: number; name: string } | null>(null)
+  const [clickedAddChild, setClickedAddChild] = useState(false);
+  const [clickedRemoveChild, setClickedRemoveChild] = useState(false);
 
   const handleChildSelection = (childId: number, checked: boolean) => {
     if (checked) {
@@ -77,6 +79,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 
   const handleAddChild = async () => {
     if (newChild.name && newChild.dateOfBirth) {
+      setClickedAddChild(true);
     	const res = await fetch('/api/add-child', {
         method: 'POST',
         headers: {
@@ -92,6 +95,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
         console.error("Failed to add child:", await res.text());
         setNewChild({ name: "",dateOfBirth: "" })
 				setIsAddingChild(false)
+        setClickedAddChild(false);
         return;
       }
       const data = await res.json();
@@ -99,6 +103,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 				setChildren([...children, data.data])
 				setNewChild({ name: "",dateOfBirth: "" })
 				setIsAddingChild(false)
+        setClickedAddChild(false);
     	}
   	}
 	}
@@ -113,6 +118,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
 
   const handleConfirmRemove = async () => {
     if (childToRemove) {
+      setClickedRemoveChild(true);
       const res = await fetch("/api/delete-child", {
         method: "DELETE",
         headers: {
@@ -124,11 +130,13 @@ export default function EnrollmentComponent({classData, existingChildren, userId
         console.error("Failed to delete child:", await res.text());
         alert("Failed to delete child.");
         setChildToRemove(null);
+        setClickedRemoveChild(false);
         return;
       }
       setChildren(children.filter((c) => c.id !== childToRemove.id))
       setSelectedChildren(selectedChildren.filter((id) => id !== childToRemove.id))
       setChildToRemove(null)
+      setClickedRemoveChild(false);
     }
   }
 
@@ -159,7 +167,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
             <Button
               variant="outline"
               size="sm"
-              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
+              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
               asChild
             >
               <Link href="/user-home">
@@ -261,7 +269,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                   <Button
                     onClick={() => setIsAddingChild(true)}
                     variant="outline"
-                    className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10"
+                    className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Add New Child
@@ -379,7 +387,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
             </Button>
             <Button
               onClick={handleAddChild}
-              disabled={!newChild.name || !newChild.dateOfBirth}
+              disabled={!newChild.name || !newChild.dateOfBirth || clickedAddChild}
               className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
             >
               Add Child
@@ -443,7 +451,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
             <Button variant="outline" onClick={() => setChildToRemove(null)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleConfirmRemove}>
+            <Button variant="destructive" onClick={handleConfirmRemove} disabled={clickedRemoveChild}>
               Remove
             </Button>
           </DialogFooter>

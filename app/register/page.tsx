@@ -26,7 +26,7 @@ export default function RegisterPage() {
     dateOfBirth: "",
     phone: "",
   })
-
+  const [registerClicked, setRegisterClicked] = useState(false);
   const router = useRouter();
   const supabase = createBrowserClient(
       process.env.NEXT_PUBLIC_OAUTH_SUPABASE_URL!,
@@ -70,17 +70,20 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    setRegisterClicked(true);
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!")
+      setRegisterClicked(false);
       return
     }
     if (formData.password.length < 8 || formData.password.search(/[A-Z]/) === -1 || formData.password.search(/[a-z]/) === -1 || formData.password.search(/[0-9]/) === -1) {
       alert("Password must be at least 8 characters long and include uppercase, lowercase, and numbers.")
+      setRegisterClicked(false);
       return
     }
     if (!validateEmail(formData.email)) {
       alert("Please enter a valid email address.");
+      setRegisterClicked(false);
       return;
     }
     const result = await register({
@@ -99,6 +102,7 @@ export default function RegisterPage() {
         return;
       }
       alert("Registration failed: " + result.error);
+      setRegisterClicked(false);
       return;
     }
 
@@ -407,6 +411,7 @@ export default function RegisterPage() {
                     type="submit"
                     size="lg"
                     className="w-full bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
+                    disabled={registerClicked}
                   >
                     Create Account
                   </Button>
@@ -477,20 +482,6 @@ export default function RegisterPage() {
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
         <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Terms of Service
-          </Link>
-        </nav>
       </footer>
     </div>
   )

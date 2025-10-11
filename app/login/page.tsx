@@ -23,6 +23,7 @@ export default function LoginPage() {
     process.env.NEXT_PUBLIC_OAUTH_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
+  const [loginClicked, setLoginClicked] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -34,7 +35,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+    setLoginClicked(true);
     const result = await login({
       email: formData.email,
       password: formData.password,
@@ -45,7 +46,7 @@ export default function LoginPage() {
     else if (result?.error === "invalid_credentials") {
       alert("Invalid email or password. Please try again.");
     }
-    
+    setLoginClicked(false);
   }
 
   const handleGoogleLogin = () => {
@@ -234,6 +235,7 @@ export default function LoginPage() {
                     type="submit"
                     size="lg"
                     className="w-full bg-[#3DA9FC] hover:bg-[#2b8ce6] shadow-lg text-white"
+                    disabled={loginClicked}
                   >
                     Sign In
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -305,20 +307,7 @@ export default function LoginPage() {
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
         <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Terms of Service
-          </Link>
-        </nav>
+      
       </footer>
     </div>
   )

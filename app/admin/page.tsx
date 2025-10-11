@@ -4,6 +4,8 @@ import {
 import AdminDashBoard from "./AdminComponent";
 
 export default async function AdminDashboard() {
+  const generalCoachData = (await getCoaches()).data ?? [];
+  const classData = (await getClasses()).data ?? [];
   const organizationStats = (await getOrganizationStats()).data ?? {
     totalHours: 0,
     classesDelivered: 0,
@@ -17,8 +19,6 @@ export default async function AdminDashboard() {
     avgClassesPerCoach: 0,
     avgChildrenPerClass: 0
   };
-  const generalCoachData = (await getCoaches()).data ?? [];
-  const classData = (await getClasses()).data ?? [];
 
   return (
     <AdminDashBoard

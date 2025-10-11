@@ -159,35 +159,19 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=200&width=200"
                       width="200"
                       height="200"
-                      alt="Sarah Johnson - Founder & Director"
+                      alt="Yuxuan Gu - Founder & President"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Sarah Johnson</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Yuxuan Gu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Founder & Executive Director
+                    Founder & President
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Former college basketball player with 8+ years of youth coaching experience. Sarah founded JoyHoops
-                    to bridge the gap between student volunteers and young athletes. She holds a Master's in Sports
-                    Management and is passionate about community development through athletics.
+                    Yuxuan is an 8th grader at Beckendorff Junior High with nine years of basketball experience. As a point guard and four-time MVP, he excels in ball-handling, shooting, and playmaking. He’s also a Science Olympiad competitor and clarinetist in the BDJH Wind Ensemble, known for his friendly and dedicated coaching style.
+
+
                   </CardDescription>
-                  <div className="flex justify-center space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Mail className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </CardHeader>
               </Card>
 
@@ -198,35 +182,17 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=200&width=200"
                       width="200"
                       height="200"
-                      alt="Marcus Chen - Program Coordinator"
+                      alt="Benson Xu - Co-Founder & Administrative Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Marcus Chen</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Program Coordinator
+                    Co-Founder
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Sports science graduate and certified youth trainer. Marcus designs our age-appropriate training
-                    programs and coordinates volunteer activities. His expertise in child development ensures our
-                    programs are both fun and educationally sound.
+                    Benson is 13 years old and has a strong passion for both basketball and music, particularly playing the viola. He enjoys teaching younger children how to play basketball and finds it rewarding to watch them grow and improve with each training session.
                   </CardDescription>
-                  <div className="flex justify-center space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Mail className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </CardHeader>
               </Card>
 
@@ -237,35 +203,17 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=200&width=200"
                       width="200"
                       height="200"
-                      alt="Emily Rodriguez - Community Outreach"
+                      alt="Samuel Xie - Co-Founder & Technology Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Emily Rodriguez</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Samuel Xie</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Community Outreach Director
+                    Co-Founder & Technology Officer
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Education major with a passion for community building. Emily manages partnerships with schools and
-                    recruits student volunteers. Her bilingual skills and community connections have been instrumental
-                    in expanding our reach to diverse populations.
+                    Samuel Xie is a high school junior at Seven Lakes High School with a strong background in web development and technology. He has hands-on experience building modern web applications using Next.js, Supabase and is eager to solve new problems and take on challenges. 
                   </CardDescription>
-                  <div className="flex justify-center space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Mail className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </CardHeader>
               </Card>
             </div>
@@ -291,14 +239,14 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Alex Thompson"
+                      alt="Gary Shen"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Alex Thompson</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Basketball Coordinator</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Gary Shen</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Chief Comms Officer & 6-7 Head Coach</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Former high school varsity player, specializes in fundamental skills development for ages 6-12.
+                    Gary Shen is a youth basketball coach and former MVP with national tournament experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -310,14 +258,14 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Maya Patel"
+                      alt="Aiden Xu"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Maya Patel</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Soccer Coordinator</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Aiden Xu</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Safety Officer/K-3 Head Coach</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Division I soccer player, leads our growing soccer program with emphasis on teamwork and fun.
+                    Aiden is a 10th grader at SLHS who loves teaching youth basketball and is in the varsity orchestra.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -329,14 +277,14 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Jordan Williams"
+                      alt="Pann Liu"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Jordan Williams</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Volunteer Coordinator</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Pann Liu</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Operation Officer/4-5 Head Coach</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Psychology major, manages volunteer recruitment, training, and ongoing support programs.
+                    Pann Liu is a sophomore at SLHS who plays on the JV basketball team.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -348,14 +296,14 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Sam Kim"
+                      alt="Daniel Fan"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Sam Kim</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Events Coordinator</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Daniel Fan</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Ambassador</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Event management specialist, organizes tournaments, community events, and fundraising activities.
+                    Daniel Fan is an 8th grader at Fay School who excels in academics, athletics, and leadership.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -368,7 +316,7 @@ export default function TeamPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Advisory Board</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Adult Board</h2>
                 <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Experienced professionals guiding our strategic direction
                 </p>
@@ -382,15 +330,15 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Dr. Michael Foster"
+                      alt="Wendy Ou"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Dr. Michael Foster</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Education Advisor</CardDescription>
+                  <CardTitle className="text-[#2E2E2E]">Wendy Ou</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium">Operations</CardDescription>
                   <CardDescription className="text-slate-600">
-                    Former superintendent with 25+ years in education, provides guidance on youth development and
-                    educational partnerships.
+                    A pharmaceutical executive offering 26 years of experience, specializing in cGMP and
+FDA/DEA/EMA/China regulatory affairs.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -402,15 +350,15 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Lisa Chang"
+                      alt="Zhiqiang Gu"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Lisa Chang</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Business Strategy Advisor</CardDescription>
+                  <CardTitle className="text-[#2E2E2E]">Zhiqiang Gu</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium">Head Coach</CardDescription>
                   <CardDescription className="text-slate-600">
-                    Nonprofit management consultant, helps with organizational development, fundraising strategies, and
-                    operational efficiency.
+                    Experienced basketball coach with a background that includes four years of playing in
+collegiate basketball league games.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -422,15 +370,14 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=150&width=150"
                       width="150"
                       height="150"
-                      alt="Coach Roberto Martinez"
+                      alt="Hui Zhi"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Coach Roberto Martinez</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Sports Development Advisor</CardDescription>
+                  <CardTitle className="text-[#2E2E2E]">Hui Zhi</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium">Treasurer</CardDescription>
                   <CardDescription className="text-slate-600">
-                    Former professional athlete and current youth sports director, advises on program development and
-                    athlete safety protocols.
+                    Certified public accountant with 18 years of progressive accounting experience and a decade in corporate industry roles.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -451,16 +398,9 @@ export default function TeamPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row px-8">
                 <Button
-                  size="lg"
-                  className="px-4 sm:px-12 bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
-                  asChild
-                >
-                  <Link href="/volunteer">Volunteer With Us</Link>
-                </Button>
-                <Button
                   variant="outline"
                   size="lg"
-                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-lg"
+                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC]  text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   asChild
                 >
                   <Link href="/contact">View Open Positions</Link>
@@ -481,18 +421,6 @@ export default function TeamPage() {
         </div>
         <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="text-xs text-slate-600 hover:text-[#3DA9FC] hover:underline underline-offset-4 transition-colors"
-          >
-            Terms of Service
-          </Link>
           <div className="flex items-center space-x-1">
             <MessageCircle className="h-4 w-4 text-[#FF6B35]" />
             <span className="text-xs text-slate-600">WeChat: JoyHoops2024</span>

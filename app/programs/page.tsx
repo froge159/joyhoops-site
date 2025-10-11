@@ -257,142 +257,6 @@ export default function ProgramsPage() {
           </div>
         </section>
 
-        {/* Soccer Program */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
-          <div className="container px-4 md:px-6">
-            <div className="mx-auto flex max-w-6xl items-center gap-12 py-12 flex-col lg:flex-row-reverse">
-              <div className="flex-1 w-full">
-                <div className="relative">
-                  <Image
-                    src="/placeholder.svg?height=500&width=600"
-                    width="600"
-                    height="500"
-                    alt="Children learning soccer skills"
-                    className="w-full h-[500px] overflow-hidden rounded-xl object-cover shadow-xl"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col justify-start space-y-8 w-full">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 bg-[#FF6B35] rounded-full flex items-center justify-center">
-                      <Zap className="h-5 w-5 text-white" />
-                    </div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-[#2E2E2E]">Soccer</h2>
-                  </div>
-                  <p className="text-slate-600 md:text-lg/relaxed">
-                    Our soccer program emphasizes ball control, passing accuracy, and field awareness. Players develop
-                    cardiovascular fitness while learning the world's most popular sport in a fun, supportive
-                    environment.
-                  </p>
-                </div>
-                <div className="grid gap-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Target className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Skill Development</h3>
-                      <p className="text-slate-600 text-sm">
-                        Dribbling, passing, shooting, goalkeeping, and tactical awareness
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Clock className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Schedule</h3>
-                      <p className="text-slate-600 text-sm">
-                        Mondays & Wednesdays 4:00-5:30 PM, Saturdays 9:00-10:30 AM
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <MapPin className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Locations</h3>
-                      <p className="text-slate-600 text-sm">
-                        Central Park Fields, Westside Soccer Complex, School District Fields
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Swimming Program */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-[#F5F7FA]">
-          <div className="container px-4 md:px-6">
-            <div className="mx-auto flex max-w-6xl items-center gap-12 py-12 flex-col lg:flex-row">
-              <div className="flex-1 w-full">
-                <div className="relative">
-                  <Image
-                    src="/placeholder.svg?height=500&width=600"
-                    width="600"
-                    height="500"
-                    alt="Children learning swimming skills"
-                    className="w-full h-[500px] overflow-hidden rounded-xl object-cover shadow-xl"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col justify-start space-y-8 w-full">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 bg-[#3DA9FC] rounded-full flex items-center justify-center">
-                      <Zap className="h-5 w-5 text-white" />
-                    </div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-[#2E2E2E]">Swimming</h2>
-                  </div>
-                  <p className="text-slate-600 md:text-lg/relaxed">
-                    Our swimming program teaches water safety, proper stroke technique, and builds cardiovascular
-                    endurance. Students learn in a safe, supportive environment with certified instructors and
-                    age-appropriate instruction.
-                  </p>
-                </div>
-                <div className="grid gap-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#FF6B35] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Target className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Skill Development</h3>
-                      <p className="text-slate-600 text-sm">
-                        Freestyle, backstroke, breaststroke, breathing techniques, and water safety
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#FF6B35] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Clock className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Schedule</h3>
-                      <p className="text-slate-600 text-sm">
-                        Tuesdays & Thursdays 3:30-4:30 PM, Saturdays 11:00 AM-12:00 PM
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#FF6B35] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <MapPin className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Locations</h3>
-                      <p className="text-slate-600 text-sm">Community Pool, YMCA Aquatic Center, High School Pool</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Tennis Program */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
           <div className="container px-4 md:px-6">
@@ -469,11 +333,11 @@ export default function ProgramsPage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">All Our Programs</h2>
                 <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Four comprehensive sports programs designed for young athletes
+                  Two comprehensive sports programs with more to come!
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-4 lg:gap-8">
+            <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-2 lg:gap-8">
               <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
                 <CardHeader>
                   <div className="h-12 w-12 mx-auto bg-[#3DA9FC] rounded-full flex items-center justify-center mb-4 shadow-md">
@@ -481,35 +345,10 @@ export default function ProgramsPage() {
                   </div>
                   <CardTitle className="text-[#2E2E2E]">Basketball</CardTitle>
                   <CardDescription className="text-slate-600">
-                    Fundamental skills, teamwork, and court strategy for young players
+                    Fundamental skills, teamwork, and court strategy
                   </CardDescription>
                 </CardHeader>
               </Card>
-
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
-                <CardHeader>
-                  <div className="h-12 w-12 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-4 shadow-md">
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-[#2E2E2E]">Soccer</CardTitle>
-                  <CardDescription className="text-slate-600">
-                    Ball control, passing, and field awareness in a fun environment
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
-                <CardHeader>
-                  <div className="h-12 w-12 mx-auto bg-[#3DA9FC] rounded-full flex items-center justify-center mb-4 shadow-md">
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-[#2E2E2E]">Swimming</CardTitle>
-                  <CardDescription className="text-slate-600">
-                    Water safety, stroke technique, and cardiovascular fitness
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
               <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
                 <CardHeader>
                   <div className="h-12 w-12 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-4 shadow-md">
@@ -552,7 +391,7 @@ export default function ProgramsPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-lg"
+                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC]  text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   asChild
                 >
                   <Link href="/contact">Ask Questions</Link>

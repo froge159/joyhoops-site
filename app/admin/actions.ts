@@ -62,7 +62,22 @@ export async function getClasses() {
         }
         classIdToCoachIds[row.class_id].push(row.coach_id);
     });
-    // Format date/time for each class
+
+    const now = new Date();
+    for (const cls of data || []) {
+        if (cls.active && new Date(cls.end_datetime) < now) {
+            const { error: updateError } = await supabaseAdmin
+                .from("Class")
+                .update({ active: false })
+                .eq("id", cls.id);
+            if (updateError) {
+                console.error(`Error updating class ${cls.id} to inactive`, updateError);
+            } else {
+                cls.active = false;
+            }
+        }
+    }
+
     const formatted = (data || []).map((cls: any) => {
         return {
             id: cls.id,
@@ -101,10 +116,10 @@ export async function getCoaches() {
 }
 // read individual coach
 export async function getCoach(coachId: number) {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
     const { data: coach, error } = await supabase
         .from("Coach")
-        .select("id, first_name, last_name, active, volunteer_hours, created_at")
+        .select("id, first_name, last_name, active, created_at")
         .eq("id", coachId)
         .single();
     if (error) {
@@ -124,14 +139,31 @@ export async function getCoach(coachId: number) {
         console.error("Error fetching class-coach relationships", classCoachError);
         return { success: false, error: classCoachError.message }
     }
+
+    // Fetch all classes for this coach
     const { data: classes, error: classesError } = await supabase
         .from("Class")
-        .select("id, start_datetime, volunteer_hours, location, name")
+        .select("id, start_datetime, end_datetime, volunteer_hours, location, name")
         .in("id", classCoachRows.map((row) => row.class_id));
     if (classesError) {
         console.error("Error fetching classes for coach", classesError);
         return { success: false, error: classesError.message }
     }
+
+    const now = new Date();
+    const volunteerHours = (classes || [])
+        .filter((cls: any) => new Date(cls.end_datetime) <= now)
+        .reduce((sum, cls: any) => sum + (cls.volunteer_hours || 0), 0);
+    
+    const {data: updateCoach, error: updateError} = await supabase
+        .from("Coach")
+        .update({ volunteer_hours: volunteerHours })
+        .eq("id", coachId);
+    if (updateError) {
+        console.error("Error updating coach volunteer hours", updateError);
+        return { success: false, error: updateError.message }
+    }
+
     const sortedClasses = (classes || []).sort((a, b) => 
         new Date(b?.start_datetime).getTime() - new Date(a?.start_datetime).getTime()
     );
@@ -145,16 +177,16 @@ export async function getCoach(coachId: number) {
         name: entry.name
     }));
 
-    detailedClasses.forEach(async (entry: any) => {
+    for (const entry of detailedClasses) {
         entry.childCount = await getClassTotalChildren(Number(entry.id));
-    });
+    }
 
     return { success: true, data: { 
         firstName: coach.first_name,
         lastName: coach.last_name,
         id: coach.id,
         active: coach.active,
-        volunteerHours: coach.volunteer_hours,
+        volunteerHours, 
         createdAt: new Date(coach.created_at).toISOString(),
         totalClasses,
         detailedClasses 
@@ -250,7 +282,6 @@ export async function getQuickSummaryStats() {
     }
     const totalCoaches = totalCoachesCount || 0;
     const avgHoursPerCoach = totalCoaches > 0 ? (totalHours / totalCoaches) : 0;
-
     // avg classes per coach
     const { count: totalClassesCount, error: totalClassesError } = await supabase
         .from("Class")

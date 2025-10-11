@@ -1,6 +1,4 @@
 import { createServerClient } from '@supabase/ssr'
-import next from 'next';
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -70,7 +68,8 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  if (!user && request.cookies.get('pendingEmail')) {
+  
+  if (user && request.cookies.get('pendingEmail')) {
     if (isProtectedRoute) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/email-verify';
@@ -87,6 +86,8 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
   }
+
+  console.log(user ? `User ${user.email} is logged in` : 'No user is logged in');
 
   return supabaseResponse;
 }

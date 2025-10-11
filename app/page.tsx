@@ -142,8 +142,8 @@ export default function HomePage() {
                     className="bg-[#FF6B35] hover:bg-[#e55a2b] px-4 sm:px-12 shadow-lg text-white"
                     asChild
                   >
-                    <Link href="/volunteer">
-                      Start Volunteering
+                    <Link href="/register">
+                      Register Now
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
@@ -320,61 +320,66 @@ export default function HomePage() {
             </div>
             <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-3 lg:gap-12">
               <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                <CardHeader>
-                  <div className="mx-auto mb-4 relative">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
-                      width="150"
-                      height="150"
-                      alt="Sarah Johnson - Founder & Director"
+                      src="/placeholder.svg?height=200&width=200"
+                      width="200"
+                      height="200"
+                      alt="Yuxuan Gu - Founder & President"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Sarah Johnson</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Founder & Director</CardDescription>
-                  <CardDescription className="text-slate-600">
-                    Former college basketball player with 8+ years of youth coaching experience. Sarah founded JoyHoops
-                    to bridge the gap between student volunteers and young athletes.
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Yuxuan Gu</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Founder & President
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Yuxuan is an 8th grader at Beckendorff Junior High with nine years of basketball experience. As a point guard and four-time MVP, he excels in ball-handling, shooting, and playmaking. He’s also a Science Olympiad competitor and clarinetist in the BDJH Wind Ensemble, known for his friendly and dedicated coaching style.
+
+
                   </CardDescription>
                 </CardHeader>
               </Card>
 
               <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                <CardHeader>
-                  <div className="mx-auto mb-4 relative">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
-                      width="150"
-                      height="150"
-                      alt="Marcus Chen - Program Coordinator"
+                      src="/placeholder.svg?height=200&width=200"
+                      width="200"
+                      height="200"
+                      alt="Benson Xu - Co-Founder & Administrative Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Marcus Chen</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Program Coordinator</CardDescription>
-                  <CardDescription className="text-slate-600">
-                    Sports science graduate and certified youth trainer. Marcus designs our age-appropriate training
-                    programs and coordinates volunteer activities.
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Co-Founder
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Benson is 13 years old and has a strong passion for both basketball and music, particularly playing the viola. He enjoys teaching younger children how to play basketball and finds it rewarding to watch them grow and improve with each training session.
                   </CardDescription>
                 </CardHeader>
               </Card>
 
               <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                <CardHeader>
-                  <div className="mx-auto mb-4 relative">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
-                      width="150"
-                      height="150"
-                      alt="Emily Rodriguez - Community Outreach"
+                      src="/placeholder.svg?height=200&width=200"
+                      width="200"
+                      height="200"
+                      alt="Samuel Xie - Co-Founder & Technology Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-[#2E2E2E]">Emily Rodriguez</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Community Outreach</CardDescription>
-                  <CardDescription className="text-slate-600">
-                    Education major with a passion for community building. Emily manages partnerships with schools and
-                    recruits student volunteers.
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Samuel Xie</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Co-Founder & Technology Officer
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Samuel Xie is a high school junior at Seven Lakes High School with a strong background in web development and technology. He has hands-on experience building modern web applications using Next.js, Supabase and is eager to solve new problems and take on challenges. 
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -383,7 +388,7 @@ export default function HomePage() {
             <div className="text-center">
               <Button
                 variant="outline"
-                className="border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-md bg-transparent"
+                className="border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 hover:text-[#3DA9FC] shadow-md bg-transparent"
                 asChild
               >
                 <Link href="/team">
@@ -414,7 +419,7 @@ export default function HomePage() {
                   className="px-4 sm:px-12 bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
                   asChild
                 >
-                  <Link href="/volunteer">
+                  <Link href="/contact">
                     Become a Volunteer
                     <Users className="ml-2 h-4 w-4" />
                   </Link>
@@ -422,7 +427,7 @@ export default function HomePage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-lg"
+                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 hover:text-[#3DA9FC] shadow-lg"
                   asChild
                 >
                   <Link href="/register">Register Your Child</Link>

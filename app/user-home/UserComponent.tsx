@@ -145,17 +145,17 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
               <p className="text-sm text-slate-600">Ready for your next sports adventure?</p>
             </div>
           </div>
-          <Button
+            <Button
             variant="outline"
             size="sm"
-            className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
+            className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
             asChild
-          >
+            >
             <Link href="/user-home/settings">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Link>
-          </Button>
+            </Button>
         </div>
       </header>
 

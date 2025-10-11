@@ -161,19 +161,19 @@ export default function AboutPage() {
                 <div className="space-y-4">
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Our Story</h2>
                   <p className="text-slate-600 md:text-lg/relaxed">
-                    JoyHoops was born from a simple observation: young athletes thrive when they connect with
-                    passionate, relatable mentors who understand their world. Founded in 2020 by a group of college
-                    students who loved sports and wanted to give back, we started with just five volunteers and a
-                    handful of kids at a local community center.
+                    The whole idea for JoyHoops basically started because we noticed something simple: kids play
+better when their coaches are cool, relatable people who get them.
                   </p>
                   <p className="text-slate-600 md:text-lg/relaxed">
-                    What began as weekend pickup games quickly evolved into structured programs that combine athletic
-                    skill development with character building. We realized that student volunteers bring a unique energy
-                    and perspective that professional coaches, while excellent, sometimes can't match.
+                    It was started back in 2025 by a bunch of us junior high and high school students who were super
+into sports and wanted to help. We began super small, just six of us volunteering at a local
+community center with a few kids.
                   </p>
                   <p className="text-slate-600 md:text-lg/relaxed">
-                    Today, we've grown to serve over 500 young athletes across multiple communities, with a network of
-                    more than 150 student volunteers from local colleges and universities.
+                    What started as just weekend pickup games slowly turned into real practices and programs that
+aren&#39;t just about getting better at sports, but also about building good character. We realized that
+student volunteers like us bring a different kind of energy. we&#39;re like older siblings who can
+connect in a way that professional coaches sometimes don&#39;t.
                   </p>
                 </div>
               </div>
@@ -192,8 +192,9 @@ export default function AboutPage() {
                   </div>
                   <CardTitle className="text-2xl text-[#2E2E2E] mb-4">Our Mission</CardTitle>
                   <CardDescription className="text-slate-600 text-lg leading-relaxed">
-                    To create meaningful connections between passionate student volunteers and young athletes, fostering
-                    athletic skill development, character building, and lifelong friendships through the joy of sports.
+                    We&#39;re all about building
+healthier bodies, tougher attitudes, and new friendships between different cultures. Our goal is to
+bring everyone closer together and create a better community for all of us.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -328,12 +329,12 @@ export default function AboutPage() {
                 <div className="text-[#2E2E2E] font-medium">Student Volunteers</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">12</div>
+                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">5</div>
                 <div className="text-[#2E2E2E] font-medium">Community Centers</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#FF6B35] mb-2">4</div>
-                <div className="text-[#2E2E2E] font-medium">Years of Impact</div>
+                <div className="text-4xl font-bold text-[#FF6B35] mb-2">1</div>
+                <div className="text-[#2E2E2E] font-medium">Year of Impact</div>
               </div>
             </div>
           </div>
@@ -354,19 +355,9 @@ export default function AboutPage() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row px-8">
                 <Button
-                  size="lg"
-                  className="px-4 sm:px-12 bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
-                  asChild
-                >
-                  <Link href="/volunteer">
-                    Become a Volunteer
-                    <Users className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
                   variant="outline"
                   size="lg"
-                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 shadow-lg"
+                  className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC]  text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   asChild
                 >
                   <Link href="/register">Register Your Child</Link>

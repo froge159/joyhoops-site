@@ -82,6 +82,7 @@ interface Class {
 function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coaches: Coach[]; selectedCoachIds: number[]; onChange: (ids: number[]) => void }) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const activeCoaches = coaches.filter(coach => coach.active)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -110,7 +111,7 @@ function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coa
       </button>
       {open && (
         <div className="absolute z-10 mt-2 w-full bg-white border border-slate-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
-          {coaches.map((coach) => (
+          {activeCoaches.map((coach) => (
             <label key={coach.id} className="flex items-center px-3 py-2 hover:bg-slate-100 cursor-pointer">
               <input
                 type="checkbox"

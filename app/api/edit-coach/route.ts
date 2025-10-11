@@ -37,7 +37,6 @@ export async function PUT(req: Request) {
                 lastName: data.last_name,
                 active: data.active,
                 volunteerHours: data.volunteer_hours,
-                totalHours: data.total_hours,
                 createdAt: data.created_at.toISOString()
             }
             : null,

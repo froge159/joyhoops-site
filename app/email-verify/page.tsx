@@ -8,6 +8,7 @@ import { Trophy, Menu, X, MessageCircle, Mail, RefreshCw } from 'lucide-react'
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { createClient } from "../clients/client"
+import { createAdminClient } from "../clients/admin";
 
 export default function EmailVerifyPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
