@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
     const token_hash = searchParams.get('token_hash') ;
     const type = searchParams.get('type') as EmailOtpType;
     const next = searchParams.get('next') ?? '/';
-    const cookieStore = cookies();
     const supabase = await createClient();
     // redirect response
     const response = NextResponse.redirect(next);
@@ -23,5 +22,10 @@ export async function GET(request: NextRequest) {
             response.cookies.delete('pendingEmail');
             return response;
         }
-    }    
+        else {
+            console.error("Supabase verifyOtp error:", error);
+            return NextResponse.redirect("/");
+        }
+    }
+    return NextResponse.redirect('/');
 }
