@@ -736,6 +736,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                             type="submit"
                             onClick={handleAddCoach}
                             disabled={!newCoach.firstName || !newCoach.lastName}
+                            className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
                           >
                             Add Coach
                           </Button>
@@ -989,6 +990,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           disabled={
                             !newClass.name || !newClass.startDatetime || !newClass.endDatetime || !newClass.location
                           }
+                          className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
                         >
                           Add Class
                         </Button>
