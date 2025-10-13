@@ -41,51 +41,50 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  if (isAdmin) {
+if (isAdmin) {
+  const redirectUrl = request.nextUrl.clone();
+  if (pathName !== '/admin') {
+    redirectUrl.pathname = '/admin';
+    console.log("admin user tried to access non-admin page, redirecting to admin");
+    return NextResponse.redirect(redirectUrl.toString());
+  }
+}
+
+if (!user && !request.cookies.get('pendingEmail')) {
+  if (isProtectedRoute || pathName === '/email-verify') {
     const redirectUrl = request.nextUrl.clone();
-    if (pathName !== '/admin') {
-      redirectUrl.pathname = '/admin';
-      console.log("admin user tried to access non-admin page, redirecting to admin");
-      return NextResponse.redirect(redirectUrl);
-    }
+    redirectUrl.pathname = '/';
+    console.log("user tried to access protected route, redirecting to home");
+    return NextResponse.redirect(redirectUrl.toString());
   }
+}
 
-  if (!user && !request.cookies.get('pendingEmail')) {
-    if (isProtectedRoute || pathName === '/email-verify') {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      console.log("user tried to access protected route, redirecting to home");
-      return NextResponse.redirect(redirectUrl);
-    }
+if (!request.cookies.get('isChangingPassword')) {
+  if (pathName === '/set-password') {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/';
+    console.log("user tried to access password reset route without changing password, redirecting to home");
+    return NextResponse.redirect(redirectUrl.toString());
   }
+}
 
-  if (!request.cookies.get('isChangingPassword')) {
-    if (pathName === '/set-password') {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      console.log("user tried to access password reset route without changing password, redirecting to home");
-      return NextResponse.redirect(redirectUrl);
-    }
+if (user && request.cookies.get('pendingEmail')) {
+  if (isProtectedRoute) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/email-verify';
+    console.log("user not verified, redirecting to email verify page");
+    return NextResponse.redirect(redirectUrl.toString());
   }
+}
 
-  
-  if (user && request.cookies.get('pendingEmail')) {
-    if (isProtectedRoute) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/email-verify';
-      console.log("user not verified, redirecting to email verify page");
-      return NextResponse.redirect(redirectUrl);
-    }
+if (user && !isAdmin) {
+  if (pathName.substring(0, 10) !== '/user-home' && !request.cookies.get("isChangingPassword")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = '/user-home';
+    console.log("logged in user tried to access restricted page, redirecting to user home" + pathName);
+    return NextResponse.redirect(redirectUrl.toString());
   }
-  
-  if (user && !isAdmin) {
-    if (pathName.substring(0, 10) !== '/user-home' && !request.cookies.get("isChangingPassword")) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/user-home';
-      console.log("logged in user tried to access restricted page, redirecting to user home" + pathName);
-      return NextResponse.redirect(redirectUrl);
-    }
-  }
+}
 
   console.log(user ? `User ${user.email} is logged in` : 'No user is logged in');
 
