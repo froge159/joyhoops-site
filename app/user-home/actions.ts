@@ -4,13 +4,14 @@ import { createClient } from "../clients/server";
 
 export async function getUserClasses(userId: string) {
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data: classes, error } = await supabase
         .from("Class")
-        .select("id, name, start_datetime, end_datetime, location, price, description")
+        .select("id, name, start_datetime, end_datetime, location, price, description, active")
     if (error) {
         console.error("Error fetching classes", error);
         return {success: false, error: error.message };
     }
+    const data = (classes ?? []).filter((cls: any) => cls.active === true);
     // get status
     const now = new Date();
     const classIds = data?.map((cls: any) => cls.id) ?? [];

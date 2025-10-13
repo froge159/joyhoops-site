@@ -470,7 +470,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
             <Button
               variant="outline"
               onClick={handleBackToCoaches}
-              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent"
+              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC]"
             >
               ← Back to Dashboard
             </Button>
@@ -572,7 +572,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
           </div>
           <Button
               variant="default"
-              className="bg-blue-500 hover:bg-blue-600 text-white"
+              className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
               onClick={handleLogOut}
             >
               Log out
@@ -797,17 +797,17 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                               onClick={() => openEditDialog(coach)}
                               size="sm"
                               variant="outline"
-                              className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10"
+                              className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10 hover:text-[#FF6B35]"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-4 w-4 text-[#FF6B35]" />
                             </Button>
                             <Button
                               onClick={() => openDeleteDialog(coach)}
                               size="sm"
                               variant="outline"
-                              className="border-red-500 text-red-500 hover:bg-red-50"
+                              className="border-red-500 text-red-500 hover:bg-red-50 hover:text-red-500"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
                           </div>
                         </div>
@@ -1068,17 +1068,17 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                             onClick={() => openEditClassDialog(classItem)}
                             size="sm"
                             variant="outline"
-                            className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10"
+                            className="border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10 hover:text-[#FF6B35]"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-4 w-4 text-[#FF6B35]" />
                           </Button>
                           <Button
                             onClick={() => openDeleteClassDialog(classItem)}
                             size="sm"
                             variant="outline"
-                            className="border-red-500 text-red-500 hover:bg-red-50"
+                            className="border-red-500 text-red-500 hover:bg-red-50 hover:text-red-500"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4 text-red-500" />
                           </Button>
                         </div>
                       </div>
@@ -1146,6 +1146,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
               type="submit"
               onClick={handleEditCoach}
               disabled={!editingCoach?.firstName || !editingCoach?.lastName}
+              className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
             >
               Save Changes
             </Button>
@@ -1318,6 +1319,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                 !editingClass?.endDatetime ||
                 !editingClass?.location
               }
+              className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
             >
               Save Changes
             </Button>
