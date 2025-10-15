@@ -5,13 +5,13 @@ import './globals.css'
 import Script from 'next/script';
 
 export const metadata = {
-  title: "JoyHoops | Empowering Youth Through Sports",
-  description: "Join JoyHoops to support youth basketball programs and sports.",
+  title: "JoyHoops Sports Academy| Empowering Youth Through Sports",
+  description: "Join JoyHoops Sports Academy to support youth basketball programs and sports.",
   openGraph: {
-    title: "JoyHoops",
+    title: "JoyHoops Sports Academy",
     description: "Empowering youth through sports.",
     url: "https://joyhoops.org",
-    siteName: "JoyHoops",
+    siteName: "JoyHoops Sports Academy",
     locale: "en_US",
     type: "website",
   }
@@ -19,7 +19,7 @@ export const metadata = {
 const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Nonprofit Organization",
-    "name": "JoyHoops",
+    "name": "JoyHoops Sports Academy",
     "url": "https://joyhoops.org"
 };
 
