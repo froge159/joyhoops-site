@@ -7,6 +7,20 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
+export const metadata = {
+  title: "JoyHoops | Empowering Youth Through Sports",
+  description: "Join JoyHoops to support youth basketball programs and sports.",
+  openGraph: {
+    title: "JoyHoops",
+    description: "Empowering youth through sports.",
+    url: "https://joyhoops.org",
+    siteName: "JoyHoops",
+    locale: "en_US",
+    type: "website",
+  }
+};
+
+
 export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
