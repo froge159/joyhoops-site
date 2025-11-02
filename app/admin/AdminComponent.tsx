@@ -29,7 +29,6 @@ import {
   Edit,
   Trash2,
 } from "lucide-react"
-import { createAdminClient } from "../clients/admin";
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "../clients/client";
 import { redirect } from "next/navigation";
@@ -71,18 +70,25 @@ interface Class {
   description: string;
   name: string;
   location: string;
-  volunteerHours: number;
   price: number;
   startDatetime: string;
   endDatetime: string;
-  coaches: number[];
+  coaches: {
+    coachId: number;
+    volHours: number;
+  }[]
+}
+
+interface CoachHours {
+  coachId: number;
+  volHours: number;
 }
 
 
-function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coaches: Coach[]; selectedCoachIds: number[]; onChange: (ids: number[]) => void }) {
+function CoachMultiSelectDropdown({coaches,selectedCoachIds,onChange,}: {coaches: Coach[]; selectedCoachIds: CoachHours[]; onChange: (ids: CoachHours[]) => void;}) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const activeCoaches = coaches.filter(coach => coach.active)
+  const activeCoaches = coaches.filter((coach) => coach.active);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -98,6 +104,22 @@ function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coa
     };
   }, [open]);
 
+  const handleCheckboxChange = (coachId: number, checked: boolean) => {
+    if (checked) {
+      if (!selectedCoachIds.some((s) => s.coachId === coachId)) {
+        onChange([...selectedCoachIds, { coachId, volHours: 0 }]);
+      }
+    } else {
+      onChange(selectedCoachIds.filter((s) => s.coachId !== coachId));
+    }
+  };
+
+  const updateVolHours = (coachId: number, volHours: number) => {
+    onChange(
+      selectedCoachIds.map((s) => (s.coachId === coachId ? { ...s, volHours } : s))
+    );
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -111,22 +133,43 @@ function CoachMultiSelectDropdown({ coaches, selectedCoachIds, onChange }: { coa
       </button>
       {open && (
         <div className="absolute z-10 mt-2 w-full bg-white border border-slate-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
-          {activeCoaches.map((coach) => (
-            <label key={coach.id} className="flex items-center px-3 py-2 hover:bg-slate-100 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={selectedCoachIds.includes(coach.id)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onChange([...selectedCoachIds, coach.id]);
-                  } else {
-                    onChange(selectedCoachIds.filter((id) => id !== coach.id));
-                  }
-                }}
-              />
-              <span className="ml-2">{coach.firstName} {coach.lastName}</span>
-            </label>
-          ))}
+          {activeCoaches.map((coach) => {
+            const isSelected = selectedCoachIds.some((s) => s.coachId === coach.id);
+            return (
+              <label key={coach.id} className="flex items-center px-3 py-2 hover:bg-slate-100 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => handleCheckboxChange(coach.id, e.target.checked)}
+                />
+                <span className="ml-2">{coach.firstName} {coach.lastName}</span>
+              </label>                                                       
+            );
+          })}
+        </div>
+      )}
+
+      {selectedCoachIds.length > 0 && (
+        <div className="mt-3 space-y-2">
+          {selectedCoachIds.map((s) => {
+            const coach = coaches.find((c) => c.id === s.coachId);
+            if (!coach) return null;
+            return (
+              <div key={s.coachId} className="flex items-center space-x-2">
+                <div className="flex-1 text-sm">
+                  {coach.firstName} {coach.lastName}
+                </div>
+                <Input
+                  type="number"
+                  step="0.5"
+                  min={0}
+                  value={s.volHours}
+                  onChange={(e) => updateVolHours(s.coachId, Number.parseFloat(e.target.value) || 0)}
+                  className="w-28"
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
@@ -161,10 +204,9 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
     startDatetime: "",
     endDatetime: "",
     location: "",
-    volunteerHours: 0,
     price: 0,
     active: true,
-    coaches: [] as number[], // array of selected coach IDs
+    coaches: [] as { coachId: number, volHours: number }[], // array of selected coach IDs
   })
 
   const handleLogOut = async () => {
@@ -304,7 +346,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
           startDatetime: classItem.startDatetime,
           endDatetime: classItem.endDatetime,
           location: classItem.location,
-          volunteerHours: classItem.volunteerHours,
           price: classItem.price,
           active: classItem.active,
           coaches: classItem.coaches,
@@ -321,7 +362,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
           startDatetime: "",
           endDatetime: "",
           location: "",
-          volunteerHours: 0,
           price: 0,
           active: true,
           coaches: [],
@@ -331,11 +371,11 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
       }
       setClassesData([...classesData, classItem]);
       setCoachData(coachData.map(coach => {
-        if (classItem.coaches.includes(coach.id)) {
+        if (classItem.coaches.some((c) => c.coachId === coach.id)) {
           coach.detailedClasses = [...coach.detailedClasses, {
             id: classItem.id,
             startDatetime: classItem.startDatetime,
-            volunteerHours: classItem.volunteerHours,
+            volunteerHours: classItem.coaches.find((c) => c.coachId === coach.id)?.volHours || 0,
             location: classItem.location,
             childCount: 0,
             name: classItem.name
@@ -350,7 +390,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
         startDatetime: "",
         endDatetime: "",
         location: "",
-        volunteerHours: 0,
         price: 0,
         active: true,
         coaches: [],
@@ -371,7 +410,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
           startDatetime: editingClass.startDatetime,
           endDatetime: editingClass.endDatetime,
           location: editingClass.location,
-          volunteerHours: editingClass.volunteerHours,
           price: editingClass.price,
           active: editingClass.active,
           coaches: editingClass.coaches, 
@@ -393,10 +431,10 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
               return {
                 id: editingClass.id,
                 startDatetime: editingClass.startDatetime,
-                volunteerHours: editingClass.volunteerHours,
                 location: editingClass.location,
                 childCount: classItem.childCount,
-                name: editingClass.name
+                name: editingClass.name,
+                volunteerHours: editingClass.coaches.find((c: { coachId: number; volHours: number; }) => c.coachId === coach.id)?.volHours || 0,
               }
             }
             return classItem;
@@ -929,21 +967,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="volunteerHours" className="text-right">
-                            Volunteer Hours
-                          </Label>
-                          <Input
-                            id="volunteerHours"
-                            type="number"
-                            step="0.5"
-                            value={newClass.volunteerHours}
-                            onChange={(e) =>
-                              setNewClass({ ...newClass, volunteerHours: Number.parseFloat(e.target.value) || 0 })
-                            }
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
                           <Label htmlFor="classPrice" className="text-right">
                             Price ($)
                           </Label>
@@ -1048,14 +1071,6 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                             <span className="font-medium text-sm text-[#2E2E2E]">{classItem.location}</span>
                           </div>
                           <div className="text-xs text-slate-600">Location</div>
-                        </div>
-
-                        <div className="h-full flex flex-col justify-center">
-                          <div className="flex items-center space-x-1 mb-1">
-                            <Clock className="h-4 w-4 text-[#3DA9FC]" />
-                            <span className="font-medium text-sm text-[#2E2E2E]">{classItem.volunteerHours}h</span>
-                          </div>
-                          <div className="text-xs text-slate-600">Volunteer Hours</div>
                         </div>
 
                         <div className="h-full flex flex-col justify-center">

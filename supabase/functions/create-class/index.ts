@@ -18,7 +18,7 @@ Deno.serve(async (req)=>{
       }
     });
   }
-  const { id, startDatetime, endDatetime, location, name, description, volunteerHours, active, price, coaches } = body;
+  const { id, startDatetime, endDatetime, location, name, description, active, price, coaches } = body;
   try {
     const product = await stripe.products.create({
       name,
@@ -36,7 +36,6 @@ Deno.serve(async (req)=>{
       location,
       name,
       description,
-      volunteer_hours: volunteerHours,
       active,
       price,
       product_id: product.id,
@@ -50,10 +49,19 @@ Deno.serve(async (req)=>{
       });
     }
     const classData = data || null;
-    const classCoachRows = coaches.map((coach_id:number)=>({
-        coach_id,
-        class_id: classData.id
-      }));
+    if (!Array.isArray(coaches)) {
+      return new Response("Invalid coaches payload", { status: 400 });
+    }
+    const classCoachRows = coaches
+      .map((c: any) => {
+        if (typeof c === "number") {
+          return { coach_id: c, class_id: classData.id, volunteer_hours: 0 };
+        }
+        const coach_id = c.coachId ?? c.coach_id;
+        const volunteer_hours = c.volHours ?? c.volunteer_hours ?? 0;
+        return { coach_id, class_id: classData.id, volunteer_hours };
+      })
+      .filter((r) => r.coach_id !== undefined && r.coach_id !== null);
     const { error: classCoachError } = await supabase.from("Class_Coach").insert(classCoachRows);
     if (classCoachError) {
       console.error("Supabase insert error:", classCoachError);

@@ -24,7 +24,6 @@ Deno.serve(async (req)=>{
     "location",
     "name",
     "description",
-    "volunteer_hours",
     "active",
     "price"
   ];
@@ -43,9 +42,10 @@ Deno.serve(async (req)=>{
       }
     }
   }
-  const classCoachRows = body.coaches.map((coach_id)=>({
+  const classCoachRows = body.coaches.map((coach_id: number, volHours: number)=>({
       coach_id,
-      class_id: body.id
+      class_id: body.id,
+      volunteer_hours: volHours
     }));
   const { error: classCoachDelError } = await supabase.from("Class_Coach").delete().eq("class_id", body.id);
   if (classCoachDelError) {

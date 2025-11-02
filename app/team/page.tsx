@@ -159,13 +159,13 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=200&width=200"
                       width="200"
                       height="200"
-                      alt="Yuxuan Gu - Founder & President"
+                      alt="Yuxuan Gu - Founder, President, Head Coach"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
                   <CardTitle className="text-xl text-[#2E2E2E] mb-2">Yuxuan Gu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Founder & President
+                    Founder, President, Head Coach
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
                     Yuxuan is an 8th grader at Beckendorff Junior High with nine years of basketball experience. As a point guard and four-time MVP, he excels in ball-handling, shooting, and playmaking. He’s also a Science Olympiad competitor and clarinetist in the BDJH Wind Ensemble, known for his friendly and dedicated coaching style.
@@ -182,13 +182,13 @@ export default function TeamPage() {
                       src="/placeholder.svg?height=200&width=200"
                       width="200"
                       height="200"
-                      alt="Benson Xu - Co-Founder & Administrative Officer"
+                      alt="Benson Xu - Co-Founder, Chief Administrative Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
                   <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder
+                    Co-Founder, Chief Administrative Officer
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
                     Benson is 13 years old and has a strong passion for both basketball and music, particularly playing the viola. He enjoys teaching younger children how to play basketball and finds it rewarding to watch them grow and improve with each training session.
@@ -263,7 +263,7 @@ export default function TeamPage() {
                     />
                   </div>
                   <CardTitle className="text-lg text-[#2E2E2E]">Aiden Xu</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Safety Officer/K-3 Head Coach</CardDescription>
+                  <CardDescription className="text-[#FF6B35] font-medium">Co-founder/K-3 Head Coach</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
                     Aiden is a 10th grader at SLHS who loves teaching youth basketball and is in the varsity orchestra.
                   </CardDescription>

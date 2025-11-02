@@ -4,9 +4,9 @@ import { createAdminClient } from "../../clients/admin";
 
 export async function POST(req: Request) {
   try {
-    const { name, id, description, startDatetime, endDatetime, location, volunteerHours, price, active, coaches} = await req.json();
+    const { name, id, description, startDatetime, endDatetime, location, price, active, coaches} = await req.json();
 
-    if (!coaches || !id || !name || !description || !startDatetime || !endDatetime || !location || typeof volunteerHours !== "number" || typeof price !== "number" || typeof active !== "boolean") {
+    if (!coaches || !id || !name || !description || !startDatetime || !endDatetime || !location || typeof price !== "number" || typeof active !== "boolean") {
       return NextResponse.json(
         { success: false, error: "Invalid input data" },
         { status: 400 }
@@ -22,7 +22,6 @@ export async function POST(req: Request) {
             startDatetime: startDatetime,
             endDatetime: endDatetime,
             location: location,
-            volunteerHours: volunteerHours,
             price: price,
             active: active,
             coaches: coaches

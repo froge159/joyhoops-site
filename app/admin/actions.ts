@@ -37,7 +37,7 @@ export async function getClasses() {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("Class")
-        .select("id, active, start_datetime, end_datetime, description, name, location, volunteer_hours, price")
+        .select("id, active, start_datetime, end_datetime, description, name, location, price")
         .order("start_datetime", { ascending: true });
     if (error) {
         console.error("Error fetching classes", error);
@@ -48,7 +48,7 @@ export async function getClasses() {
     const classIds = (data || []).map((cls: any) => cls.id);
     const { data: classCoachRows, error: classCoachError } = await supabaseAdmin
         .from("Class_Coach")
-        .select("class_id, coach_id")
+        .select("class_id, coach_id, volunteer_hours")
         .in("class_id", classIds);
     if (classCoachError) {
         console.error("Error fetching class-coach relationships", classCoachError);
@@ -56,11 +56,14 @@ export async function getClasses() {
     }
 
     const classIdToCoachIds: Record<number, number[]> = {};
+    const classIdToCoachHours: Record<number, Record<number, number>> = {};
     (classCoachRows || []).forEach((row: any) => {
         if (!classIdToCoachIds[row.class_id]) {
             classIdToCoachIds[row.class_id] = [];
         }
         classIdToCoachIds[row.class_id].push(row.coach_id);
+        if (!classIdToCoachHours[row.class_id]) classIdToCoachHours[row.class_id] = {};
+        classIdToCoachHours[row.class_id][row.coach_id] = row.volunteer_hours ?? 0;
     });
 
     const now = new Date();
@@ -79,20 +82,24 @@ export async function getClasses() {
     }
 
     const formatted = (data || []).map((cls: any) => {
+        const coachIds = classIdToCoachIds[cls.id] || [];
+        const coaches = coachIds.map((id) => ({
+            coachId: id,
+            volHours: classIdToCoachHours[cls.id]?.[id] ?? 0
+        }));
         return {
-            id: cls.id,
-            active: cls.active,
-            description: cls.description,
-            name: cls.name,
-            location: cls.location,
-            volunteerHours: cls.volunteer_hours,
-            price: cls.price,
-            startDatetime: new Date(cls.start_datetime).toISOString(),
-            endDatetime: new Date(cls.end_datetime).toISOString(),
-            coaches: classIdToCoachIds[cls.id] || []
-        }
-    });
-    return { success: true, data: formatted }
+             id: cls.id,
+             active: cls.active,
+             description: cls.description,
+             name: cls.name,
+             location: cls.location,
+             price: cls.price,
+             startDatetime: new Date(cls.start_datetime).toISOString(),
+             endDatetime: new Date(cls.end_datetime).toISOString(),
+             coaches
+         }
+     });
+     return { success: true, data: formatted }
 }
 
 
@@ -133,7 +140,7 @@ export async function getCoach(coachId: number) {
 
     const { data: classCoachRows, error: classCoachError } = await supabase
         .from("Class_Coach")
-        .select("class_id")
+        .select("class_id, volunteer_hours")
         .eq("coach_id", coachId);
     if (classCoachError) {
         console.error("Error fetching class-coach relationships", classCoachError);
@@ -143,7 +150,7 @@ export async function getCoach(coachId: number) {
     // Fetch all classes for this coach
     const { data: classes, error: classesError } = await supabase
         .from("Class")
-        .select("id, start_datetime, end_datetime, volunteer_hours, location, name")
+        .select("id, start_datetime, end_datetime, location, name")
         .in("id", classCoachRows.map((row) => row.class_id));
     if (classesError) {
         console.error("Error fetching classes for coach", classesError);
@@ -151,9 +158,17 @@ export async function getCoach(coachId: number) {
     }
 
     const now = new Date();
-    const volunteerHours = (classes || [])
-        .filter((cls: any) => new Date(cls.end_datetime) <= now)
-        .reduce((sum, cls: any) => sum + (cls.volunteer_hours || 0), 0);
+    const classEndById: Record<number, string> = {};
+    (classes || []).forEach((c: any) => {
+        if (c && c.id != null) classEndById[c.id] = c.end_datetime;
+    });
+
+    const volunteerHours = (classCoachRows || [])
+        .filter((row: any) => {
+            const end = classEndById[row.class_id];
+            return end ? new Date(end) <= now : false;
+        })
+        .reduce((sum: number, row: any) => sum + (row.volunteer_hours || 0), 0);
     
     const {data: updateCoach, error: updateError} = await supabase
         .from("Coach")
@@ -171,7 +186,7 @@ export async function getCoach(coachId: number) {
     const detailedClasses = (sortedClasses || []).map((entry: any) => ({
         id: entry.id,
         startDatetime: new Date(entry.start_datetime).toISOString(),
-        volunteerHours: entry.volunteer_hours,
+        volunteerHours: (classCoachRows || []).find((r: any) => r.class_id === entry.id)?.volunteer_hours ?? 0,
         location: entry.location,
         childCount: 0,
         name: entry.name
