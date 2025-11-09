@@ -392,8 +392,7 @@ collegiate basketball league games.
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Join Our Team</h2>
                 <p className="max-w-[600px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We're always looking for passionate individuals to join our mission. Whether as a volunteer, intern,
-                  or staff member, there's a place for you at JoyHoops.
+                 Join our mission! We&#39;re seeking passionate coaches for our existing teams! Whether you&#39;re an experienced coach or new to coaching, we welcome you to launch new programs or join existing ones!
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row px-8">
@@ -403,7 +402,7 @@ collegiate basketball league games.
                   className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC]  text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   asChild
                 >
-                  <Link href="/contact">View Open Positions</Link>
+                  <Link href="/contact">Submit Request</Link>
                 </Button>
               </div>
             </div>

@@ -57,6 +57,13 @@ export async function register(data: SignupData) {
         return { success: false, error: signUpError.message };
     };
 
+    const supabase = await createClient();
+    // sign in
+    await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+    });
+
     // obtain user id
     const userId = signUpData.user?.id;
     if (!userId) {

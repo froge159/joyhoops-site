@@ -26,9 +26,11 @@ import {
   BookOpen,
   Target,
   ChevronRight,
+  LogOut
 } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { redirect } from "next/navigation"
 import { createClient } from "../clients/client"; 
 
 interface UserStats {
@@ -68,6 +70,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   const [selectedClass, setSelectedClass] = useState<(Class) | null>(null)
   const [selectedChildren, setSelectedChildren] = useState<number[]>([])
   const [selectAllChildren, setSelectAllChildren] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const [signOutClicked, setSignOutClicked] = useState(false);
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -94,6 +98,18 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     setSelectedChildren([])
     setSelectAllChildren(false)
     setCancelDialogOpen(true)
+  }
+
+  const handleLogout = async () => {
+    setSignOutClicked(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+      return;
+    }
+    setSignOutClicked(false);
+    redirect("/");
   }
 
   const confirmCancelEnrollment = async () => {
@@ -145,17 +161,28 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
               <p className="text-sm text-slate-600">Ready for your next sports adventure?</p>
             </div>
           </div>
+          <div>
+            <Button
+              variant="outline"
+              onClick={() => setIsLogoutDialogOpen(true)}
+              className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC] h-9"
+              disabled={signOutClicked}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+            </Button>
             <Button
             variant="outline"
             size="sm"
-            className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
+            className="border-[#3DA9FC] text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC] ml-3"
             asChild
             >
-            <Link href="/user-home/settings">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Link>
+              <Link href="/user-home/settings">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Link>
             </Button>
+          </div>
         </div>
       </header>
 
@@ -483,6 +510,31 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
             </Button>
             <Button variant="destructive" onClick={confirmCancelEnrollment}>
               Cancel Enrollment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle className="text-[#2E2E2E]">Sign Out</DialogTitle>
+            <DialogDescription>Are you sure you want to sign out of your account?</DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <p className="text-sm text-slate-600">
+              You will be redirected to the login page and will need to enter your credentials to access your account
+              again.
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsLogoutDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleLogout} className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white">
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
             </Button>
           </DialogFooter>
         </DialogContent>

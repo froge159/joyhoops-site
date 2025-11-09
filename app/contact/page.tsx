@@ -195,8 +195,8 @@ export default function ContactPage() {
                     Send us a message using the form below or directly at:
                   </CardDescription>
                   <div className="space-y-2">
-                    <p className="text-[#3DA9FC] font-medium">info@joyhoops.org</p>
-                    <p className="text-sm text-slate-500">We respond within 24 hours</p>
+                    <p className="text-[#3DA9FC] font-medium">ou.zhiqiao@gmail.com</p>
+                    <p className="text-[#3DA9FC] font-medium">zhiqiaoou@hotmail.com</p>
                   </div>
                 </CardHeader>
               </Card>
@@ -227,8 +227,7 @@ export default function ContactPage() {
                     Speak directly with our team for immediate assistance:
                   </CardDescription>
                   <div className="space-y-2">
-                    <p className="text-[#3DA9FC] font-medium">(555) 123-HOOP</p>
-                    <p className="text-sm text-slate-500">Mon-Fri 9AM-6PM</p>
+                    <p className="text-[#3DA9FC] font-medium">(346) 857-9571</p>
                   </div>
                 </CardHeader>
               </Card>

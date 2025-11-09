@@ -5,7 +5,7 @@ import './globals.css'
 import Script from 'next/script';
 
 export const metadata = {
-  title: "JoyHoops Sports Academy",
+  title: "JoyHoops Sports Academy ",
   description: "Join JoyHoops Sports Academy to support youth basketball programs and sports.",
   openGraph: {
     title: "JoyHoops Sports Academy",
