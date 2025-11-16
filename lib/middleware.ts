@@ -2,23 +2,17 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+        getAll: () => request.cookies.getAll(),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          supabaseResponse = NextResponse.next({ request })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -27,66 +21,62 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  const pathName = request.nextUrl.pathname
-  const protectedRoutes = ['/user-home', '/admin', '/set-password'];
-  const isProtectedRoute = protectedRoutes.some((route) => pathName.startsWith(route));
-  const isAdmin = user?.email === process.env.ADMIN_EMAIL;
-  const isAPIRoute = pathName.startsWith('/api/');
-
-  if (isAPIRoute) {
-    return supabaseResponse;
+  const path = request.nextUrl.pathname
+  const redirect = (to: string) => {
+    const url = request.nextUrl.clone()
+    url.pathname = to
+    return NextResponse.redirect(url)
   }
 
-  if (isAdmin && !request.cookies.get('pendingEmail')) {
-    const redirectUrl = request.nextUrl.clone();
-    if (pathName !== '/admin') {
-      redirectUrl.pathname = '/admin';
-      console.log("admin user tried to access non-admin page, redirecting to admin");
-      return NextResponse.redirect(redirectUrl.toString());
+  const protectedRoutes = ['/user-home', '/admin']
+  const isProtected = protectedRoutes.some((r) => path.startsWith(r))
+  const isAPI = path.startsWith('/api/')
+  const isAdmin = user?.email === process.env.ADMIN_EMAIL
+
+  const pendingEmail = request.cookies.get('pendingEmail')
+  const changingPassword = request.cookies.get('isChangingPassword')
+
+  // 1. API passthrough
+  if (isAPI) return supabaseResponse
+
+  // 2. Admin-only area protection
+  if (path.startsWith('/admin')) {
+    if (!user) return redirect('/')
+    if (!isAdmin) return redirect('/user-home')
+  }
+
+  // 3. If user is not logged in, block ALL protected routes
+  if (!user && isProtected) {
+    return redirect('/')
+  }
+
+  // 4. Password reset route rules
+  if (path === '/set-password') {
+    // only allow if cookie explicitly allows it
+    if (!changingPassword) {
+      return redirect('/')
     }
   }
 
-  if (!user && !request.cookies.get('pendingEmail') || !user && request.cookies.get('pendingEmail')) {
-    if (isProtectedRoute || pathName === '/email-verify') {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      console.log("user tried to access protected route, redirecting to home");
-      return NextResponse.redirect(redirectUrl.toString());
+  // 5. Email verification requirements
+  if (user && pendingEmail) {
+    // lock down ALL protected user areas until verified
+    if (path !== '/email-verify' && path !== '/set-password') {
+      return redirect('/email-verify')
     }
   }
 
-  if (!request.cookies.get('isChangingPassword')) {
-    if (pathName === '/set-password') {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      console.log("user tried to access password reset route without changing password, redirecting to home");
-      return NextResponse.redirect(redirectUrl.toString());
+  // 6. Logged-in user: restrict access to non-user pages (except allowed)
+  if (user && !isAdmin && !pendingEmail && !changingPassword) {
+    const allowed = ['/user-home', '/email-verify', '/set-password']
+    const isAllowed = allowed.some((p) => path.startsWith(p))
+
+    if (!isAllowed) {
+      return redirect('/user-home')
     }
   }
 
-  if (user && request.cookies.get('pendingEmail')) {
-    if (isProtectedRoute) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/email-verify';
-      console.log("user not verified, redirecting to email verify page");
-      return NextResponse.redirect(redirectUrl.toString());
-    }
-  }
-
-  if (user && !isAdmin) {
-    if (pathName.substring(0, 10) !== '/user-home' && !request.cookies.get("isChangingPassword") && !request.cookies.get('pendingEmail')) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/user-home';
-      console.log("logged in user tried to access restricted page, redirecting to user home" + pathName);
-      return NextResponse.redirect(redirectUrl.toString());
-    }
-  }
-
-  console.log(user ? `User ${user.email} is logged in` : 'No user is logged in');
-
-  return supabaseResponse;
+  return supabaseResponse
 }
