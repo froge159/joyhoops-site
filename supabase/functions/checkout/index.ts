@@ -5,7 +5,7 @@ const ALLOWED_ORIGIN = "https://joyhoops.org";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-client-info",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-client-info, apiKey",
 };
 
 Deno.serve(async (req)=>{
