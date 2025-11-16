@@ -5,7 +5,7 @@ const ALLOWED_ORIGIN = "https://joyhoops.org";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, 'x-client-info",
 };
 
 
@@ -28,7 +28,8 @@ Deno.serve(async (req)=>{
     const errorMessage = err instanceof Error ? err.message : String(err);
     console.error("signature verification failed:", errorMessage);
     return new Response(`Webhook signature verification failed: ${errorMessage}`, {
-      status: 400
+      status: 400,
+      headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
     });
   }
   if (event.type === "checkout.session.completed") {
@@ -53,9 +54,12 @@ Deno.serve(async (req)=>{
     }
     return new Response(JSON.stringify({
       message: "Enrollment successful - user charged"
-    }));
+    }), {
+      headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
+    });
   }
   return new Response("Event ignored", {
-    status: 200
+    status: 200,
+    headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
   });
 });

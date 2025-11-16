@@ -5,7 +5,7 @@ const ALLOWED_ORIGIN = "https://joyhoops.org";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-client-info",
 };
 
 Deno.serve(async (req)=>{
@@ -27,7 +27,9 @@ Deno.serve(async (req)=>{
     }), {
       status: 400,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...CORS_HEADERS,
+        "Access-Control-Max-Age": "3600"
       }
     });
   }
@@ -41,7 +43,9 @@ Deno.serve(async (req)=>{
       }), {
         status: 500,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          ...CORS_HEADERS,
+          "Access-Control-Max-Age": "3600"
         }
       });
     }
@@ -70,7 +74,9 @@ Deno.serve(async (req)=>{
     }), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...CORS_HEADERS,
+        "Access-Control-Max-Age": "3600"
       }
     });
   } catch (err) {
@@ -79,7 +85,9 @@ Deno.serve(async (req)=>{
       error: errorMessage
     }), {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        ...CORS_HEADERS,
+        "Access-Control-Max-Age": "3600"
       },
       status: 500
     });
