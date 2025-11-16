@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  if (isAdmin) {
+  if (isAdmin && !request.cookies.get('pendingEmail')) {
     const redirectUrl = request.nextUrl.clone();
     if (pathName !== '/admin') {
       redirectUrl.pathname = '/admin';
@@ -67,7 +67,7 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(redirectUrl.toString());
     }
   }
-
+/*
   if (user && request.cookies.get('pendingEmail')) {
     if (isProtectedRoute) {
       const redirectUrl = request.nextUrl.clone();
@@ -75,7 +75,7 @@ export async function updateSession(request: NextRequest) {
       console.log("user not verified, redirecting to email verify page");
       return NextResponse.redirect(redirectUrl.toString());
     }
-  }
+  }*/
 
   if (user && !isAdmin) {
     if (pathName.substring(0, 10) !== '/user-home' && !request.cookies.get("isChangingPassword") && !request.cookies.get('pendingEmail')) {
