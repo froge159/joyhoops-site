@@ -49,6 +49,7 @@ export default function RegisterPage() {
       );
   };
 
+
   const handleGoogleLogin = async () => {
     await setOAuthCookies({
       firstName: formData.firstName,
@@ -60,7 +61,7 @@ export default function RegisterPage() {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`,
       }
     }).catch((error) => {
       console.error("google registration failed:", error);

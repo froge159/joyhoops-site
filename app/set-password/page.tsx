@@ -79,6 +79,20 @@ export default function SetPasswordPage() {
     router.push("/user-home");
   }
 
+  useEffect(() => {
+    const hash = window.location.hash;
+    const params = new URLSearchParams(hash.replace("#", ""));
+
+    const access_token = params.get("access_token");
+
+    if (access_token) {
+      supabase.auth.setSession({
+        access_token,
+        refresh_token: params.get("refresh_token") ?? "",
+      });
+    }
+  }, []);
+
   if (success) {
     return (
       <div className="flex flex-col min-h-screen bg-[#FAFAFA]">
