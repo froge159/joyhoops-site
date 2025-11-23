@@ -1,6 +1,21 @@
 import Stripe from "https://esm.sh/stripe?target=deno";
 import { createClient } from "https://esm.sh/v2/@supabase/supabase-js@2.0.0";
+
+
+const ALLOWED_ORIGIN = "https://joyhoops.org";
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+  "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-client-info, apiKey",
+};
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" },
+    });
+  }
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
   const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
   let body;
@@ -13,7 +28,8 @@ Deno.serve(async (req) => {
     }), {
       status: 400,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...CORS_HEADERS,
       }
     });
   }
@@ -25,7 +41,8 @@ Deno.serve(async (req) => {
     }), {
       status: 400,
       headers: {
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json',
+        ...CORS_HEADERS,
       }
     });
   }
@@ -35,7 +52,11 @@ Deno.serve(async (req) => {
     if (price_error || !price_data) {
       console.error("Supabase select error:", price_error);
       return new Response(JSON.stringify({ error: "Error retrieving class price from Supabase" }), {
-        status: 500
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          ...CORS_HEADERS,
+        }
       });
     }
     const price = await stripe.prices.retrieve(price_data.price_id);
@@ -83,7 +104,8 @@ Deno.serve(async (req) => {
     }), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...CORS_HEADERS,
       }
     });
   } catch (err) {
@@ -93,7 +115,8 @@ Deno.serve(async (req) => {
       error: errorMessage
     }), {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        ...CORS_HEADERS,
       },
       status: 500
     });

@@ -78,5 +78,9 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+  if (user && path === '/') {
+    return redirect('/user-home')
+  }
+
   return supabaseResponse
 }

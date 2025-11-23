@@ -72,6 +72,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   const [selectAllChildren, setSelectAllChildren] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [signOutClicked, setSignOutClicked] = useState(false);
+  const [unenrollDisabled, setUnenrollDisabled] = useState(false);
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -113,11 +114,14 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   }
 
   const confirmCancelEnrollment = async () => {
+    setUnenrollDisabled(true);
     if (!selectedClass) {
+      setUnenrollDisabled(false);
       return;
     }
     if (selectedChildren.length === 0) {
       alert("Please select at least one child to cancel enrollment for.");
+      setUnenrollDisabled(false);
       return;
     }
     const supabase = createClient();
@@ -140,12 +144,14 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
       setSelectedClass(null)
       setSelectedChildren([])
       setSelectAllChildren(false)
+      setUnenrollDisabled(false);
       return; 
     }
     setCancelDialogOpen(false)
     setSelectedClass(null)
     setSelectedChildren([])
     setSelectAllChildren(false)
+    setUnenrollDisabled(false);
     window.location.reload();
   }
 
@@ -517,7 +523,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
             <Button variant="outline" onClick={() => setCancelDialogOpen(false)}>
               Keep Enrollment
             </Button>
-            <Button variant="destructive" onClick={confirmCancelEnrollment}>
+            <Button variant="destructive" onClick={confirmCancelEnrollment} disabled={unenrollDisabled}>
               Cancel Enrollment
             </Button>
           </DialogFooter>

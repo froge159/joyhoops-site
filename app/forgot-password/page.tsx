@@ -14,11 +14,11 @@ import { createClient } from "../clients/client";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
   const supabase = createClient();
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback`
@@ -32,10 +32,13 @@ export default function ForgotPasswordPage() {
       if (!response.ok) {
         console.error("Failed to set access cookie");
         alert("Error setting access cookie");
+        setIsLoading(false);
         return;
       }
       alert("Password reset email sent! Please check your inbox.");
+      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -97,16 +100,11 @@ export default function ForgotPasswordPage() {
                     />
                   </div>
 
-                  {error && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-red-600">{error}</p>
-                    </div>
-                  )}
-
                   <Button
-                    type="submit"
+                    type="submit"   
                     disabled={isLoading || !email}
                     className="w-full bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
+                    onClick={handleForgotPassword}
                   >
                     {isLoading ? "Sending Code..." : "Send Verification Link"}
                   </Button>

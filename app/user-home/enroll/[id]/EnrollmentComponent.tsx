@@ -68,6 +68,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
   const [childToRemove, setChildToRemove] = useState<{ id: number; name: string } | null>(null)
   const [clickedAddChild, setClickedAddChild] = useState(false);
   const [clickedRemoveChild, setClickedRemoveChild] = useState(false);
+  const [paymentClicked, setPaymentClicked] = useState(false);
 
   const handleChildSelection = (childId: number, checked: boolean) => {
     if (checked) {
@@ -141,6 +142,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
   }
 
   const handlePaymentClick = async () => {
+    setPaymentClicked(true);
     const supabase = createClient();
     const { data: checkoutData, error } = await supabase.functions.invoke('checkout', {
       method: 'POST',
@@ -153,6 +155,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
     if (error) {
       console.error("Error invoking checkout function:", error);
       alert("Failed to initiate payment.");
+      setPaymentClicked(false);
       return; 
     }
     window.location.href = checkoutData.url;
@@ -430,7 +433,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
             <Button variant="outline" onClick={() => setShowPayment(false)}>
               Cancel
             </Button>
-            <Button className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white" onClick = {handlePaymentClick}>
+            <Button className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white" onClick = {handlePaymentClick} disabled={paymentClicked}>
               <CreditCard className="h-4 w-4 mr-2" />
               Proceed to Payment
             </Button>
