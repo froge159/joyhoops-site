@@ -51,7 +51,6 @@ export async function GET(request: NextRequest) {
         }
     }
 
-
     const response = NextResponse.redirect(new URL("/user-home", request.url));
     return response;
 }  
