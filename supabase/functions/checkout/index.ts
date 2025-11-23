@@ -66,6 +66,13 @@ Deno.serve(async (req)=>{
         classId,
         userId,
         children: childIds.join(",")
+      },
+      payment_intent_data: {
+        metadata: {
+          classId,
+          userId,
+          children: childIds.join(",")
+        }
       }
     });
     return new Response(JSON.stringify({

@@ -116,7 +116,10 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     if (!selectedClass) {
       return;
     }
-    const asdf = selectedClass.enrolledChildren.map((child) => child.id);
+    if (selectedChildren.length === 0) {
+      alert("Please select at least one child to cancel enrollment for.");
+      return;
+    }
     const supabase = createClient();
     const { data: { user }} = await supabase.auth.getUser();
     const { data: { session } } = await supabase.auth.getSession();
@@ -127,7 +130,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
       body: JSON.stringify({
         class_id: selectedClass?.id,
         user_id: user?.id,
-        children: asdf
+        children: selectedChildren
       })
     });
     if (!res.ok) {
@@ -481,8 +484,14 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div key={child.id} className="flex items-center space-x-2">
                         <Checkbox
                           id={`child-${child.id}`}
-                          checked={true}
-                          disabled
+                          checked={selectedChildren.includes(child.id)}
+                          onCheckedChange={(checked) => {
+                            setSelectedChildren((prev) =>
+                              checked
+                                ? [...prev, child.id]
+                                : prev.filter((id) => id !== child.id)
+                            );
+                          }}
                         />
                         <label htmlFor={`child-${child.id}`} className="text-sm text-slate-600">
                           {child.name} ({child.age} years old)

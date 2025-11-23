@@ -4,16 +4,23 @@ import { createClient } from "https://esm.sh/v2/@supabase/supabase-js@2.0.0";
 const ALLOWED_ORIGIN = "https://joyhoops.org";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+  "Access-Control-Allow-Methods": "POST,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization, apiKey, x-client-info",
 };
 
 
 Deno.serve(async (req)=>{
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" },
+   if (req.method === "OPTIONS") {
+     return new Response(null, {
+       status: 204,
+       headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" },
+     });
+   }
+  if (req.method !== "POST") {
+    // return CORS headers too so the caller (and Stripe UI) sees the response
+    return new Response("Method Not Allowed", {
+      status: 405,
+      headers: { Allow: "POST, OPTIONS", ...CORS_HEADERS },
     });
   }
   console.log("serving the request with supabase/functions/charge-webhook");
@@ -32,11 +39,11 @@ Deno.serve(async (req)=>{
       headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
     });
   }
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    console.log("Checkout session:", JSON.stringify(session, null, 2));
-    const paymentIntentId = session.payment_intent;
-    const { classId, userId, children } = session.metadata;
+  if (event.type === "payment_intent.succeeded") {
+    const paymentIntent = event.data.object;
+    console.log("PaymentIntent:", JSON.stringify(paymentIntent, null, 2));
+    const paymentIntentId = paymentIntent.id;
+    const { classId, userId, children } = paymentIntent.metadata;
 
     for (const child_id of children.split(",")){
       const { error } = await supabase.from("Class_User_Child").insert({
