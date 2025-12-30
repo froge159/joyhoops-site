@@ -2,6 +2,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '../clients/server';
+import { env } from 'process';
 
 interface SignupData {
     email: string;
@@ -23,5 +24,8 @@ export async function login(data: { email: string; password: string }) {
     }
 
     revalidatePath('/', 'layout');
+    if (data.email === process.env.ADMIN_EMAIL) {
+        redirect('/admin');
+    }
     redirect('/user-home');
 }
