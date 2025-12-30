@@ -324,11 +324,11 @@ export default function HomePage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/Yuxuan Gu.jpg"
                       width="200"
                       height="200"
                       alt="Yuxuan Gu - Founder, President, Head Coach"
-                      className="rounded-full object-cover shadow-lg"
+                      className="object-cover rounded-full shadow-lg"
                     />
                   </div>
                   <CardTitle className="text-xl text-[#2E2E2E] mb-2">Yuxuan Gu</CardTitle>
@@ -347,7 +347,7 @@ export default function HomePage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/Benson Xu.jpg"
                       width="200"
                       height="200"
                       alt="Benson Xu - Co-Founder, Chief Administrative Officer"
@@ -368,7 +368,7 @@ export default function HomePage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/samuelxie.jpg"
                       width="200"
                       height="200"
                       alt="Samuel Xie - Co-Founder & Technology Officer"

@@ -195,8 +195,7 @@ export default function ContactPage() {
                     Send us a message using the form below or directly at:
                   </CardDescription>
                   <div className="space-y-2">
-                    <p className="text-[#3DA9FC] font-medium">ou.zhiqiao@gmail.com</p>
-                    <p className="text-[#3DA9FC] font-medium">zhiqiaoou@hotmail.com</p>
+                    <p className="text-[#3DA9FC] font-medium">Joyhoopsacademy@gmail.com</p>
                   </div>
                 </CardHeader>
               </Card>

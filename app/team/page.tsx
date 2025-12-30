@@ -116,7 +116,7 @@ export default function TeamPage() {
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
-              src="/placeholder.svg?height=600&width=1200"
+              src="/people/Joyhoops Coach Team.jpg"
               width="1200"
               height="600"
               alt="JoyHoops team members"
@@ -156,7 +156,7 @@ export default function TeamPage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/Yuxuan Gu.jpg"
                       width="200"
                       height="200"
                       alt="Yuxuan Gu - Founder, President, Head Coach"
@@ -179,7 +179,7 @@ export default function TeamPage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/Benson Xu.jpg"
                       width="200"
                       height="200"
                       alt="Benson Xu - Co-Founder, Chief Administrative Officer"
@@ -200,7 +200,7 @@ export default function TeamPage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="/people/samuelxie.jpg"
                       width="200"
                       height="200"
                       alt="Samuel Xie - Co-Founder & Technology Officer"
@@ -236,7 +236,7 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/people/Gary Shen 2.jpg"
                       width="150"
                       height="150"
                       alt="Gary Shen"
@@ -255,7 +255,7 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/people/Aiden Xu.jpg"
                       width="150"
                       height="150"
                       alt="Aiden Xu"
@@ -274,7 +274,7 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/people/Pann Liu.jpg"
                       width="150"
                       height="150"
                       alt="Pann Liu"
