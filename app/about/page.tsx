@@ -321,19 +321,23 @@ bring everyone closer together and create a better community for all of us.
             </div>
             <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-4 lg:gap-12">
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">30+</div>
-                <div className="text-[#2E2E2E] font-medium">Young Athletes Served</div>
+                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">180+</div>
+                <div className="text-[#2E2E2E] font-medium">Families Served</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-[#FF6B35] mb-2">10+</div>
                 <div className="text-[#2E2E2E] font-medium">Student Volunteers</div>
               </div>
               <div className="text-center">
+                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">190</div>
+                <div className="text-[#2E2E2E] font-medium">Served Hours</div>
+              </div>
+              <div className="text-center">
                 <div className="text-4xl font-bold text-[#3DA9FC] mb-2">5</div>
                 <div className="text-[#2E2E2E] font-medium">Community Centers</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#FF6B35] mb-2">1</div>
+                <div className="text-4xl font-bold text-[#FF6B35] mb-2">~1</div>
                 <div className="text-[#2E2E2E] font-medium">Year of Impact</div>
               </div>
             </div>

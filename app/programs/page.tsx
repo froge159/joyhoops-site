@@ -5,10 +5,34 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Heart, Trophy, Menu, X, Calendar, Clock, Users, MapPin, Star, Target, Zap } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+
+import { useState, useEffect } from "react"
 
 export default function ProgramsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [latestClass, setLatestClass] = useState<{
+    name: string;
+    date: string;
+    location: string;
+  } | null>(null);
+  const [latestClassError, setLatestClassError] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/get-latest-class");
+        const json = await res.json();
+        if (json.success) {
+          setLatestClass(json.data);
+        } else {
+          setLatestClassError(json.error || "No class info available");
+        }
+      } catch (e) {
+        setLatestClassError("Failed to load class info");
+        console.error(e);
+      }
+    })();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FAFAFA]">
@@ -234,10 +258,18 @@ export default function ProgramsPage() {
                       <Clock className="h-3 w-3 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Schedule</h3>
-                      <p className="text-slate-600 text-sm">
-                        Tuesdays & Thursdays 4:00-5:30 PM, Saturdays 10:00-11:30 AM
-                      </p>
+                      <h3 className="font-semibold text-[#2E2E2E]">Latest Class</h3>
+                      {latestClass ? (
+                        <p className="text-slate-600 text-sm">
+                          <span className="font-medium">{latestClass.name}</span><br />
+                          {new Date(latestClass.date).toLocaleString()}<br />
+                          <span className="italic">{latestClass.location}</span>
+                        </p>
+                      ) : latestClassError ? (
+                        <p className="text-slate-600 text-sm italic">{latestClassError}</p>
+                      ) : (
+                        <p className="text-slate-600 text-sm italic">Loading latest class info...</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -247,7 +279,7 @@ export default function ProgramsPage() {
                     <div>
                       <h3 className="font-semibold text-[#2E2E2E]">Locations</h3>
                       <p className="text-slate-600 text-sm">
-                        Community Center Gym, Lincoln Elementary, Riverside Park Courts
+                        Alexander Elementary, Creech Elementary, Beckendorff Junior High
                       </p>
                     </div>
                   </div>
@@ -257,112 +289,9 @@ export default function ProgramsPage() {
           </div>
         </section>
 
-        {/* Tennis Program */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
-          <div className="container px-4 md:px-6">
-            <div className="mx-auto flex max-w-6xl items-center gap-12 py-12 flex-col lg:flex-row-reverse">
-              <div className="flex-1 w-full">
-                <div className="relative">
-                  <Image
-                    src="/placeholder.svg?height=500&width=600"
-                    width="600"
-                    height="500"
-                    alt="Children learning tennis skills"
-                    className="w-full h-[500px] overflow-hidden rounded-xl object-cover shadow-xl"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col justify-start space-y-8 w-full">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 bg-[#FF6B35] rounded-full flex items-center justify-center">
-                      <Star className="h-5 w-5 text-white" />
-                    </div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-[#2E2E2E]">Tennis</h2>
-                  </div>
-                  <p className="text-slate-600 md:text-lg/relaxed">
-                    Our tennis program introduces young players to proper technique, court positioning, and match
-                    strategy. Using age-appropriate equipment and modified courts, students build hand-eye coordination
-                    and learn sportsmanship.
-                  </p>
-                </div>
-                <div className="grid gap-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Target className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Skill Development</h3>
-                      <p className="text-slate-600 text-sm">
-                        Forehand, backhand, serving, volleying, and court movement
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Clock className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Schedule</h3>
-                      <p className="text-slate-600 text-sm">
-                        Wednesdays & Fridays 4:00-5:30 PM, Sundays 10:00-11:30 AM
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="h-6 w-6 bg-[#3DA9FC] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <MapPin className="h-3 w-3 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-[#2E2E2E]">Locations</h3>
-                      <p className="text-slate-600 text-sm">
-                        City Tennis Center, High School Courts, Recreation Center
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        
 
-        {/* All Programs Summary */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-[#F5F7FA]">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">All Our Programs</h2>
-                <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Two comprehensive sports programs with more to come!
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-2 lg:gap-8">
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
-                <CardHeader>
-                  <div className="h-12 w-12 mx-auto bg-[#3DA9FC] rounded-full flex items-center justify-center mb-4 shadow-md">
-                    <Trophy className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-[#2E2E2E]">Basketball</CardTitle>
-                  <CardDescription className="text-slate-600">
-                    Fundamental skills, teamwork, and court strategy
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
-                <CardHeader>
-                  <div className="h-12 w-12 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-4 shadow-md">
-                    <Star className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-[#2E2E2E]">Tennis</CardTitle>
-                  <CardDescription className="text-slate-600">
-                    Proper technique, court positioning, and sportsmanship
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-          </div>
-        </section>
+        
 
         {/* Registration Info */}
         <section className="w-full py-12 md:py-24 lg:py-32 bg-white">

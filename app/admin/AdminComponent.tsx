@@ -658,17 +658,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                     </CardHeader>
                   </Card>
 
-                  <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow">
-                    <CardHeader className="text-center pb-4">
-                      <div className="h-12 w-12 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-3 shadow-md">
-                        <GraduationCap className="h-6 w-6 text-white" />
-                      </div>
-                      <CardTitle className="text-3xl font-bold text-[#2E2E2E] mb-1">
-                        {organizationStats.classesDelivered}
-                      </CardTitle>
-                      <CardDescription className="text-slate-600 font-medium">Classes Delivered</CardDescription>
-                    </CardHeader>
-                  </Card>
+                  
 
                   <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow">
                     <CardHeader className="text-center pb-4">
@@ -1268,21 +1258,7 @@ export default function AdminDashboard({coaches,organizationStats,quickSummarySt
                   className="col-span-3"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="editVolunteerHours" className="text-right">
-                  Volunteer Hours
-                </Label>
-                <Input
-                  id="editVolunteerHours"
-                  type="number"
-                  step="0.5"
-                  value={editingClass.volunteerHours}
-                  onChange={(e) =>
-                    setEditingClass({ ...editingClass, volunteerHours: Number.parseFloat(e.target.value) || 0 })
-                  }
-                  className="col-span-3"
-                />
-              </div>
+              
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="editClassPrice" className="text-right">
                   Price ($)

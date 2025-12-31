@@ -42,11 +42,14 @@ Deno.serve(async (req)=>{
       }
     }
   }
-  const classCoachRows = body.coaches.map((coach_id: number, volHours: number)=>({
-      coach_id,
+  // Expecting body.coaches to be an array of objects: { coachId, volHours }
+  const classCoachRows = body.coaches.map(
+    ({ coachId, volHours }: { coachId: number, volHours: number }) => ({
+      coach_id: coachId,
       class_id: body.id,
       volunteer_hours: volHours
-    }));
+    })
+  );
   const { error: classCoachDelError } = await supabase.from("Class_Coach").delete().eq("class_id", body.id);
   if (classCoachDelError) {
     console.error("Supabase insert error:", classCoachDelError);
