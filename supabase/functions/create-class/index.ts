@@ -1,7 +1,6 @@
 import Stripe from "https://esm.sh/stripe?target=deno";
 import { createClient } from "https://esm.sh/v2/@supabase/supabase-js@2.0.0";
 Deno.serve(async (req)=>{
-  console.log(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
   const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
   let body;

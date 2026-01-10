@@ -111,7 +111,6 @@ export default function SettingsPage({ userData }: { userData: UserData }) {
       console.error("Error deleting account:", result.error);
       return;
     }
-    console.log("Account deletion confirmed")
     setIsDeleteDialogOpen(false)
     redirect("/");
   }

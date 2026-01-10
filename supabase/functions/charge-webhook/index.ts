@@ -23,7 +23,6 @@ Deno.serve(async (req)=>{
       headers: { Allow: "POST, OPTIONS", ...CORS_HEADERS },
     });
   }
-  console.log("serving the request with supabase/functions/charge-webhook");
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
   const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
   const sig = req.headers.get("stripe-signature");
@@ -41,7 +40,6 @@ Deno.serve(async (req)=>{
   }
   if (event.type === "payment_intent.succeeded") {
     const paymentIntent = event.data.object;
-    console.log("PaymentIntent:", JSON.stringify(paymentIntent, null, 2));
     const paymentIntentId = paymentIntent.id;
     const { classId, userId, children } = paymentIntent.metadata;
 
