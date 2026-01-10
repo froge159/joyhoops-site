@@ -118,7 +118,7 @@ export default function AboutPage() {
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
-              src="/placeholder.svg?height=600&width=1200"
+              src="/program/kidsliningup.JPG"
               width="1200"
               height="600"
               alt="Children and volunteers playing sports"
@@ -149,7 +149,7 @@ export default function AboutPage() {
               <div className="flex-1 w-full">
                 <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=500&width=600"
+                    src="/program/outdoordribbling.JPEG"
                     width="600"
                     height="500"
                     alt="Students coaching young children"
@@ -329,7 +329,7 @@ bring everyone closer together and create a better community for all of us.
                 <div className="text-[#2E2E2E] font-medium">Student Volunteers</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">190</div>
+                <div className="text-4xl font-bold text-[#3DA9FC] mb-2">190+</div>
                 <div className="text-[#2E2E2E] font-medium">Served Hours</div>
               </div>
               <div className="text-center">

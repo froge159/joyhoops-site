@@ -137,7 +137,7 @@ export default function ProgramsPage() {
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
-              src="/placeholder.svg?height=600&width=1200"
+              src="/program/verticalphonephoto.JPG"
               width="1200"
               height="600"
               alt="Children participating in various sports programs"
@@ -219,7 +219,7 @@ export default function ProgramsPage() {
               <div className="flex-1 w-full">
                 <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=500&width=600"
+                    src="/program/kidsliningup.JPG"
                     width="600"
                     height="500"
                     alt="Children learning basketball skills"

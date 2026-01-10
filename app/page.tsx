@@ -121,9 +121,9 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full object-cover"
             poster="/placeholder.svg?height=1080&width=1920"
           >
-            <source src="/hero-video.mp4" type="video/mp4" />
+            <source src="/program/2997.mp4" type="video/mp4" />
             {/* Fallback for browsers that don't support video */}
-            <div className="absolute inset-0 bg-[#2E2E2E]" />
+            Your browser does not support the video tag.
           </video>
 
           {/* Content overlay */}
@@ -296,7 +296,7 @@ export default function HomePage() {
               <div className="flex-1 w-full">
                 <div className="relative">
                   <Image
-                    src="/placeholder.svg?height=500&width=800"
+                    src="/program/indoorbasketball.JPEG"
                     width="800"
                     height="500"
                     alt="Children learning basketball skills"

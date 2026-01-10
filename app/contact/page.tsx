@@ -149,7 +149,7 @@ export default function ContactPage() {
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
-              src="/placeholder.svg?height=600&width=1200"
+              src="/program/outdoordribbling.JPEG"
               width="1200"
               height="600"
               alt="JoyHoops community members connecting"

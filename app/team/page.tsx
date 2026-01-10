@@ -293,7 +293,7 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/people/daniel fan.JPEG"
                       width="150"
                       height="150"
                       alt="Daniel Fan"
