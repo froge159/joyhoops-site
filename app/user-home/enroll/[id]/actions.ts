@@ -13,15 +13,6 @@ export async function getClass(id: string) {
 		return {success: false, error: "Could not fetch class"};
 	}
 
-	const {data: CoachesData, error: CoachesError} = await supabase
-		.from("Class_Coach")
-		.select("coach_id, Coach(id, first_name, last_name)")
-		.eq("class_id", id);
-	if (CoachesError) {
-		console.error("Error fetching coaches:", CoachesError);
-		return {success: false, error: "Could not fetch coaches"};
-	}
-
 	return {
 		id: data.id,
 		name: data.name,
@@ -30,19 +21,6 @@ export async function getClass(id: string) {
 		location: data.location,
 		price: data.price,
 		description: data.description,
-		coaches: CoachesData?.map((cc) => {
-			let coachObj;
-			if (Array.isArray(cc.Coach)) {
-				coachObj = cc.Coach[0];
-			} else {
-				coachObj = cc.Coach;
-			}
-			return {
-				id: cc.coach_id,
-				firstName: coachObj?.first_name ?? "",
-				lastName: coachObj?.last_name ?? ""
-			};
-		}) || []
 	};
 }
 

@@ -76,7 +76,7 @@ export default function SetPasswordPage() {
       setIsLoading(false);
       return;
     }
-    router.push("/user-home");
+    setSuccess(true);
   }
 
   useEffect(() => {

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS "public"."Class_Coach" CASCADE;
+DROP TABLE IF EXISTS "public"."Coach" CASCADE;

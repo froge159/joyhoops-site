@@ -5,12 +5,10 @@ import { createClient } from '../../clients/server';
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const token_hash = searchParams.get('token_hash') ;
+    const token_hash = searchParams.get('token_hash');
     const type = searchParams.get('type') as EmailOtpType;
     const next = searchParams.get('next') ?? '/';
     const supabase = await createClient();
-    // redirect response
-    const response = NextResponse.redirect(next);
 
     if (token_hash && type) {
         const { error } = await supabase.auth.verifyOtp({
@@ -18,13 +16,13 @@ export async function GET(request: NextRequest) {
             token_hash,
         });
         if (!error) {
+            const response = NextResponse.redirect(new URL(next, request.url));
             response.cookies.delete('pendingEmail');
             return response;
-        }
-        else {
+        } else {
             console.error("Supabase verifyOtp error:", error);
-            return NextResponse.redirect("/");
+            return NextResponse.redirect(new URL('/', request.url));
         }
     }
-    return NextResponse.redirect('/');
+    return NextResponse.redirect(new URL('/', request.url));
 }

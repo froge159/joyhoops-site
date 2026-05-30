@@ -98,8 +98,9 @@ export default function RegisterPage() {
     });
 
     if (!result?.success) {
-      if (result?.error === "Email already registered.") {
+      if (result?.error === "Email already in use.") {
         alert("This email is already registered.");
+        setRegisterClicked(false);
         return;
       }
       alert("Registration failed: " + result.error);
@@ -418,15 +419,7 @@ export default function RegisterPage() {
                   </Button>
                 </form>
 
-                {/* Divider */}
-                <div className="relative my-6">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-200" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-slate-500">Or continue with</span>
-                  </div>
-                </div>
+                
 
                 {/* Login Link */}
                 <div className="text-center mt-6 pt-6 border-t border-slate-200">

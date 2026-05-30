@@ -101,10 +101,9 @@ export default function ForgotPasswordPage() {
                   </div>
 
                   <Button
-                    type="submit"   
+                    type="submit"
                     disabled={isLoading || !email}
                     className="w-full bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white"
-                    onClick={handleForgotPassword}
                   >
                     {isLoading ? "Sending Code..." : "Send Verification Link"}
                   </Button>

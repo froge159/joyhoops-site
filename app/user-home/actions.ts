@@ -39,22 +39,6 @@ export async function getUserClasses(userId: string) {
         status: classStatusMap.get(cls.id) ?? "available"
     })) ?? [];
 
-    // get coaches
-    const classCoachesMap = new Map<string, any[]>();
-    const { data: classCoachData, error: classCoachError } = await supabase
-        .from("Class_Coach")
-        .select("class_id, Coach(id, first_name, last_name, active, created_at)")
-        .in("class_id", classIds);
-    if (classCoachError) {
-        console.error("Error fetching class coaches", classCoachError);
-        return {success: false, error: classCoachError.message };
-    }
-    classCoachData?.forEach((cc: any) => {
-        if (!classCoachesMap.has(cc.class_id)) {
-            classCoachesMap.set(cc.class_id, []);
-        }
-        classCoachesMap.get(cc.class_id)?.push(cc.Coach);
-    });
     // get children
     const enrolledChildrenMap = new Map<string, any[]>();
     junctions?.forEach((j: any) => {
@@ -68,13 +52,12 @@ export async function getUserClasses(userId: string) {
         });
     });
 
-    const classesWithCoaches = classesWithStatus.map((cls: any) => ({
+    const classesWithChildren = classesWithStatus.map((cls: any) => ({
         ...cls,
-        coaches: classCoachesMap.get(cls.id) || [],
         enrolledChildren: enrolledChildrenMap.get(cls.id) || []
     }));
 
-    return { success: true, classes: classesWithCoaches };
+    return { success: true, classes: classesWithChildren };
 }
 
 export async function getUserStats(userId: string) {

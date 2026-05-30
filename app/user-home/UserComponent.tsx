@@ -31,6 +31,7 @@ import {
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { createClient } from "../clients/client"; 
 
 interface UserStats {
@@ -40,18 +41,9 @@ interface UserStats {
   availableClasses: number
 }
 
-interface Coach {
-  id: number;
-  firstName: string;
-  lastName: string;
-  active: boolean;
-  createdAt: string;
-}
-
 interface Class {
   id: number,
   name: string,
-  coaches: Coach[], // missing
   start_datetime: string,
   end_datetime: string,
   location: string,
@@ -73,6 +65,7 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [signOutClicked, setSignOutClicked] = useState(false);
   const [unenrollDisabled, setUnenrollDisabled] = useState(false);
+  const router = useRouter();
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -87,10 +80,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
       (activeTab === "enrolled" && classItem.status === "enrolled") ||
       (activeTab === "past" && classItem.status === "completed")
     
-    const instructorNames = classItem.coaches.map(coach => `${coach.firstName} ${coach.lastName}`).join(", ");
     const matchesSearch =
-      classItem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      instructorNames.toLowerCase().includes(searchTerm.toLowerCase())
+      classItem.name.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesTab && matchesSearch
   })
 
@@ -110,7 +101,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
       return;
     }
     setSignOutClicked(false);
-    redirect("/");
+    router.refresh();
+    router.push('/');
   }
 
   const confirmCancelEnrollment = async () => {

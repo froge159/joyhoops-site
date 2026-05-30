@@ -20,23 +20,14 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Users,
-  User,
   Plus,
   CreditCard,
-  CheckCircle,
   Trash2,
 } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import {createClient} from "../../../clients/client";
 import { createBrowserClient } from "@supabase/ssr";
-
-interface Coach {
-  id: number,
-  firstName: string,
-  lastName: string,
-}
 
 interface Class {
   id: number
@@ -46,7 +37,6 @@ interface Class {
   location: string
   price: number
   description: string
-  coaches: Coach[]
 }
 
 interface Child {
@@ -235,30 +225,6 @@ export default function EnrollmentComponent({classData, existingChildren, userId
               </CardContent>
             </Card>
           </section>
-
-          {/* Instructors */}
-          <section className="mb-8">
-            <Card className="bg-white border-[#3DA9FC]/20 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl text-[#2E2E2E]">Meet Your Instructors</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {classData.coaches.map((coach, index) => (
-                    <div key={index} className="flex items-start space-x-4 p-4 bg-slate-50 rounded-lg">
-                      <div className="flex items-center justify-center w-12 h-12 bg-[#3DA9FC] rounded-full shadow-md">
-                        <User className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="flex-1 mt-3">
-                        <h3 className="font-semibold text-[#2E2E2E] mb-1">{`${coach.firstName} ${coach.lastName}`}</h3>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
 
           {/* Child Selection */}
           <section className="mb-8">

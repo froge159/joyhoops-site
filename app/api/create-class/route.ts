@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "../../clients/admin"; 
+import { createAdminClient } from "../../clients/admin";
 
 
 export async function POST(req: Request) {
   try {
-    const { name, id, description, startDatetime, endDatetime, location, price, active, coaches} = await req.json();
+    const { name, id, description, startDatetime, endDatetime, location, price, active } = await req.json();
 
-    if (!coaches || !id || !name || !description || !startDatetime || !endDatetime || !location || typeof price !== "number" || typeof active !== "boolean") {
+    if (!id || !name || !description || !startDatetime || !endDatetime || !location || typeof price !== "number" || typeof active !== "boolean") {
       return NextResponse.json(
         { success: false, error: "Invalid input data" },
         { status: 400 }
@@ -15,17 +15,7 @@ export async function POST(req: Request) {
 
     const adminClient = await createAdminClient();
     const { data, error } = await adminClient.functions.invoke('create-class', {
-        body: {
-            id: id,
-            name: name,
-            description: description,
-            startDatetime: startDatetime,
-            endDatetime: endDatetime,
-            location: location,
-            price: price,
-            active: active,
-            coaches: coaches
-        }
+        body: { id, name, description, startDatetime, endDatetime, location, price, active }
     });
 
     if (error) {
@@ -36,14 +26,12 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({
-      success: true
-    });
+    return NextResponse.json({ success: true });
   } catch (err: any) {
-        console.error("Server error:", err);
-        return NextResponse.json(
-            { success: false, error: "Internal server error" },
-            { status: 500 }
-        );
+    console.error("Server error:", err);
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

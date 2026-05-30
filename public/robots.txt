@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://joyhoops.org
+
+# Sitemaps
+Sitemap: https://joyhoops.org/sitemap.xml

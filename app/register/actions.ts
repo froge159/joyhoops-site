@@ -1,6 +1,5 @@
 'use server'
 
-import { revalidatePath } from 'next/cache';
 import { createClient } from '../clients/server';
 import { createAdminClient } from '../clients/admin';
 import { cookies } from 'next/headers';
@@ -32,46 +31,39 @@ export async function setOAuthCookies(data: OAuthSignUpData) {
     return { success: true };
 }
 
-
 export async function register(data: SignupData) {
-    const admin = await createAdminClient();    
+    const admin = await createAdminClient();
 
-    const { data: user, error: userError} = await admin.auth.admin.listUsers();
-
-    if (userError) {
-        console.error("user lookup error:", userError);
-        return { success: false, error: userError.message };
-    }
-
-    if (user.users.some(u => u.email === data.email)) {
-        return { success: false, error: "Email already in use." };
-    }
-
-    // sign up user - added to auth.users
-    const { data:signUpData, error: signUpError } = await admin.auth.signUp({
+    // sign up — Supabase enforces email uniqueness at the DB level
+    const { data: signUpData, error: signUpError } = await admin.auth.signUp({
         email: data.email,
         password: data.password,
     });
     if (signUpError) {
         console.error("Signup error:", signUpError);
+        if (signUpError.code === 'user_already_exists') {
+            return { success: false, error: "Email already in use." };
+        }
         return { success: false, error: signUpError.message };
-    };
+    }
 
-    const supabase = await createClient();
-    // sign in
-    await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-    });
-
-    // obtain user id
     const userId = signUpData.user?.id;
     if (!userId) {
         console.error("User ID not found after signup.");
         return { success: false, error: "User ID not found after signup." };
     }
 
-    // add user to User table
+    // sign in immediately so the session cookie is set
+    const supabase = await createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+    });
+    if (signInError) {
+        console.error("Sign-in after signup failed:", signInError);
+    }
+
+    // add profile row — clean up auth user if this fails
     const { error: profileError } = await admin
         .from("User")
         .insert({
@@ -84,8 +76,9 @@ export async function register(data: SignupData) {
         });
     if (profileError) {
         console.error("Profile creation error:", profileError);
+        await admin.auth.admin.deleteUser(userId);
         return { success: false, error: profileError.message };
     }
 
-    return {success: true};
+    return { success: true };
 }

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "../../clients/admin"; 
+import { createAdminClient } from "../../clients/admin";
 
 export async function PUT(req: Request) {
   try {
-    const { coaches, id, name, description, startDatetime, endDatetime, location, price, active } = await req.json();
+    const { id, name, description, startDatetime, endDatetime, location, price, active } = await req.json();
 
-    if (!coaches || !id || !name || !description || !startDatetime || !endDatetime || !location || typeof price !== "number" || typeof active !== "boolean") {
+    if (!id || !name || !description || !startDatetime || !endDatetime || !location || typeof price !== "number" || typeof active !== "boolean") {
       return NextResponse.json(
         { success: false, error: "Invalid input data" },
         { status: 400 }
@@ -15,15 +15,14 @@ export async function PUT(req: Request) {
     const adminClient = await createAdminClient();
     const { data, error } = await adminClient.functions.invoke('update-class', {
         body: {
-            id: id,
-            name: name,
-            description: description,
+            id,
+            name,
+            description,
             start_datetime: startDatetime,
             end_datetime: endDatetime,
-            location: location,
-            price: price,
-            active: active,
-            coaches: coaches,
+            location,
+            price,
+            active,
         }
     });
 
@@ -35,14 +34,12 @@ export async function PUT(req: Request) {
       );
     }
 
-    return NextResponse.json({
-      success: true
-    });
+    return NextResponse.json({ success: true });
   } catch (err: any) {
-        console.error("Server error:", err);
-        return NextResponse.json(
-            { success: false, error: "Internal server error" },
-            { status: 500 }
-        );
+    console.error("Server error:", err);
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

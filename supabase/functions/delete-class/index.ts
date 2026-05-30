@@ -41,13 +41,29 @@ Deno.serve(async (req)=>{
         }
       });
     }
-    // Delete Stripe product
+    // Delete Stripe product after deactivating user-created prices
     if (classData.product_id) {
       try {
+        const prices = await stripe.prices.list({
+          product: classData.product_id,
+          limit: 100
+        });
+        if (prices?.data?.length) {
+          await Promise.all(prices.data.map((price) => stripe.prices.update(price.id, {
+            active: false
+          })));
+        }
         await stripe.products.del(classData.product_id);
       } catch (stripeErr) {
         // Log Stripe error but continue with Supabase deletion
         console.error("Stripe product delete error:", stripeErr);
+        try {
+          await stripe.products.update(classData.product_id, {
+            active: false
+          });
+        } catch (archiveErr) {
+          console.error("Stripe product archive error:", archiveErr);
+        }
       }
     }
     // Delete class from Supabase
