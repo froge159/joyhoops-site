@@ -16,7 +16,7 @@ Deno.serve(async (req)=>{
     });
   }
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
-  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
+  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SECRET_KEY"));
   let body;
   try {
     body = await req.json();

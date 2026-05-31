@@ -27,7 +27,7 @@ export async function getUserClasses(userId: string) {
     const classStatusMap = new Map<string, "available" | "completed" | "enrolled">();
 
     junctions?.forEach((j: any) => {
-        if (new Date(j.end_datetime) < now) {
+        if (new Date(j.Class.end_datetime) < now) {
             classStatusMap.set(j.class_id, "completed");
         } else {
             classStatusMap.set(j.class_id, "enrolled");
@@ -81,9 +81,21 @@ export async function getUserStats(userId: string) {
     const uniqueEnrolledClasses = Array.from(uniqueClassesMap.values());
 
     // get unenrolled classes
+    if (uniqueEnrolledClasses.length === 0) {
+        const { count, error: countError } = await supabase
+            .from("Class")
+            .select("id", { count: "exact", head: true })
+            .eq("active", true);
+        if (countError) {
+            console.error("Error fetching classes", countError);
+            return { success: false, error: countError.message };
+        }
+        return { success: true, data: { upcomingClasses: 0, classesCompleted: 0, totalHours: 0, availableClasses: count ?? 0 } };
+    }
     const { data: unenrolledClasses, error: unenrolledClassesError } = await supabase
         .from("Class")
         .select("id")
+        .eq("active", true)
         .not("id", "in", `(${uniqueEnrolledClasses.map((cls: any) => cls.class_id).join(",")})`);
     if (unenrolledClassesError) {
         console.error("Error fetching classes", unenrolledClassesError);

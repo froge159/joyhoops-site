@@ -24,7 +24,7 @@ Deno.serve(async (req)=>{
     });
   }
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY"));
-  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
+  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SECRET_KEY"));
   const sig = req.headers.get("stripe-signature");
   const rawBody = await req.text();
   let event;
@@ -43,19 +43,42 @@ Deno.serve(async (req)=>{
     const paymentIntentId = paymentIntent.id;
     const { classId, userId, children } = paymentIntent.metadata;
 
-    for (const child_id of children.split(",")){
-      const { error } = await supabase.from("Class_User_Child").insert({
-        class_id:classId,
-        user_id:userId,
-        child_id:child_id,
-        charge_id: paymentIntentId
+    if (!classId || !userId || !children) {
+      console.error("Missing payment metadata:", {
+        classId,
+        userId,
+        children
       });
-      if (error) {
-        console.error("Supabase insert error:", error);
-        return new Response("Error inserting class enrollment into Supabase", {
-          status: 500
-        });
-      }
+      return new Response("Missing payment metadata", {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
+      });
+    }
+
+    const childIds = children.split(",").map((childId) => childId.trim()).filter(Boolean);
+    if (!childIds.length) {
+      console.error("Empty children metadata:", children);
+      return new Response("Missing child IDs", {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" }
+      });
+    }
+
+    const rows = childIds.map((childId) => ({
+      class_id: classId,
+      user_id: userId,
+      child_id: childId,
+      charge_id: paymentIntentId
+    }));
+    const { error } = await supabase.from("Class_User_Child").upsert(rows, {
+      onConflict: "class_id,user_id,child_id,charge_id",
+      ignoreDuplicates: true
+    });
+    if (error) {
+      console.error("Supabase upsert error:", error);
+      return new Response("Error inserting class enrollment into Supabase", {
+        status: 500
+      });
     }
     return new Response(JSON.stringify({
       message: "Enrollment successful - user charged"

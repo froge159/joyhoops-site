@@ -26,7 +26,7 @@ Deno.serve(async (req)=>{
       }
     });
   }
-  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
+  const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SECRET_KEY"));
   const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
   try {
     // Get the class to retrieve product_id
@@ -41,29 +41,31 @@ Deno.serve(async (req)=>{
         }
       });
     }
-    // Delete Stripe product after deactivating user-created prices
+    // Archive Stripe product after deactivating user-created prices
     if (classData.product_id) {
       try {
-        const prices = await stripe.prices.list({
-          product: classData.product_id,
-          limit: 100
-        });
-        if (prices?.data?.length) {
-          await Promise.all(prices.data.map((price) => stripe.prices.update(price.id, {
-            active: false
-          })));
+        let hasMore = true;
+        let startingAfter: string | undefined;
+        while (hasMore) {
+          const prices = await stripe.prices.list({
+            product: classData.product_id,
+            limit: 100,
+            starting_after: startingAfter
+          });
+          if (prices?.data?.length) {
+            await Promise.all(prices.data.map((price) => stripe.prices.update(price.id, {
+              active: false
+            })));
+            startingAfter = prices.data[prices.data.length - 1]?.id;
+          }
+          hasMore = prices.has_more;
         }
-        await stripe.products.del(classData.product_id);
+        await stripe.products.update(classData.product_id, {
+          active: false
+        });
       } catch (stripeErr) {
         // Log Stripe error but continue with Supabase deletion
-        console.error("Stripe product delete error:", stripeErr);
-        try {
-          await stripe.products.update(classData.product_id, {
-            active: false
-          });
-        } catch (archiveErr) {
-          console.error("Stripe product archive error:", archiveErr);
-        }
+        console.error("Stripe product archive error:", stripeErr);
       }
     }
     // Delete class from Supabase

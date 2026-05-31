@@ -23,7 +23,7 @@ Three distinct clients are used depending on context:
 
 - `app/clients/server.ts` — Server Components and Server Actions (uses `@supabase/ssr` cookie store, row-level security applies)
 - `app/clients/client.ts` — Client Components (browser client, also used to invoke Edge Functions directly from the browser)
-- `app/clients/admin.ts` — Server Actions and API routes that need to bypass RLS (uses `SUPABASE_SERVICE_ROLE_KEY`)
+- `app/clients/admin.ts` — Server Actions and API routes that need to bypass RLS (uses `SUPABASE_SECRET_KEY`)
 
 Always use the server client for data fetching in Server Components and actions, the admin client only when RLS needs to be bypassed (e.g., creating users, inserting into protected tables).
 
@@ -66,9 +66,9 @@ Required in `.env.local`:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 NEXT_PUBLIC_OAUTH_SUPABASE_URL
 NEXT_PUBLIC_BASE_URL
-SUPABASE_SERVICE_ROLE_KEY
+SUPABASE_SECRET_KEY
 ADMIN_EMAIL
 ```
