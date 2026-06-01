@@ -118,19 +118,15 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
     }
     const supabase = createClient();
     const { data: { user }} = await supabase.auth.getUser();
-    const { data: { session } } = await supabase.auth.getSession();
-    const accessToken = session?.access_token;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/unenroll`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
-      body: JSON.stringify({
+    const { error } = await supabase.functions.invoke("unenroll", {
+      body: {
         class_id: selectedClass?.id,
         user_id: user?.id,
         children: selectedChildren
-      })
+      }
     });
-    if (!res.ok) {
-      console.error("Error invoking unenroll function:", res.statusText);
+    if (error) {
+      console.error("Error invoking unenroll function:", error.message);
       alert("Failed to cancel enrollment.");
       setCancelDialogOpen(false)
       setSelectedClass(null)

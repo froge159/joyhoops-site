@@ -14,9 +14,8 @@ export async function DELETE(req: Request) {
 
     const adminClient = await createAdminClient();
     const { data, error } = await adminClient.functions.invoke('delete-class', {
-        body: {
-            id
-        }
+        body: { id },
+        headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
     });
 
     if (error) {

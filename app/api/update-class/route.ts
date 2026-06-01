@@ -23,7 +23,8 @@ export async function PUT(req: Request) {
             location,
             price,
             active,
-        }
+        },
+        headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
     });
 
     if (error) {

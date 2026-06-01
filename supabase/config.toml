@@ -12,7 +12,7 @@ entrypoint = "./functions/checkout/index.ts"
 
 [functions.create-class]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/create-class/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
@@ -23,7 +23,7 @@ entrypoint = "./functions/create-class/index.ts"
 
 [functions.update-class]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/update-class/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
@@ -34,7 +34,7 @@ entrypoint = "./functions/update-class/index.ts"
 
 [functions.delete-class]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/delete-class/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
