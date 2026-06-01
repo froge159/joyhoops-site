@@ -31,7 +31,7 @@ export async function getClasses() {
         }
     }
 
-    const formatted = (data || []).map((cls: any) => ({
+    const formatted = (data || []).filter((cls: any) => new Date(cls.end_datetime) >= now).map((cls: any) => ({
         id: cls.id,
         active: cls.active,
         description: cls.description,

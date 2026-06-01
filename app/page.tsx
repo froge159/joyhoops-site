@@ -177,7 +177,7 @@ export default function HomePage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Why Choose JoyHoops?</h2>
                 <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We create meaningful connections between student volunteers and young athletes, fostering growth,
+                  We are a 501(c)(3) nonprofit organization dedicated to creating meaningful connections between student volunteers and young athletes, fostering growth,
                   friendship, and a love for sports.
                 </p>
               </div>
@@ -447,7 +447,7 @@ export default function HomePage() {
           </div>
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
-        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
+        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops 501(c)(3). Bringing joy through sports.</p>
       </footer>
     </div>
   )

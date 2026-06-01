@@ -1,4 +1,4 @@
-import Stripe from "https://esm.sh/stripe?target=deno";
+import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
 import { createClient } from "https://esm.sh/v2/@supabase/supabase-js@2.0.0";
 
 
@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       headers: { ...CORS_HEADERS, "Access-Control-Max-Age": "3600" },
     });
   }
-  const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
+  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
   const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SECRET_KEY"));
   let body;
   try {

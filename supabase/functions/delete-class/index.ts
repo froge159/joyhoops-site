@@ -1,4 +1,4 @@
-import Stripe from "https://esm.sh/stripe?target=deno";
+import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
 import { createClient } from "https://esm.sh/v2/@supabase/supabase-js@2.0.0";
 Deno.serve(async (req)=>{
   let body;
@@ -27,7 +27,7 @@ Deno.serve(async (req)=>{
     });
   }
   const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SECRET_KEY"));
-  const stripe = Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
+  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "");
   try {
     // Get the class to retrieve product_id
     const { data: classData, error: fetchError } = await supabase.from("Class").select("id, product_id").eq("id", id).single();

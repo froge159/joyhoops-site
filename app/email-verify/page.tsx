@@ -230,7 +230,7 @@ export default function EmailVerifyPage() {
           </div>
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
-        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
+        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops 501(c)(3). Bringing joy through sports.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6 items-center">
           <div className="flex items-center space-x-1">
             <MessageCircle className="h-4 w-4 text-[#FF6B35]" />

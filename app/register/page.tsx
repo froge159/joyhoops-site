@@ -444,7 +444,7 @@ export default function RegisterPage() {
           </div>
           <span className="text-sm font-medium text-[#2E2E2E]">JoyHoops</span>
         </div>
-        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops. Bringing joy through sports.</p>
+        <p className="text-xs text-slate-500 sm:ml-4">© 2024 JoyHoops 501(c)(3). Bringing joy through sports.</p>
       </footer>
     </div>
   )
