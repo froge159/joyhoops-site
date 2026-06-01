@@ -367,12 +367,12 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                         <div className="flex items-center space-x-1 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="font-medium text-sm text-[#2E2E2E]">
-                            {new Date(classItem.startDatetime).toLocaleDateString()}
+                            {new Date(classItem.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                           </span>
                         </div>
                         <div className="text-xs text-slate-600">
-                          {new Date(classItem.startDatetime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}-
-                          {new Date(classItem.endDatetime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", timeZone: 'UTC' })}{" "}-
+                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", timeZone: 'UTC' })}
                         </div>
                       </div>
 

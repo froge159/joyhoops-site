@@ -195,8 +195,8 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-5 w-5 text-[#3DA9FC]" />
                     <div>
-                      <p className="font-medium text-[#2E2E2E]">{new Date(classData.startDatetime).toLocaleDateString()}</p>
-                      <p className="text-sm text-slate-600">{new Date(classData.startDatetime).toLocaleTimeString()}</p>
+                      <p className="font-medium text-[#2E2E2E]">{new Date(classData.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
+                      <p className="text-sm text-slate-600">{new Date(classData.startDatetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -265,7 +265,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                             {child.name}
                           </label>
                           <p className="text-sm text-slate-600">
-                            {child.age} years old • Born {new Date(child.dateOfBirth).toLocaleDateString()}
+                            {child.age} years old • Born {new Date(child.dateOfBirth).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                           </p>
                         </div>
                         <Badge variant="outline" className="text-[#3DA9FC]">
@@ -377,7 +377,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
               <h4 className="font-semibold text-[#2E2E2E] mb-2">Enrollment Summary</h4>
               <p className="text-sm text-slate-600 mb-1">Class: {classData.name}</p>
               <p className="text-sm text-slate-600 mb-1">
-                Date: {new Date(classData.startDatetime).toLocaleDateString()} at {new Date(classData.startDatetime).toLocaleTimeString()}
+                Date: {new Date(classData.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(classData.startDatetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
               </p>
               <p className="text-sm text-slate-600 mb-3">
                 Children:{" "}
