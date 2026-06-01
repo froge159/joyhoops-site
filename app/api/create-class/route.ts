@@ -16,10 +16,11 @@ export async function POST(req: Request) {
     const adminClient = await createAdminClient();
     const { data, error } = await adminClient.functions.invoke('create-class', {
         body: { id, name, description, startDatetime, endDatetime, location, price, active },
-        headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
+        //headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
     });
 
     if (error) {
+      console.log(error?.context?.status, await error?.context?.text())
       console.error("Error adding class:", error);
       return NextResponse.json(
         { success: false, error: error.message },

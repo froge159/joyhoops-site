@@ -24,7 +24,7 @@ export async function PUT(req: Request) {
             price,
             active,
         },
-        headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
+        //headers: { Authorization: `Bearer ${process.env.SUPABASE_SECRET_KEY}` },
     });
 
     if (error) {

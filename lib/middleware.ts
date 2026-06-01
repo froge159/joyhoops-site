@@ -62,7 +62,15 @@ export async function updateSession(request: NextRequest) {
 
   // 5. Email verification requirements
   if (user && pendingEmail) {
-    // lock down ALL protected user areas until verified
+    if (user.email_confirmed_at) {
+      // Email confirmed (e.g. via hash-fragment flow) but cookie wasn't cleared — do it now
+      const response = (path === '/' || path === '/email-verify')
+        ? redirect('/user-home')
+        : supabaseResponse;
+      response.cookies.delete('pendingEmail');
+      return response;
+    }
+    // Email not yet confirmed — lock down until verified
     if (path !== '/email-verify' && path !== '/set-password') {
       return redirect('/email-verify')
     }
