@@ -420,7 +420,7 @@ export default function HomePage() {
                   className="px-4 sm:px-12 bg-[#FF6B35] hover:bg-[#e55a2b] shadow-lg text-white"
                   asChild
                 >
-                  <Link href="/contact">
+                  <Link href="https://docs.google.com/forms/d/e/1FAIpQLScap7iJGuzf9L_hUaFIhxZCsl95-uEWdekHLRjw3Af1r8w_zg/viewform" target="_blank">
                     Become a Volunteer
                     <Users className="ml-2 h-4 w-4" />
                   </Link>
