@@ -33,7 +33,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "../clients/client";
 import { redirect, useRouter } from "next/navigation";
 
@@ -73,7 +73,15 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
     price: 0,
     active: true,
   });
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const fmtDate = (iso: string) =>
+    mounted ? new Date(iso).toLocaleDateString('en-US') : '';
+  const fmtTime = (iso: string, opts?: Intl.DateTimeFormatOptions) =>
+    mounted ? new Date(iso).toLocaleTimeString('en-US', opts) : '';
 
   // Convert datetime-local input value (browser local time) to UTC ISO string
   const toUtcIsoFromLocal = (value: string) => {
@@ -377,15 +385,13 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                       <div className="h-full flex flex-col justify-center">
                         <div className="flex items-center space-x-1 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span suppressHydrationWarning className="font-medium text-sm text-[#2E2E2E]">
-                            {new Date(classItem.startDatetime).toLocaleDateString('en-US', {
-                              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                            })}
+                          <span className="font-medium text-sm text-[#2E2E2E]">
+                            {fmtDate(classItem.startDatetime)}
                           </span>
                         </div>
-                        <div suppressHydrationWarning className="text-xs text-slate-600">
-                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour: "2-digit", minute: "2-digit" })}{" "}-
-                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour: "2-digit", minute: "2-digit" })}
+                        <div className="text-xs text-slate-600">
+                          {fmtTime(classItem.startDatetime, { hour: "2-digit", minute: "2-digit" })}{" "}-
+                          {fmtTime(classItem.endDatetime, { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
 
