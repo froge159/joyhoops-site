@@ -75,10 +75,18 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
   });
   const router = useRouter();
 
+  // Convert datetime-local input value (browser local time) to UTC ISO string
   const toUtcIsoFromLocal = (value: string) => {
     if (!value) return value;
-    const [datePart, timePart] = value.split("T");
-    return new Date(`${datePart}T${timePart}:00Z`).toISOString();
+    return new Date(value).toISOString();
+  };
+
+  // Convert UTC ISO string to datetime-local input value (browser local time)
+  const toLocalDatetimeInput = (isoString: string) => {
+    if (!isoString) return '';
+    const d = new Date(isoString);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
   const warnIfActivePastStart = (startValue: string, isActive: boolean) => {
@@ -197,7 +205,11 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
   }
 
   const openEditClassDialog = (cls: Class) => {
-    setEditingClass(cls);
+    setEditingClass({
+      ...cls,
+      startDatetime: toLocalDatetimeInput(cls.startDatetime),
+      endDatetime: toLocalDatetimeInput(cls.endDatetime),
+    });
     setIsEditClassOpen(true);
   };
 
@@ -366,13 +378,13 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                       <div className="h-full flex flex-col justify-center">
                         <div className="flex items-center space-x-1 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="font-medium text-sm text-[#2E2E2E]">
-                            {new Date(classItem.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })}
+                          <span suppressHydrationWarning className="font-medium text-sm text-[#2E2E2E]">
+                            {new Date(classItem.startDatetime).toLocaleDateString('en-US')}
                           </span>
                         </div>
-                        <div className="text-xs text-slate-600">
-                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", timeZone: 'UTC' })}{" "}-
-                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit", timeZone: 'UTC' })}
+                        <div suppressHydrationWarning className="text-xs text-slate-600">
+                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}{" "}-
+                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
 

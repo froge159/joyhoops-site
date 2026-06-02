@@ -195,8 +195,8 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-5 w-5 text-[#3DA9FC]" />
                     <div>
-                      <p className="font-medium text-[#2E2E2E]">{new Date(classData.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })}</p>
-                      <p className="text-sm text-slate-600">{new Date(classData.startDatetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}</p>
+                      <p suppressHydrationWarning className="font-medium text-[#2E2E2E]">{new Date(classData.startDatetime).toLocaleDateString('en-US')}</p>
+                      <p suppressHydrationWarning className="text-sm text-slate-600">{new Date(classData.startDatetime).toLocaleTimeString('en-US')}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -377,7 +377,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
               <h4 className="font-semibold text-[#2E2E2E] mb-2">Enrollment Summary</h4>
               <p className="text-sm text-slate-600 mb-1">Class: {classData.name}</p>
               <p className="text-sm text-slate-600 mb-1">
-                Date: {new Date(classData.startDatetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(classData.startDatetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
+                <span suppressHydrationWarning>Date: {new Date(classData.startDatetime).toLocaleDateString('en-US')} at {new Date(classData.startDatetime).toLocaleTimeString('en-US')}</span>
               </p>
               <p className="text-sm text-slate-600 mb-3">
                 Children:{" "}

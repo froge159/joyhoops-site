@@ -277,8 +277,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
+                          <span suppressHydrationWarning className="text-sm text-slate-600">
+                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -345,8 +345,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
+                          <span suppressHydrationWarning className="text-sm text-slate-600">
+                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US')}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -415,8 +415,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
+                          <span suppressHydrationWarning className="text-sm text-slate-600">
+                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US')}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -465,8 +465,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
             <div className="py-4">
               <div className="mb-4 p-4 bg-slate-50 rounded-lg">
                 <h4 className="font-semibold text-[#2E2E2E] mb-1">{selectedClass.name}</h4>
-                <p className="text-sm text-slate-600">
-                  {new Date(selectedClass.start_datetime).toLocaleDateString('en-US', { timeZone: 'UTC' })} at {new Date(selectedClass.start_datetime).toLocaleTimeString('en-US', { timeZone: 'UTC' })}
+                <p suppressHydrationWarning className="text-sm text-slate-600">
+                  {new Date(selectedClass.start_datetime).toLocaleDateString('en-US')} at {new Date(selectedClass.start_datetime).toLocaleTimeString('en-US')}
                 </p>
               </div>
 
