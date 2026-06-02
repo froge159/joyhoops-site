@@ -402,7 +402,9 @@ collegiate basketball league games.
                   className="px-4 sm:px-12 bg-white border-2 border-[#3DA9FC]  text-[#3DA9FC] hover:bg-[#3DA9FC]/10 bg-transparent hover:text-[#3DA9FC] focus:text-[#3DA9FC] active:text-[#3DA9FC]"
                   asChild
                 >
-                  <Link href="/contact">Submit Request</Link>
+                  <Link href="https://docs.google.com/forms/d/e/1FAIpQLScap7iJGuzf9L_hUaFIhxZCsl95-uEWdekHLRjw3Af1r8w_zg/viewform" target="_blank">
+                    Submit Request
+                  </Link>
                 </Button>
               </div>
             </div>

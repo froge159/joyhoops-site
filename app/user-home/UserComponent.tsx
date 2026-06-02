@@ -65,13 +65,20 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [signOutClicked, setSignOutClicked] = useState(false);
   const [unenrollDisabled, setUnenrollDisabled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem("pendingEmail");
     }
+    setMounted(true);
   }, []);
+
+  const fmtDate = (iso: string) =>
+    mounted ? new Date(iso).toLocaleDateString('en-US') : '';
+  const fmtTime = (iso: string, opts?: Intl.DateTimeFormatOptions) =>
+    mounted ? new Date(iso).toLocaleTimeString('en-US', opts) : '';
 
 
   const filteredClasses = (classes ?? []).filter((classItem) => {
@@ -277,8 +284,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span suppressHydrationWarning className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}
+                          <span className="text-sm text-slate-600">
+                            {fmtDate(classItem.start_datetime)} at {fmtTime(classItem.start_datetime, { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -345,8 +352,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span suppressHydrationWarning className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US')}
+                          <span className="text-sm text-slate-600">
+                            {fmtDate(classItem.start_datetime)} at {fmtTime(classItem.start_datetime)}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -415,8 +422,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
-                          <span suppressHydrationWarning className="text-sm text-slate-600">
-                            {new Date(classItem.start_datetime).toLocaleDateString('en-US')} at {new Date(classItem.start_datetime).toLocaleTimeString('en-US')}
+                          <span className="text-sm text-slate-600">
+                            {fmtDate(classItem.start_datetime)} at {fmtTime(classItem.start_datetime)}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -465,8 +472,8 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
             <div className="py-4">
               <div className="mb-4 p-4 bg-slate-50 rounded-lg">
                 <h4 className="font-semibold text-[#2E2E2E] mb-1">{selectedClass.name}</h4>
-                <p suppressHydrationWarning className="text-sm text-slate-600">
-                  {new Date(selectedClass.start_datetime).toLocaleDateString('en-US')} at {new Date(selectedClass.start_datetime).toLocaleTimeString('en-US')}
+                <p className="text-sm text-slate-600">
+                  {fmtDate(selectedClass.start_datetime)} at {fmtTime(selectedClass.start_datetime)}
                 </p>
               </div>
 

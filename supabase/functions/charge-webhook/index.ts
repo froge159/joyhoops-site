@@ -74,7 +74,6 @@ Deno.serve(async (req) => {
     return new Response("Failed to record enrollment", { status: 500 });
   }
 
-  console.log(`Enrolled [${childIds.join(", ")}] in class ${classId} for user ${userId}`);
   return new Response(JSON.stringify({ received: true, enrolled: childIds.length }), {
     status: 200,
     headers: { "Content-Type": "application/json" },

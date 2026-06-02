@@ -20,7 +20,6 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      console.log(error?.context?.status, await error?.context?.text())
       console.error("Error adding class:", error);
       return NextResponse.json(
         { success: false, error: error.message },

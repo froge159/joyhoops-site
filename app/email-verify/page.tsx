@@ -183,7 +183,7 @@ export default function EmailVerifyPage() {
                       size="lg"
                       disabled={isResending || timer > 0}
                       onClick={handleResendEmail}
-                      className="w-full border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35]/10 bg-transparent disabled:opacity-50"
+                      className="w-full border-[#FF6B35] text-[#585655] hover:bg-[#FF6B35]/10 bg-transparent disabled:opacity-50"
                     >
                       {isResending ? (
                         <>

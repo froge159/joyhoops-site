@@ -59,6 +59,14 @@ export default function EnrollmentComponent({classData, existingChildren, userId
   const [clickedAddChild, setClickedAddChild] = useState(false);
   const [clickedRemoveChild, setClickedRemoveChild] = useState(false);
   const [paymentClicked, setPaymentClicked] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const fmtDate = (iso: string) =>
+    mounted ? new Date(iso).toLocaleDateString('en-US') : '';
+  const fmtTime = (iso: string) =>
+    mounted ? new Date(iso).toLocaleTimeString('en-US') : '';
 
   const handleChildSelection = (childId: number, checked: boolean) => {
     if (checked) {
@@ -195,8 +203,8 @@ export default function EnrollmentComponent({classData, existingChildren, userId
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-5 w-5 text-[#3DA9FC]" />
                     <div>
-                      <p suppressHydrationWarning className="font-medium text-[#2E2E2E]">{new Date(classData.startDatetime).toLocaleDateString('en-US')}</p>
-                      <p suppressHydrationWarning className="text-sm text-slate-600">{new Date(classData.startDatetime).toLocaleTimeString('en-US')}</p>
+                      <p className="font-medium text-[#2E2E2E]">{fmtDate(classData.startDatetime)}</p>
+                      <p className="text-sm text-slate-600">{fmtTime(classData.startDatetime)}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -377,7 +385,7 @@ export default function EnrollmentComponent({classData, existingChildren, userId
               <h4 className="font-semibold text-[#2E2E2E] mb-2">Enrollment Summary</h4>
               <p className="text-sm text-slate-600 mb-1">Class: {classData.name}</p>
               <p className="text-sm text-slate-600 mb-1">
-                <span suppressHydrationWarning>Date: {new Date(classData.startDatetime).toLocaleDateString('en-US')} at {new Date(classData.startDatetime).toLocaleTimeString('en-US')}</span>
+                <span>Date: {fmtDate(classData.startDatetime)} at {fmtTime(classData.startDatetime)}</span>
               </p>
               <p className="text-sm text-slate-600 mb-3">
                 Children:{" "}

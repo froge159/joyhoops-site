@@ -4,13 +4,14 @@ import type React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Trophy, Menu, X, Mail, Phone, MapPin, MessageCircle, Send } from "lucide-react"
+import { Trophy, Menu, X, Mail, Phone, MapPin, MessageCircle, Send, Volleyball } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
 export default function ContactPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isQrOpen, setIsQrOpen] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -185,7 +186,7 @@ export default function ContactPage() {
               </div>
             </div>
             <div className="mx-auto grid max-w-6xl items-center gap-8 py-12 lg:grid-cols-3 lg:gap-12">
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
+              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center h-full">
                 <CardHeader>
                   <div className="h-16 w-16 mx-auto bg-[#3DA9FC] rounded-full flex items-center justify-center mb-6 shadow-md">
                     <Mail className="h-8 w-8 text-white" />
@@ -194,13 +195,13 @@ export default function ContactPage() {
                   <CardDescription className="text-slate-600 mb-4">
                     Send us a message using the form below or directly at:
                   </CardDescription>
-                  <div className="space-y-2">
-                    <p className="text-[#3DA9FC] font-medium">Joyhoopsacademy@gmail.com</p>
+                  <div className="space-y-2 pt-3"> 
+                    <p className="text-[#3DA9FC] font-medium">joyhoopsacademy@gmail.com</p>
                   </div>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
+              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center h-full">
                 <CardHeader>
                   <div className="h-16 w-16 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-6 shadow-md">
                     <MessageCircle className="h-8 w-8 text-white" />
@@ -211,12 +212,22 @@ export default function ContactPage() {
                   </CardDescription>
                   <div className="space-y-2">
                     <p className="text-[#FF6B35] font-medium">JoyHoops2024</p>
-                    <p className="text-sm text-slate-500">Scan QR code or search our ID</p>
+                    <p className="text-sm text-slate-500">
+                      Scan{" "}
+                      <button
+                        type="button"
+                        className="text-[#FF6B35] hover:text-[#e95a2b] underline underline-offset-4"
+                        onClick={() => setIsQrOpen(true)}
+                      >
+                        QR code
+                      </button>{" "}
+                      or search our ID
+                    </p>
                   </div>
                 </CardHeader>
               </Card>
 
-              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center">
+              <Card className="bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-shadow text-center h-full">
                 <CardHeader>
                   <div className="h-16 w-16 mx-auto bg-[#3DA9FC] rounded-full flex items-center justify-center mb-6 shadow-md">
                     <Phone className="h-8 w-8 text-white" />
@@ -225,8 +236,23 @@ export default function ContactPage() {
                   <CardDescription className="text-slate-600 mb-4">
                     Speak directly with our team for immediate assistance:
                   </CardDescription>
-                  <div className="space-y-2">
+                  <div className="space-y-2 pt-3">
                     <p className="text-[#3DA9FC] font-medium">(346) 857-9571</p>
+                  </div>
+                </CardHeader>
+              </Card>
+
+              <Card className="bg-white border-[#FF6B35]/20 shadow-lg hover:shadow-xl transition-shadow text-center h-full">
+                <CardHeader>
+                  <div className="h-16 w-16 mx-auto bg-[#FF6B35] rounded-full flex items-center justify-center mb-6 shadow-md">
+                    <Volleyball className="h-8 w-8 text-white" />
+                  </div>  
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">SportsYou</CardTitle>
+                  <CardDescription className="text-slate-600 mb-4">
+                    Join our SportsYou group to stay updated on all programs and events:
+                  </CardDescription>
+                  <div className="space-y-2">
+                    <p className="text-[#FF6B35] font-medium">C2YF-RK3A</p>
                   </div>
                 </CardHeader>
               </Card>
@@ -250,6 +276,43 @@ export default function ContactPage() {
           </div>
         </nav>
       </footer>
+
+      {isQrOpen ? (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="WeChat QR code"
+          onClick={() => setIsQrOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="absolute right-4 top-4 rounded-full border border-slate-200 p-2 text-slate-500 hover:text-slate-700"
+              onClick={() => setIsQrOpen(false)}
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="space-y-3 text-center">
+              <h3 className="text-lg font-semibold text-[#2E2E2E]">WeChat QR Code</h3>
+              <div className="mx-auto w-full overflow-hidden rounded-xl border border-slate-100">
+                <Image
+                  src="/program/wechat-qr.png"
+                  width={480}
+                  height={480}
+                  alt="WeChat QR code for JoyHoops"
+                  className="h-auto w-full"
+                />
+              </div>
+              <p className="text-sm text-slate-500">Scan to add JoyHoops on WeChat.</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

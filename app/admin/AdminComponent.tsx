@@ -121,7 +121,6 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
         id: classesData.length == 0 ? 1 : Math.max(...classesData.map((c) => c.id)) + 1,
         ...newClass,
       }
-      console.log(classItem.startDatetime);
       const response = await fetch("/api/create-class", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -379,12 +378,14 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                         <div className="flex items-center space-x-1 mb-1">
                           <Calendar className="h-4 w-4 text-[#3DA9FC]" />
                           <span suppressHydrationWarning className="font-medium text-sm text-[#2E2E2E]">
-                            {new Date(classItem.startDatetime).toLocaleDateString('en-US')}
+                            {new Date(classItem.startDatetime).toLocaleDateString('en-US', {
+                              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                            })}
                           </span>
                         </div>
                         <div suppressHydrationWarning className="text-xs text-slate-600">
-                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}{" "}-
-                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(classItem.startDatetime).toLocaleTimeString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour: "2-digit", minute: "2-digit" })}{" "}-
+                          {new Date(classItem.endDatetime).toLocaleTimeString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
 
