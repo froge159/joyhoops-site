@@ -53,6 +53,7 @@ interface Class {
   price: number;
   startDatetime: string;
   endDatetime: string;
+  registrantCount: number;
 }
 
 export default function AdminDashboard({classes}: {classes: Class[]}) {
@@ -408,6 +409,14 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                           <span className="font-bold text-lg text-[#2E2E2E]">${classItem.price}</span>
                         </div>
                         <div className="text-xs text-slate-600">Price</div>
+                      </div>
+
+                      <div className="h-full flex flex-col justify-center">
+                        <div className="flex items-center space-x-1 mb-1">
+                          <Users className="h-4 w-4 text-[#3DA9FC]" />
+                          <span className="font-bold text-lg text-[#2E2E2E]">{classItem.registrantCount}</span>
+                        </div>
+                        <div className="text-xs text-slate-600">Registrants</div>
                       </div>
 
                       <div className="flex flex-col space-y-2 justify-center items-end">

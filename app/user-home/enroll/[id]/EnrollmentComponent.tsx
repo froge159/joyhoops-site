@@ -107,10 +107,25 @@ export default function EnrollmentComponent({classData, existingChildren, userId
   	}
 	}
 
-  const handleRegister = () => {
-    if (selectedChildren.length > 0) {
-      setShowPayment(true)
+  const handleRegister = async () => {
+    if (selectedChildren.length === 0) return;
+    if (classData.price === 0) {
+      setPaymentClicked(true);
+      const res = await fetch('/api/free-enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, classId: classData.id, childIds: selectedChildren }),
+      });
+      if (!res.ok) {
+        console.error("Failed to enroll:", await res.text());
+        alert("Failed to complete enrollment. Please try again.");
+        setPaymentClicked(false);
+        return;
+      }
+      window.location.href = '/user-home';
+      return;
     }
+    setShowPayment(true);
   }
 
   const totalCost = selectedChildren.length * classData.price
@@ -320,12 +335,12 @@ export default function EnrollmentComponent({classData, existingChildren, userId
           <div className="flex justify-center">
             <Button
               onClick={handleRegister}
-              disabled={selectedChildren.length === 0}
+              disabled={selectedChildren.length === 0 || paymentClicked}
               size="lg"
               className="bg-[#3DA9FC] hover:bg-[#2b8ce6] text-white px-12"
             >
               <CreditCard className="h-5 w-5 mr-2" />
-              Register & Pay ${totalCost}
+              {classData.price === 0 ? "Register for Free" : `Register & Pay $${totalCost}`}
             </Button>
           </div>
         </div>

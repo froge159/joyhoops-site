@@ -1,0 +1,1 @@
+ALTER TABLE "Class_User_Child" ALTER COLUMN charge_id DROP NOT NULL;

@@ -31,7 +31,20 @@ export async function getClasses() {
         }
     }
 
-    const formatted = (data || []).filter((cls: any) => new Date(cls.end_datetime) >= now).map((cls: any) => ({
+    const upcomingClasses = (data || []).filter((cls: any) => new Date(cls.end_datetime) >= now);
+    const classIds = upcomingClasses.map((cls: any) => cls.id);
+
+    const { data: enrollmentData } = await supabaseAdmin
+        .from("Class_User_Child")
+        .select("class_id")
+        .in("class_id", classIds);
+
+    const countMap: Record<number, number> = {};
+    for (const row of enrollmentData || []) {
+        countMap[row.class_id] = (countMap[row.class_id] || 0) + 1;
+    }
+
+    const formatted = upcomingClasses.map((cls: any) => ({
         id: cls.id,
         active: cls.active,
         description: cls.description,
@@ -40,6 +53,7 @@ export async function getClasses() {
         price: cls.price,
         startDatetime: new Date(cls.start_datetime).toISOString(),
         endDatetime: new Date(cls.end_datetime).toISOString(),
+        registrantCount: countMap[cls.id] || 0,
     }));
     return { success: true, data: formatted }
 }

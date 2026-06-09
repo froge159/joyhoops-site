@@ -123,25 +123,47 @@ export default function UserHomePage({classes, userStats, name} : {classes: Clas
       setUnenrollDisabled(false);
       return;
     }
-    const supabase = createClient();
-    const { data: { user }} = await supabase.auth.getUser();
-    const { error } = await supabase.functions.invoke("unenroll", {
-      body: {
-        class_id: selectedClass?.id,
-        user_id: user?.id,
-        children: selectedChildren
+
+    if (selectedClass.price === 0) {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const res = await fetch('/api/free-unenroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user?.id, classId: selectedClass.id, childIds: selectedChildren }),
+      });
+      if (!res.ok) {
+        console.error("Error invoking free unenroll:", await res.text());
+        alert("Failed to cancel enrollment.");
+        setCancelDialogOpen(false);
+        setSelectedClass(null);
+        setSelectedChildren([]);
+        setSelectAllChildren(false);
+        setUnenrollDisabled(false);
+        return;
       }
-    });
-    if (error) {
-      console.error("Error invoking unenroll function:", error.message);
-      alert("Failed to cancel enrollment.");
-      setCancelDialogOpen(false)
-      setSelectedClass(null)
-      setSelectedChildren([])
-      setSelectAllChildren(false)
-      setUnenrollDisabled(false);
-      return; 
+    } else {
+      const supabase = createClient();
+      const { data: { user }} = await supabase.auth.getUser();
+      const { error } = await supabase.functions.invoke("unenroll", {
+        body: {
+          class_id: selectedClass?.id,
+          user_id: user?.id,
+          children: selectedChildren
+        }
+      });
+      if (error) {
+        console.error("Error invoking unenroll function:", error.message);
+        alert("Failed to cancel enrollment.");
+        setCancelDialogOpen(false);
+        setSelectedClass(null);
+        setSelectedChildren([]);
+        setSelectAllChildren(false);
+        setUnenrollDisabled(false);
+        return;
+      }
     }
+
     setCancelDialogOpen(false)
     setSelectedClass(null)
     setSelectedChildren([])
