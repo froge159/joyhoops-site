@@ -126,22 +126,17 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
       if (warnIfActivePastStart(newClass.startDatetime, newClass.active)) {
         return;
       }
-      const classItem = {
-        id: classesData.length == 0 ? 1 : Math.max(...classesData.map((c) => c.id)) + 1,
-        ...newClass,
-      }
       const response = await fetch("/api/create-class", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-          name: classItem.name,
-          description: classItem.description,
-          startDatetime: toUtcIsoFromLocal(classItem.startDatetime),
-          endDatetime: toUtcIsoFromLocal(classItem.endDatetime),
-          location: classItem.location,
-          price: classItem.price,
-          active: classItem.active,
-          id: classItem.id,
+          name: newClass.name,
+          description: newClass.description,
+          startDatetime: toUtcIsoFromLocal(newClass.startDatetime),
+          endDatetime: toUtcIsoFromLocal(newClass.endDatetime),
+          location: newClass.location,
+          price: newClass.price,
+          active: newClass.active,
         })
       })
       if (!response.ok) {
@@ -152,6 +147,8 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
         setIsAddClassOpen(false)
         return;
       }
+      const result = await response.json();
+      const classItem = { id: result.id, ...newClass, registrantCount: 0 };
       setClassesData([...classesData, classItem]);
       setNewClass({ name: "", description: "", startDatetime: "", endDatetime: "", location: "", price: 0, active: true })
       setIsAddClassOpen(false);

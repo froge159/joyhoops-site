@@ -13,7 +13,7 @@ Deno.serve(async (req)=>{
       headers: { 'Content-Type': 'application/json' }
     });
   }
-  const { id, startDatetime, endDatetime, location, name, description, active, price } = body;
+  const { startDatetime, endDatetime, location, name, description, active, price } = body;
   try {
     const product = await stripe.products.create({ name, description, active });
     const stripePrice = await stripe.prices.create({
@@ -21,7 +21,7 @@ Deno.serve(async (req)=>{
       unit_amount: price * 100,
       currency: "usd"
     });
-    const { error: classError } = await supabase.from("Class").insert({
+    const { data: classData, error: classError } = await supabase.from("Class").insert({
       start_datetime: new Date(startDatetime).toISOString(),
       end_datetime: new Date(endDatetime).toISOString(),
       location,
@@ -31,7 +31,6 @@ Deno.serve(async (req)=>{
       price,
       product_id: product.id,
       price_id: stripePrice.id,
-      id
     }).select().single();
     if (classError) {
       console.error("Supabase insert error:", classError);
@@ -39,7 +38,8 @@ Deno.serve(async (req)=>{
     }
     return new Response(JSON.stringify({
       message: "Class created",
-      product_id: product.id
+      product_id: product.id,
+      class_id: classData.id,
     }), {
       headers: { "Content-Type": "application/json" },
       status: 201
