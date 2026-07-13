@@ -23,6 +23,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
   Trophy,
   Clock,
   Users,
@@ -36,6 +44,14 @@ import {
 import { useState, useEffect } from "react";
 import { createClient } from "../clients/client";
 import { redirect, useRouter } from "next/navigation";
+import { getRoster } from "./actions";
+
+interface RosterRow {
+  childName: string;
+  childDob: string | null;
+  parentName: string;
+  phone: string;
+}
 
 interface OrganizationStats {
   classesDelivered: number;
@@ -63,6 +79,10 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
   const [isDeleteClassOpen, setIsDeleteClassOpen] = useState(false)
   const [isActivePastAlertOpen, setIsActivePastAlertOpen] = useState(false)
   const [activePastAlertMessage, setActivePastAlertMessage] = useState("")
+  const [isRosterOpen, setIsRosterOpen] = useState(false)
+  const [rosterClassName, setRosterClassName] = useState("")
+  const [rosterRows, setRosterRows] = useState<RosterRow[]>([])
+  const [rosterLoading, setRosterLoading] = useState(false)
   const [editingClass, setEditingClass] = useState<any>(null)
   const [deletingClass, setDeletingClass] = useState<any>(null)
   const [newClass, setNewClass] = useState({
@@ -222,6 +242,28 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
     setDeletingClass(classItem)
     setIsDeleteClassOpen(true)
   }
+
+  const ageFromDob = (dob: string | null) => {
+    if (!dob) return null;
+    const birth = new Date(dob);
+    const now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    const m = now.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+    return age;
+  };
+
+  const openRoster = async (cls: Class) => {
+    setRosterClassName(cls.name);
+    setRosterRows([]);
+    setRosterLoading(true);
+    setIsRosterOpen(true);
+    const result = await getRoster(cls.id);
+    if (result.success) {
+      setRosterRows(result.data as RosterRow[]);
+    }
+    setRosterLoading(false);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FAFAFA]">
@@ -408,13 +450,18 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
                         <div className="text-xs text-slate-600">Price</div>
                       </div>
 
-                      <div className="h-full flex flex-col justify-center">
+                      <button
+                        type="button"
+                        onClick={() => openRoster(classItem)}
+                        title="View roster"
+                        className="h-full flex flex-col justify-center rounded-md px-2 -mx-2 transition-colors hover:bg-[#3DA9FC]/10 cursor-pointer"
+                      >
                         <div className="flex items-center space-x-1 mb-1">
                           <Users className="h-4 w-4 text-[#3DA9FC]" />
                           <span className="font-bold text-lg text-[#2E2E2E]">{classItem.registrantCount}</span>
                         </div>
-                        <div className="text-xs text-slate-600">Registrants</div>
-                      </div>
+                        <div className="text-xs text-slate-600 underline decoration-dotted underline-offset-2">Registrants</div>
+                      </button>
 
                       <div className="flex flex-col space-y-2 justify-center items-end">
                         <Button
@@ -442,6 +489,55 @@ export default function AdminDashboard({classes}: {classes: Class[]}) {
           </section>
         </div>
       </main>
+
+      {/* Roster Dialog */}
+      <Dialog open={isRosterOpen} onOpenChange={setIsRosterOpen}>
+        <DialogContent className="sm:max-w-[640px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Class Roster</DialogTitle>
+            <DialogDescription>
+              Enrolled children and parent contact info for {rosterClassName}.
+            </DialogDescription>
+          </DialogHeader>
+          {rosterLoading ? (
+            <div className="py-8 text-center text-sm text-slate-600">Loading roster…</div>
+          ) : rosterRows.length === 0 ? (
+            <div className="py-8 text-center text-sm text-slate-600">No registrants yet.</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Child</TableHead>
+                  <TableHead>Age</TableHead>
+                  <TableHead>Parent</TableHead>
+                  <TableHead>Phone</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rosterRows.map((row, i) => {
+                  const age = ageFromDob(row.childDob);
+                  return (
+                    <TableRow key={i}>
+                      <TableCell className="font-medium">{row.childName}</TableCell>
+                      <TableCell>{age ?? "—"}</TableCell>
+                      <TableCell>{row.parentName || "—"}</TableCell>
+                      <TableCell>
+                        {row.phone ? (
+                          <a href={`tel:${row.phone}`} className="text-[#3DA9FC] hover:underline">
+                            {row.phone}
+                          </a>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Class Dialog */}
       <Dialog open={isEditClassOpen} onOpenChange={setIsEditClassOpen}>

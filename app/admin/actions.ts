@@ -1,3 +1,4 @@
+"use server";
 
 import { createClient } from "../clients/server";
 import { createAdminClient } from "../clients/admin";
@@ -56,4 +57,28 @@ export async function getClasses() {
         registrantCount: countMap[cls.id] || 0,
     }));
     return { success: true, data: formatted }
+}
+
+export async function getRoster(classId: number) {
+    const supabaseAdmin = await createAdminClient();
+    const { data, error } = await supabaseAdmin
+        .from("Class_User_Child")
+        .select(
+            "child:Child!Class_User_Child_child_id_fkey(first_name, date_of_birth), parent:User!Class_User_Child_user_id_fkey(first_name, last_name, phone)"
+        )
+        .eq("class_id", classId);
+    if (error) {
+        console.error(`Error fetching roster for class ${classId}`, error);
+        return { success: false, error: error.message };
+    }
+
+    const roster = (data || []).map((row: any) => ({
+        childName: row.child?.first_name ?? "",
+        childDob: row.child?.date_of_birth ?? null,
+        parentName: row.parent
+            ? `${row.parent.first_name} ${row.parent.last_name}`.trim()
+            : "",
+        phone: row.parent?.phone ?? "",
+    }));
+    return { success: true, data: roster };
 }
