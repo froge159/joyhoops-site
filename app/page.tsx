@@ -2,11 +2,19 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Trophy, Calendar, ArrowRight, Star, Menu, X, Quote } from "lucide-react"
+import { Users, Trophy, Calendar, ArrowRight, Star, Menu, X, Quote, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
+
+const GROWTH_CHALLENGE_LINKS = [
+  { label: "Program Details", href: "https://docs.google.com/document/d/1KcCzeWCwUCeCctfG5NChM2TLmMrN6deI/edit?usp=sharing&ouid=110192638605657727368&rtpof=true&sd=true" },
+  { label: "Agreement Doc", href: "https://docs.google.com/document/d/1Dc9iAj2sHHtvOdooSsaU0EPc9LRtEtZD/edit?usp=sharing&ouid=110192638605657727368&rtpof=true&sd=true" },
+  { label: "21 Day Task Signoff", href: "https://docs.google.com/document/d/1Gq6E0PMyDS4PRJlaBMZhu_0E_0d8CEuW/edit?usp=sharing&ouid=110192638605657727368&rtpof=true&sd=true" },
+  { label: "50 Habit Example", href: "https://docs.google.com/document/d/181omC8BH2ULmHr7VzR5gp75cK6wiL72X/edit?usp=sharing&ouid=110192638605657727368&rtpof=true&sd=true" },
+  { label: "Booklist", href: "https://docs.google.com/spreadsheets/d/19IG-M_KgOpBWGZ_rMwz3w4Yi4so4ATkB/edit?usp=sharing&ouid=110192638605657727368&rtpof=true&sd=true" },
+]
 
 export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -39,6 +47,27 @@ export default function HomePage() {
             <Link href="/contact" className="text-sm font-medium text-[#2E2E2E] hover:text-[#3DA9FC] transition-colors">
               Contact Us
             </Link>
+            <div className="relative group">
+              <button className="flex items-center gap-1 text-sm font-medium text-[#2E2E2E] hover:text-[#3DA9FC] transition-colors">
+                Growth Challenge
+                <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+              </button>
+              <div className="absolute left-0 top-full pt-2 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
+                <div className="flex flex-col min-w-[220px] rounded-md border bg-white shadow-lg py-2">
+                  {GROWTH_CHALLENGE_LINKS.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 text-sm text-[#2E2E2E] hover:bg-[#3DA9FC]/10 hover:text-[#3DA9FC] transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </nav>
 
           <div className="flex items-center space-x-2">
@@ -104,6 +133,23 @@ export default function HomePage() {
               >
                 Contact Us
               </Link>
+              <div className="pt-2 border-t">
+                <span className="text-sm font-medium text-[#2E2E2E] py-2 block">Growth Challenge</span>
+                <div className="flex flex-col pl-3">
+                  {GROWTH_CHALLENGE_LINKS.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-slate-600 hover:text-[#3DA9FC] transition-colors py-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
             </nav>
           </div>
         </div>
