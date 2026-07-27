@@ -160,7 +160,7 @@ export default function TeamPage() {
                       width="200"
                       height="200"
                       alt="Yuxuan Gu - Founder, President, Head Coach"
-                      className="rounded-full object-cover shadow-lg"
+                      className="object-cover rounded-full shadow-lg"
                     />
                   </div>
                   <CardTitle className="text-xl text-[#2E2E2E] mb-2">Yuxuan Gu</CardTitle>
@@ -168,9 +168,71 @@ export default function TeamPage() {
                     Founder, President, Head Coach
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Yuxuan is an 8th grader at Beckendorff Junior High with nine years of basketball experience. As a point guard and four-time MVP, he excels in ball-handling, shooting, and playmaking. He’s also a Science Olympiad competitor and clarinetist in the BDJH Wind Ensemble, known for his friendly and dedicated coaching style.
+                    Yuxuan is a member of the class of  2030 at The Hotchkiss School with nine 9 years of competitive basketball experience and six MVP awards. He is the point guard for both his AAU team and the BDJH basketball A team.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
 
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
+                    <Image
+                      src="/people/Pann Liu.jpg"
+                      width="200"
+                      height="200"
+                      alt="Pann Liu - Co-Founder (TX), Head Coach"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Pann Liu</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Co-Founder (TX), Head Coach Grades 6-8
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Pann is a student coach and member of the Class of 2028 at Seven Lakes High School, where he plays on the JV basketball team, with experience competing for both his school and AAU teams.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
 
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
+                    <Image
+                      src="/people/Aiden Xu.jpg"
+                      width="200"
+                      height="200"
+                      alt="Aiden Xu - Co-Founder (TX), Head Coach Grades 3-5"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Aiden Xu</CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Co-Founder (TX), Head Coach Grades 3-5
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Aiden is a member of the Class of 2028 at Seven Lakes High School and has many years of basketball experience with both AAU and school teams.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader className="pb-8">
+                  <div className="mx-auto mb-6 relative">
+                    <Image
+                      src="/people/Gary Shen 2.jpg"
+                      width="200"
+                      height="200"
+                      alt="Gary Shen - Co-Founder"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Gary Shen
+                  </CardTitle>
+                  <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
+                    Co-Founder, Student Coach, K-2nd
+                  </CardDescription>
+                  <CardDescription className="text-slate-600 mb-6">
+                    Gary is a student coach and a member of the Class of 2029 at Seven Lakes High School, with eight years of competitive AAU and school basketball experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -182,16 +244,17 @@ export default function TeamPage() {
                       src="/people/Benson Xu.jpg"
                       width="200"
                       height="200"
-                      alt="Benson Xu - Co-Founder, Chief Administrative Officer"
+                      alt="Benson Xu - Safety & Talent Resource Director"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu
+                  </CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder, Chief Administrative Officer
+                     Safety & Talent Resource Director
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Benson is 13 years old and has a strong passion for both basketball and music, particularly playing the viola. He enjoys teaching younger children how to play basketball and finds it rewarding to watch them grow and improve with each training session.
+                    Benson is a member of the Class of 2030 at Seven Lakes High School and has several years of basketball experience with AAU and school teams. 
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -203,16 +266,17 @@ export default function TeamPage() {
                       src="/people/samuelxie.jpg"
                       width="200"
                       height="200"
-                      alt="Samuel Xie - Co-Founder & Technology Officer"
+                      alt="Samuel Xie - Chief Information & Technical Support Officer"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Samuel Xie</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Samuel Xie
+                  </CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder & Technology Officer
+                     Chief Information & Technical Support Officer
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Samuel Xie is a high school junior at Seven Lakes High School with a strong background in web development and technology. He has hands-on experience building modern web applications using Next.js, Supabase and is eager to solve new problems and take on challenges. 
+                   Samuel Xie is a high school junior at Seven Lakes High School with a strong background in web development and technology.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -236,17 +300,17 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/people/Gary Shen 2.jpg"
+                      src="/pfp_placeholder.png"
                       width="150"
                       height="150"
-                      alt="Gary Shen"
+                      alt="Aaron Zhou"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Gary Shen</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Chief Comms Officer & 6-7 Head Coach</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Aaron Zhou</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Gary Shen is a youth basketball coach and former MVP with national tournament experience.
+                    Aaron is an eighth-grade student at Beckendorff Junior High with AAU basketball experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -255,17 +319,17 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/people/Aiden Xu.jpg"
+                      src="/people/audihuang.png"
                       width="150"
                       height="150"
-                      alt="Aiden Xu"
+                      alt="Andi Huang"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Aiden Xu</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Co-founder/K-3 Head Coach</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Andi Huang</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Aiden is a 10th grader at SLHS who loves teaching youth basketball and is in the varsity orchestra.
+                    Andi is a member of the Class of 2031 and AAU basketball player with extensive experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -274,17 +338,17 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/people/Pann Liu.jpg"
+                      src="/pfp_placeholder.png"
                       width="150"
                       height="150"
-                      alt="Pann Liu"
+                      alt="Andy Mu"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Pann Liu</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Operation Officer/4-5 Head Coach</CardDescription>
+                  <CardTitle className="text-lg text-[#2E2E2E]">Andy Mu</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Pann Liu is a sophomore at SLHS who plays on the JV basketball team.
+                    Andy is a member of the Class of 2030 at Seven Lakes High School. He has several years of competitive fencing experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -293,17 +357,36 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/people/daniel fan.JPEG"
+                      src="/people/fangbrothers.png"
                       width="150"
                       height="150"
-                      alt="Daniel Fan"
+                      alt="William Fang & Albert Fang"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-lg text-[#2E2E2E]">Daniel Fan</CardTitle>
-                  <CardDescription className="text-[#FF6B35] font-medium">Ambassador</CardDescription>
+                  <CardTitle className="text-[#2E2E2E] text-sm">William Fang & Albert Fang</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coaches, Special Project Leaders</CardDescription>
+                  <CardDescription className="text-slate-600 text-xs">
+                    The Fang brothers have developed their skills through multiple seasons of competitive play in the KYBB league and serve as core members of their team.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader>
+                  <div className="mx-auto mb-4 relative">
+                    <Image
+                      src="/people/kexin.jpeg"
+                      width="150"
+                      height="150"
+                      alt="Kexin"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-[#2E2E2E] text-lg">Kexin</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
                   <CardDescription className="text-slate-600 text-sm">
-                    Daniel Fan is an 8th grader at Fay School who excels in academics, athletics, and leadership.
+                    Kexin is a curious and thoughtful student who enjoys exploring how things work and discovering connections between science, mathematics, and the world.
                   </CardDescription>
                 </CardHeader>
               </Card>

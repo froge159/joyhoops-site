@@ -382,9 +382,7 @@ export default function HomePage() {
                     Founder, President, Head Coach
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Yuxuan is an 8th grader at Beckendorff Junior High with nine years of basketball experience. As a point guard and four-time MVP, he excels in ball-handling, shooting, and playmaking. He’s also a Science Olympiad competitor and clarinetist in the BDJH Wind Ensemble, known for his friendly and dedicated coaching style.
-
-
+                    Yuxuan is a member of the class of  2030 at The Hotchkiss School with nine 9 years of competitive basketball experience and six MVP awards. He is the point guard for both his AAU team and the BDJH basketball A team.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -393,19 +391,19 @@ export default function HomePage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/people/Benson Xu.jpg"
+                      src="/people/Pann Liu.jpg"
                       width="200"
                       height="200"
-                      alt="Benson Xu - Co-Founder, Chief Administrative Officer"
+                      alt="Pann Liu - Co-Founder (TX), Head Coach"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Benson Xu</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Pann Liu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder, Chief Administrative Officer
+                    Co-Founder (TX), Head Coach Grades 6-8
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Benson is 13 years old and has a strong passion for both basketball and music, particularly playing the viola. He enjoys teaching younger children how to play basketball and finds it rewarding to watch them grow and improve with each training session.
+                    Pann is a student coach and member of the Class of 2028 at Seven Lakes High School, where he plays on the JV basketball team, with experience competing for both his school and AAU teams.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -414,19 +412,19 @@ export default function HomePage() {
                 <CardHeader className="pb-8">
                   <div className="mx-auto mb-6 relative">
                     <Image
-                      src="/people/samuelxie.jpg"
+                      src="/people/Aiden Xu.jpg"
                       width="200"
                       height="200"
-                      alt="Samuel Xie - Co-Founder & Technology Officer"
+                      alt="Aiden Xu - Co-Founder (TX), Head Coach Grades 3-5"
                       className="rounded-full object-cover shadow-lg"
                     />
                   </div>
-                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Samuel Xie</CardTitle>
+                  <CardTitle className="text-xl text-[#2E2E2E] mb-2">Aiden Xu</CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder & Technology Officer
+                    Co-Founder (TX), Head Coach Grades 3-5
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Samuel Xie is a high school junior at Seven Lakes High School with a strong background in web development and technology. He has hands-on experience building modern web applications using Next.js, Supabase and is eager to solve new problems and take on challenges. 
+                    Aiden is a member of the Class of 2028 at Seven Lakes High School and has many years of basketball experience with both AAU and school teams.
                   </CardDescription>
                 </CardHeader>
               </Card>
