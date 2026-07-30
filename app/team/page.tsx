@@ -145,7 +145,7 @@ export default function TeamPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Leadership Team</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Core Leadership Team & Co-Founders</h2>
                 <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   The dedicated leaders guiding our mission
                 </p>
@@ -229,10 +229,10 @@ export default function TeamPage() {
                   <CardTitle className="text-xl text-[#2E2E2E] mb-2">Gary Shen
                   </CardTitle>
                   <CardDescription className="text-[#3DA9FC] font-medium text-lg mb-4">
-                    Co-Founder, Student Coach, K-2nd
+                    Co-Founder, Head Coach, K-2nd
                   </CardDescription>
                   <CardDescription className="text-slate-600 mb-6">
-                    Gary is a student coach and a member of the Class of 2029 at Seven Lakes High School, with eight years of competitive AAU and school basketball experience.
+                    Gary is a coach and a member of the Class of 2029 at Seven Lakes High School, with eight years of competitive AAU and school basketball experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -390,6 +390,44 @@ export default function TeamPage() {
                   </CardDescription>
                 </CardHeader>
               </Card>
+
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader>
+                  <div className="mx-auto mb-4 relative">
+                    <Image
+                      src="/people/dylanzhong.jpg"
+                      width="150"
+                      height="150"
+                      alt="Dylan Zhong"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-[#2E2E2E] text-lg">Dylan Zhong</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
+                  <CardDescription className="text-slate-600 text-sm">
+                    Dylan (Class of 2032) is a young student-athlete who has played competitive AAU basketball as a point/shooting guard since the age of seven. 
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                <CardHeader>
+                  <div className="mx-auto mb-4 relative">
+                    <Image
+                      src="/people/samuelho.jpg"
+                      width="150"
+                      height="150"
+                      alt="Samuel Ho"
+                      className="rounded-full object-cover shadow-lg"
+                    />
+                  </div>
+                  <CardTitle className="text-[#2E2E2E] text-lg">Samuel Ho</CardTitle>
+                  <CardDescription className="text-[#FF6B35] font-medium">Assistant Coach, Special Project Leader</CardDescription>
+                  <CardDescription className="text-slate-600 text-sm">
+                    Samuel is a member of the Class of 2031 with a passion for academics, basketball, music, and community service.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             </div>
           </div>
         </section>
@@ -399,7 +437,7 @@ export default function TeamPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Adult Board</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-[#2E2E2E]">Adult Advisory Board</h2>
                 <p className="max-w-[900px] text-slate-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Experienced professionals guiding our strategic direction
                 </p>
@@ -410,7 +448,7 @@ export default function TeamPage() {
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/pfp_placeholder.png"
                       width="150"
                       height="150"
                       alt="Wendy Ou"
@@ -418,7 +456,7 @@ export default function TeamPage() {
                     />
                   </div>
                   <CardTitle className="text-[#2E2E2E]">Wendy Ou</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Operations</CardDescription>
+                  <CardDescription className="text-[#3DA9FC] font-medium">Adult Operation Officer</CardDescription>
                   <CardDescription className="text-slate-600">
                     A pharmaceutical executive offering 26 years of experience, specializing in cGMP and
 FDA/DEA/EMA/China regulatory affairs.
@@ -426,11 +464,11 @@ FDA/DEA/EMA/China regulatory affairs.
                 </CardHeader>
               </Card>
 
-              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+              <Card className="text-center bg-white border-[#3DA9FC]/20 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1]">
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/pfp_placeholder.png"
                       width="150"
                       height="150"
                       alt="Zhiqiang Gu"
@@ -438,7 +476,7 @@ FDA/DEA/EMA/China regulatory affairs.
                     />
                   </div>
                   <CardTitle className="text-[#2E2E2E]">Zhiqiang Gu</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Head Coach</CardDescription>
+                  <CardDescription className="text-[#3DA9FC] font-medium">Adult Head Coach</CardDescription>
                   <CardDescription className="text-slate-600">
                     Experienced basketball coach with a background that includes four years of playing in
 collegiate basketball league games.
@@ -450,7 +488,7 @@ collegiate basketball league games.
                 <CardHeader>
                   <div className="mx-auto mb-4 relative">
                     <Image
-                      src="/placeholder.svg?height=150&width=150"
+                      src="/pfp_placeholder.png"
                       width="150"
                       height="150"
                       alt="Hui Zhi"
@@ -458,9 +496,9 @@ collegiate basketball league games.
                     />
                   </div>
                   <CardTitle className="text-[#2E2E2E]">Hui Zhi</CardTitle>
-                  <CardDescription className="text-[#3DA9FC] font-medium">Treasurer</CardDescription>
-                  <CardDescription className="text-slate-600">
-                    Certified public accountant with 18 years of progressive accounting experience and a decade in corporate industry roles.
+                  <CardDescription className="text-[#3DA9FC] font-medium">Adult Treasurer</CardDescription>
+                  <CardDescription className="text-slate-600 text-sm">
+                   Certified public accountant with 18 years of progressive accounting experience, blending big 4 public auditing with over a decade in corporate industry roles.
                   </CardDescription>
                 </CardHeader>
               </Card>
